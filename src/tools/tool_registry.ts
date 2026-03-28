@@ -1,13 +1,20 @@
-import { calculateTool } from './calculate_tool.ts';
-import { reviewHistoryTool } from './review_history_tool.ts';
+import { tgConnectTool } from './tg_connect_tool.ts';
+import { tgManageTool } from './tg_manage_tool.ts';
+import { tgReadTool } from './tg_read_tool.ts';
+import { tgSendTool } from './tg_send_tool.ts';
 import type { ToolDefinitionRegistry } from './tool_metadata.ts';
 
-export const calcTools = [calculateTool, reviewHistoryTool] satisfies ToolDefinitionRegistry;
+export const telegramTools: ToolDefinitionRegistry = [
+	tgReadTool,
+	tgSendTool,
+	tgManageTool,
+	tgConnectTool,
+];
 
-export function listCalcToolDefinitions() {
-	return [...calcTools];
+export function listTelegramToolDefinitions() {
+	return [...telegramTools];
 }
 
-export function getCalcToolByName(name: string) {
-	return calcTools.find((tool) => tool.name === name) ?? null;
+export function getTelegramToolByName(name: string) {
+	return telegramTools.find((tool) => tool.name === name) ?? null;
 }

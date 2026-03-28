@@ -1,0 +1,131 @@
+import { Bot } from 'grammy';
+
+import { insertCallback } from './callbacks/index.ts';
+import { upsertChat } from './chats/index.ts';
+import type { TelegramDb } from './database.ts';
+import { upsertMember } from './members/index.ts';
+import { insertMessage, updateMessage } from './messages/index.ts';
+import { normalizeChat } from './normalize/normalize_chat.ts';
+import { normalizeMember } from './normalize/normalize_member.ts';
+import { normalizeMessage } from './normalize/normalize_message.ts';
+import { normalizeUser } from './normalize/normalize_user.ts';
+import type {
+	CallbackHandler,
+	EditedMessageHandler,
+	JoinRequestHandler,
+	MemberUpdateHandler,
+	MessageHandler,
+	PollAnswerHandler,
+	ReactionHandler,
+} from './normalize/types.ts';
+import { applyReactionUpdate } from './reactions/index.ts';
+import { upsertUser } from './users/index.ts';
+
+export interface BotConfig {
+	token: string;
+	db: TelegramDb;
+	onMessage?: MessageHandler;
+	onEditedMessage?: EditedMessageHandler;
+	onCallback?: CallbackHandler;
+	onMemberUpdate?: MemberUpdateHandler;
+	onReaction?: ReactionHandler;
+	onPollAnswer?: PollAnswerHandler;
+	onJoinRequest?: JoinRequestHandler;
+}
+
+export interface TelegramBot {
+	readonly config: BotConfig;
+	start(): Promise<void>;
+	stop(): void;
+}
+
+export function createBot(config: BotConfig): TelegramBot {
+	const { db } = config;
+	const grammy = new Bot(config.token);
+
+	grammy.on('message', async (ctx) => {
+		const msg = ctx.message;
+		if (!msg) return;
+		const user = msg.from ? upsertUser(db, normalizeUser(msg.from)) : null;
+		upsertChat(db, normalizeChat(msg.chat));
+		const stored = insertMessage(db, normalizeMessage(msg, 'in', ctx.me.id));
+		await config.onMessage?.({ message: stored, user });
+	});
+
+	grammy.on('edited_message', async (ctx) => {
+		const msg = ctx.editedMessage;
+		if (!msg) return;
+		const user = msg.from ? upsertUser(db, normalizeUser(msg.from)) : null;
+		try {
+			const updated = updateMessage(db, msg.chat.id, msg.message_id, {
+				editDate: msg.edit_date ? msg.edit_date * 1000 : null,
+				text: msg.text ?? null,
+			});
+			await config.onEditedMessage?.({ message: updated, user });
+		} catch {
+			// message not persisted yet — ignore
+		}
+	});
+
+	grammy.on('callback_query', async (ctx) => {
+		const cq = ctx.callbackQuery;
+		const user = upsertUser(db, normalizeUser(cq.from));
+		const entry = insertCallback(db, {
+			callbackId: cq.id,
+			chatId: cq.message?.chat.id ?? 0,
+			messageId: cq.message?.message_id ?? 0,
+			userId: cq.from.id,
+			data: cq.data ?? null,
+			handler: null,
+			payload: null,
+			answeredAt: null,
+			expiresAt: null,
+		});
+		await config.onCallback?.({ callback: entry, user });
+	});
+
+	grammy.on('my_chat_member', async (ctx) => {
+		const update = ctx.myChatMember;
+		upsertUser(db, normalizeUser(update.from));
+		upsertChat(db, normalizeChat(update.chat));
+		const member = upsertMember(db, normalizeMember(update.chat.id, update.new_chat_member));
+		const oldMember = normalizeMember(update.chat.id, update.old_chat_member);
+		await config.onMemberUpdate?.({ chatId: update.chat.id, member, oldMember });
+	});
+
+	grammy.on('message_reaction', async (ctx) => {
+		const reaction = ctx.messageReaction;
+		const toEmoji = (r: { type: string; emoji?: string; custom_emoji_id?: string }) =>
+			r.type === 'emoji'
+				? (r.emoji ?? '')
+				: r.type === 'custom_emoji'
+					? (r.custom_emoji_id ?? '')
+					: 'paid';
+		const oldEmojis = (reaction.old_reaction ?? []).map(toEmoji);
+		const newEmojis = (reaction.new_reaction ?? []).map(toEmoji);
+		const u = reaction.user;
+		const displayName = u ? `${u.first_name}${u.last_name ? ` ${u.last_name}` : ''}` : 'Unknown';
+		applyReactionUpdate(
+			db,
+			reaction.chat.id,
+			reaction.message_id,
+			u?.id ?? 0,
+			displayName,
+			oldEmojis,
+			newEmojis,
+		);
+		await config.onReaction?.({
+			chatId: reaction.chat.id,
+			messageId: reaction.message_id,
+			userId: u?.id ?? 0,
+			oldReactions: oldEmojis,
+			newReactions: newEmojis,
+		});
+	});
+
+	return {
+		config,
+		start: () => grammy.start(),
+		stop: () => grammy.stop(),
+	};
+}

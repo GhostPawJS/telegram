@@ -1,4 +1,4 @@
-import type { CalcDb } from '../database.ts';
+import type { TelegramDb } from '../database.ts';
 
 import type { ToolResult } from './tool_types.ts';
 
@@ -17,7 +17,7 @@ export interface JsonSchema {
 export type ToolSideEffects = 'none' | 'writes_state';
 export type ToolInputDescriptions = Record<string, string>;
 
-export interface CalcToolDefinition<TInput = Record<string, unknown>, TOutput = unknown> {
+export interface TelegramToolDefinition<TInput = Record<string, unknown>, TOutput = unknown> {
 	name: string;
 	description: string;
 	whenToUse: string;
@@ -28,16 +28,16 @@ export interface CalcToolDefinition<TInput = Record<string, unknown>, TOutput = 
 	outputDescription: string;
 	inputSchema: JsonSchema;
 	handler: {
-		bivarianceHack(db: CalcDb, input: TInput): ToolResult<TOutput>;
+		bivarianceHack(db: TelegramDb, input: TInput): ToolResult<TOutput>;
 	}['bivarianceHack'];
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: registry needs to hold heterogeneous tool definitions
-export type ToolDefinitionRegistry = readonly CalcToolDefinition<any, any>[];
+export type ToolDefinitionRegistry = readonly TelegramToolDefinition<any, any>[];
 
-export function defineCalcTool<TInput, TOutput>(
-	tool: CalcToolDefinition<TInput, TOutput>,
-): CalcToolDefinition<TInput, TOutput> {
+export function defineTelegramTool<TInput, TOutput>(
+	tool: TelegramToolDefinition<TInput, TOutput>,
+): TelegramToolDefinition<TInput, TOutput> {
 	return tool;
 }
 

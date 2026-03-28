@@ -1,7 +1,7 @@
 {
-	"name": "@ghostpaw/template",
+	"name": "@ghostpaw/telegram",
 	"version": "0.1.0",
-	"description": "TODO: describe this package",
+	"description": "Telegram bot channel engine — grammy transport, SQLite message mirror, FTS5 full-text search, markdown rendering, and a structured LLM tool facade. Node 24+, built-in node:sqlite.",
 	"type": "module",
 	"exports": {
 		".": {
@@ -25,16 +25,13 @@
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
-		"demo:build": "node scripts/build_demo.mjs",
-		"demo:watch": "node scripts/build_demo.mjs --watch",
-		"demo:serve": "npm run demo:build && node scripts/serve_demo.mjs",
 		"test": "node --experimental-strip-types --test --test-reporter=dot 'src/**/*.test.ts'",
 		"lint": "biome check",
 		"lint:fix": "biome check --fix",
 		"format": "biome format --write",
 		"typecheck": "tsc --noEmit",
 		"check": "biome check && tsc --noEmit",
-		"clean": "rm -rf dist demo",
+		"clean": "rm -rf dist",
 		"version": "biome format --write package.json package-lock.json && git add package.json package-lock.json",
 		"prepublishOnly": "npm run check && npm run build",
 		"release:patch": "npm version patch && git push && git push --tags",
@@ -48,28 +45,42 @@
 		"access": "public"
 	},
 	"keywords": [
+		"telegram",
+		"telegram-bot",
+		"telegrambot",
+		"grammy",
+		"bot",
+		"chatbot",
+		"bot-framework",
+		"messaging",
+		"webhook",
 		"sqlite",
+		"node-sqlite",
 		"local-first",
 		"llm",
+		"llm-tools",
 		"ai",
+		"ai-agent",
 		"agent",
+		"multi-agent",
+		"mcp",
 		"tools",
-		"typescript",
-		"zero-dependencies"
+		"ghostpaw",
+		"typescript"
 	],
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/GhostPawJS/template.git"
+		"url": "https://github.com/GhostPawJS/telegram.git"
 	},
 	"author": {
 		"name": "Anonyfox",
 		"email": "max@anonyfox.com",
 		"url": "https://anonyfox.com"
 	},
-	"homepage": "https://github.com/GhostPawJS/template",
+	"homepage": "https://github.com/GhostPawJS/telegram",
 	"bugs": {
-		"url": "https://github.com/GhostPawJS/template/issues"
+		"url": "https://github.com/GhostPawJS/telegram/issues"
 	},
 	"funding": {
 		"type": "github",
@@ -78,11 +89,13 @@
 	"volta": {
 		"node": "24.14.0"
 	},
+	"dependencies": {
+		"grammy": "^1",
+		"marked": "^15"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4",
 		"@types/node": "^25.3.0",
-		"esbuild": "^0.27.4",
-		"preact": "^10.29.0",
 		"tsup": "^8.4.0",
 		"typescript": "^5.9.3"
 	}

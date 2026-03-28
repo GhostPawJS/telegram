@@ -1,8 +1,12 @@
-export type { CalcDb } from './database.ts';
+export { createBot } from './bot.ts';
+export type { TelegramDb } from './database.ts';
+export { DEFAULTS } from './defaults.ts';
 export * from './errors.ts';
 export * as errors from './errors.ts';
-export { initCalcTables } from './init_calc_tables.ts';
+export { initTelegramTables } from './init_telegram_tables.ts';
+export * as network from './network.ts';
 export * as read from './read.ts';
+export * as render from './render.ts';
 export type * from './skills/index.ts';
 export * as skills from './skills/index.ts';
 export type * from './soul.ts';

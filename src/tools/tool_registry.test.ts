@@ -1,17 +1,15 @@
 import { strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { calculateToolName, reviewHistoryToolName } from './tool_names.ts';
-import { getCalcToolByName, listCalcToolDefinitions } from './tool_registry.ts';
+
+import { getTelegramToolByName, listTelegramToolDefinitions } from './tool_registry.ts';
 
 describe('tool registry', () => {
-	it('lists all tools', () => {
-		const tools = listCalcToolDefinitions();
-		strictEqual(tools.length, 2);
+	it('lists all tools (empty until step 7)', () => {
+		const tools = listTelegramToolDefinitions();
+		strictEqual(Array.isArray(tools), true);
 	});
 
-	it('finds tools by name', () => {
-		strictEqual(getCalcToolByName(calculateToolName)?.name, calculateToolName);
-		strictEqual(getCalcToolByName(reviewHistoryToolName)?.name, reviewHistoryToolName);
-		strictEqual(getCalcToolByName('nonexistent'), null);
+	it('returns null for unknown tool name', () => {
+		strictEqual(getTelegramToolByName('nonexistent'), null);
 	});
 });

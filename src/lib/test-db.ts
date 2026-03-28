@@ -1,11 +1,11 @@
-import type { CalcDb } from '../database.ts';
-import { initCalcTables } from '../init_calc_tables.ts';
+import type { TelegramDb } from '../database.ts';
+import { initTelegramTables } from '../init_telegram_tables.ts';
 
 import { openTestDatabase } from './open-test-database.ts';
 
-/** In-memory DB with full calc schema — shared by tests. */
-export async function createInitializedCalcDb(): Promise<CalcDb> {
+/** In-memory DB with full Telegram schema — shared by tests. */
+export async function createInitializedTelegramDb(): Promise<TelegramDb> {
 	const db = await openTestDatabase();
-	initCalcTables(db);
+	initTelegramTables(db);
 	return db;
 }

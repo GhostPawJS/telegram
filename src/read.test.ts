@@ -3,9 +3,8 @@ import { describe, it } from 'node:test';
 
 import * as read from './read.ts';
 
-describe('read barrel', () => {
-	it('exports all expected query functions', () => {
-		strictEqual(typeof read.listHistory, 'function');
-		strictEqual(typeof read.getLastResult, 'function');
+describe('read surface', () => {
+	it('is an object (module namespace)', () => {
+		strictEqual(typeof read, 'object');
 	});
 });

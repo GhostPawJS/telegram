@@ -1,13 +1,13 @@
-import type { CalcDb } from './database.ts';
+import type { TelegramDb } from './database.ts';
 
-const transactionDepth = new WeakMap<CalcDb, number>();
+const transactionDepth = new WeakMap<TelegramDb, number>();
 
 /**
  * Runs a synchronous transaction with nested-savepoint support.
  */
-export function withTransaction<T>(db: CalcDb, fn: () => T): T {
+export function withTransaction<T>(db: TelegramDb, fn: () => T): T {
 	const depth = transactionDepth.get(db) ?? 0;
-	const savepoint = `calc_${depth}`;
+	const savepoint = `tg_${depth}`;
 
 	if (depth === 0) {
 		db.exec('BEGIN IMMEDIATE');

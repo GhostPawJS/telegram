@@ -23,5 +23,5 @@
 		"exactOptionalPropertyTypes": true
 	},
 	"include": ["src"],
-	"exclude": ["node_modules", "dist", "src/demo"]
+	"exclude": ["node_modules", "dist"]
 }

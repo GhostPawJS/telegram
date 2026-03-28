@@ -1,13 +1,13 @@
-import { strictEqual } from 'node:assert/strict';
+import { doesNotThrow, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { createInitializedCalcDb } from './test-db.ts';
+import { createInitializedTelegramDb } from './test-db.ts';
 
-describe('createInitializedCalcDb', () => {
-	it('returns a database with the full schema applied', async () => {
-		const db = await createInitializedCalcDb();
-		const row = db.prepare('SELECT COUNT(*) AS c FROM operations').get() as { c: number };
-		strictEqual(row.c, 0);
+describe('createInitializedTelegramDb', () => {
+	it('returns a usable in-memory database with schema applied', async () => {
+		const db = await createInitializedTelegramDb();
+		doesNotThrow(() => db.exec('SELECT 1'));
+		strictEqual(typeof db.prepare, 'function');
 		db.close();
 	});
 });

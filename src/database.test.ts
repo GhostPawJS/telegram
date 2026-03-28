@@ -2,11 +2,11 @@ import { strictEqual } from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { describe, it } from 'node:test';
 
-import type { CalcDb } from './database.ts';
+import type { TelegramDb } from './database.ts';
 
-describe('CalcDb', () => {
-	it('DatabaseSync satisfies the CalcDb interface', () => {
-		const db: CalcDb = new DatabaseSync(':memory:');
+describe('TelegramDb', () => {
+	it('DatabaseSync satisfies the TelegramDb interface', () => {
+		const db: TelegramDb = new DatabaseSync(':memory:');
 		db.exec('CREATE TABLE t (id INTEGER PRIMARY KEY)');
 		const stmt = db.prepare('SELECT COUNT(*) AS c FROM t');
 		const row = stmt.get() as { c: number };
@@ -15,7 +15,7 @@ describe('CalcDb', () => {
 	});
 
 	it('prepare().all() returns an array', () => {
-		const db: CalcDb = new DatabaseSync(':memory:');
+		const db: TelegramDb = new DatabaseSync(':memory:');
 		db.exec('CREATE TABLE t (v INTEGER)');
 		db.prepare('INSERT INTO t VALUES (1)').run();
 		db.prepare('INSERT INTO t VALUES (2)').run();

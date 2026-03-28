@@ -1,23 +1,18 @@
-# @ghostpaw/template
+# @ghostpaw/telegram
 
-[![npm](https://img.shields.io/npm/v/@ghostpaw/template)](https://www.npmjs.com/package/@ghostpaw/template)
-[![node](https://img.shields.io/node/v/@ghostpaw/template)](https://nodejs.org)
-[![license](https://img.shields.io/npm/l/@ghostpaw/template)](LICENSE)
-[![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
+[![npm](https://img.shields.io/npm/v/@ghostpaw/telegram)](https://www.npmjs.com/package/@ghostpaw/telegram)
+[![node](https://img.shields.io/node/v/@ghostpaw/telegram)](https://nodejs.org)
+[![license](https://img.shields.io/npm/l/@ghostpaw/telegram)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Live Demo](https://img.shields.io/badge/demo-live-06d6a0?style=flat&logo=github)](https://ghostpawjs.github.io/template)
 
-TODO: one-line description of what this package does.
+Telegram bot channel engine — grammy transport, SQLite message mirror, markdown rendering, and agent tools.
 
-> This is the GhostPaw template repository. The calculator domain below is toy
-> content — a working example to copy from and replace. See
-> [TEMPLATE.md](TEMPLATE.md) for a full map of what to keep, what to replace,
-> and a step-by-step checklist.
+Every incoming update is mirrored into a local SQLite database before your handler runs, giving you a persistent, queryable record of everything the bot sees. It ships as a single prebundled blob designed for two audiences at once: human developers building bot backends in code, and LLM agents operating through a structured tool facade.
 
 ## Install
 
 ```bash
-npm install @ghostpaw/template
+npm install @ghostpaw/telegram
 ```
 
 Requires **Node.js 24+** (uses the built-in `node:sqlite` module).
@@ -26,99 +21,148 @@ Requires **Node.js 24+** (uses the built-in `node:sqlite` module).
 
 ```ts
 import { DatabaseSync } from 'node:sqlite';
-import { initCalcTables, read, write } from '@ghostpaw/template';
+import { createBot, initTelegramTables } from '@ghostpaw/telegram';
 
-const db = new DatabaseSync(':memory:');
-initCalcTables(db);
+const db = new DatabaseSync('bot.db');
+initTelegramTables(db);
 
-const r1 = write.add(db, 10, 5);
-const r2 = write.multiply(db, r1.result, 2);
+const bot = createBot({
+  token: process.env.TELEGRAM_TOKEN!,
+  db,
+  onMessage: async ({ message, user }) => {
+    console.log(user?.firstName, message.text);
+  },
+});
 
-const history = read.listHistory(db);
+await bot.start();
 ```
+
+## What It Stores
+
+Every update is mirrored into SQLite before your handler runs:
+
+- **Messages** — text, media, edits, reply edges, albums, threads (FTS5 full-text index)
+- **Users** — first name, last name, username, language code
+- **Chats** — title, type, member count, forum flag
+- **Members** — status, permissions, admin title per chat
+- **Reactions** — emoji per user per message, with per-emoji counts and event log
+- **Files** — file ID, size, MIME type, local download status
+- **Callbacks** — inline button presses with data and answered state
+- **Bot state** — arbitrary key/value store and running statistics
+
+All eight tables are created in one call: `initTelegramTables(db)`.
 
 ## Two Audiences
 
 ### Human developers
 
-Use the `read` and `write` namespaces for direct-code access to every domain
-operation:
+Use the `read`, `write`, and `network` namespaces for direct-code access to every domain operation:
 
 ```ts
-import { read, write } from '@ghostpaw/template';
+import { read, write, network } from '@ghostpaw/telegram';
 
-write.add(db, 3, 4);
-write.divide(db, 10, 2);
+// query the local mirror — no network calls
+const chat = read.getChat(db, chatId);
+const messages = read.listMessages(db, { chatId, limit: 50 });
+const results = read.searchMessages(db, chatId, 'invoice');
+const chain = read.replyChain(db, chatId, messageId);
 
-const history = read.listHistory(db);
-const last = read.getLastResult(db);
+// send and manage
+await write.sendMessage(bot, chatId, 'Hello');
+await write.pinMessage(bot, chatId, messageId);
+await write.broadcast(bot, chatIds, 'Announcement');
+
+// streaming — debounced progressive edits
+const stream = write.createStream(bot, chatId);
+await stream.append('Thinking...');
+await stream.replace('Done.');
 ```
 
-See [HUMAN.md](docs/HUMAN.md) for the full human-facing guide.
+See [docs/HUMAN.md](docs/HUMAN.md) for the full human-facing guide with worked examples.
 
 ### LLM agents
 
-Use the `tools`, `skills`, and `soul` namespaces for a structured runtime
-surface designed to minimise LLM cognitive load:
+Use the `tools`, `skills`, and `soul` namespaces for a structured runtime surface:
 
 ```ts
-import { tools, skills, soul } from '@ghostpaw/template';
+import { tools, skills, soul } from '@ghostpaw/telegram';
 
-// Intent-shaped tools with JSON Schema inputs and structured results
-const allTools = tools.calcTools;
-const calcTool = tools.getCalcToolByName('calculate')!;
-const result = calcTool.handler(db, { a: 3, b: 4, operator: '+' });
+// 4 JSON-schema tools with structured ToolResult responses
+const allTools = tools.telegramTools;
+const readTool = tools.getTelegramToolByName('tg_read');
+const result = readTool?.handler(db, { subcommand: 'search_messages', chatId, query: 'invoice' });
 
-// Reusable workflow skills for common multi-step scenarios
-const allSkills = skills.listCalcSkills();
+// 6 workflow playbooks for common multi-step scenarios
+const allSkills = skills.telegramSkills;
 
-// Thinking foundation for system prompts
-const prompt = soul.renderCalcSoulPromptFoundation();
+// Herald persona for system prompts
+const prompt = soul.renderTelegramSoulPromptFoundation();
 ```
 
-Every tool returns a discriminated result with `outcome: 'success' | 'no_op' |
-'needs_clarification' | 'error'`, structured data, next-step hints, and
-actionable recovery advice.
+Every tool returns a discriminated result with `outcome: 'success' | 'no_op' | 'error'`, structured data, and next-step hints. No thrown exceptions to parse.
 
-See [LLM.md](docs/LLM.md) for the full AI-facing guide.
-
-## Tools
-
-| Tool             | What it does                                    |
-|------------------|-------------------------------------------------|
-| `calculate`      | Perform an arithmetic operation, store it       |
-| `review_history` | List recent calculations, newest-first          |
-
-## Key Properties
-
-- **Zero runtime dependencies.** Only `node:sqlite` (built into Node 24+).
-- **Single prebundled blob.** One ESM + one CJS entry in `dist/`.
-- **Pure SQLite storage.** Bring your own `DatabaseSync` instance.
-- **Append-only history.** Operations are never modified after insertion.
-- **Additive AI runtime.** `soul` for posture, `tools` for actions, `skills`
-  for workflow guidance — all optional, all structured.
-- **Colocated tests.** Every non-type module has a colocated `.test.ts` file.
+See [docs/LLM.md](docs/LLM.md) for the full AI-facing guide covering soul, tools, and skills.
 
 ## Package Surface
 
-```ts
-import {
-  initCalcTables,  // schema setup
-  read,            // all query functions
-  write,           // all mutation functions
-  tools,           // LLM tool definitions + registry
-  skills,          // LLM workflow skills + registry
-  soul,            // thinking foundation for system prompts
-} from '@ghostpaw/template';
-```
+| Export | Role |
+|---|---|
+| `initTelegramTables(db)` | One-shot DDL — call once at startup |
+| `createBot(config)` | Full bot composition over grammy |
+| `read` | Query the local SQLite mirror (no network) |
+| `write` | Send messages and actions via grammy |
+| `network` | Manage polling and update dispatch |
+| `render` | Pure markdown and text transformation |
+| `tools` | 4 JSON-schema tools for LLM agents |
+| `skills` | 6 workflow playbooks for LLM agents |
+| `soul` | Herald persona for system prompts |
+| `DEFAULTS` | Tuneable runtime constants |
+
+## Tools
+
+Four tools shaped around operator intent:
+
+| Tool | What it does |
+|---|---|
+| `tg_read` | Query messages, chats, users, reactions, edit history, reply chains |
+| `tg_send` | Send, edit, delete, forward, pin messages; set reactions; broadcast |
+| `tg_manage` | Ban, unban, restrict, promote, kick users; query member status |
+| `tg_connect` | Get bot stats, read bot state, list active chats |
+
+Each tool exports runtime metadata — name, description, JSON Schema, side-effect level, `readOnly` flag — so agent harnesses can wire them without reading docs.
+
+## Skills
+
+Six workflow playbooks as markdown strings:
+
+| Skill | Workflow |
+|---|---|
+| `manage-telegram-conversations` | Read context, reply, pin, track threads and albums |
+| `moderate-chat-effectively` | Detect violations, warn, restrict, ban with audit trail |
+| `handle-group-administration` | Promote, demote, migrate, configure permissions |
+| `broadcast-to-audience` | Compose, send, handle errors, retry failed chats |
+| `search-and-retrieve-messages` | Full-text search, reply chains, edit history |
+| `stream-progressive-responses` | Debounced streaming with overflow and error recovery |
+
+## Ecosystem
+
+Telegram is one component of the GhostPaw cognitive substrate:
+
+| Package | Domain |
+|---|---|
+| **souls** | Cognitive identity — traits, crystallization, level-up |
+| **questlog** | Tasks and commitments — plan, track, complete, reward |
+| **telegram** | Bot channel — mirror, query, send, moderate |
+
+Each package owns one slice of state with the same architecture: Node 24+, built-in `node:sqlite`, zero config.
 
 ## Documentation
 
 | Document | Audience |
 |---|---|
-| [HUMAN.md](docs/HUMAN.md) | Human developers using the low-level `read` / `write` API |
-| [LLM.md](docs/LLM.md) | Agent builders wiring `soul`, `tools`, and `skills` into LLM systems |
-| [docs/README.md](docs/README.md) | Architecture overview and source layout |
+| [docs/HUMAN.md](docs/HUMAN.md) | Human developers using the `read`/`write`/`network` API |
+| [docs/LLM.md](docs/LLM.md) | Agent builders wiring tools, skills, and soul |
+| [docs/README.md](docs/README.md) | Architecture overview: storage model, surfaces, invariants |
 | [docs/entities/](docs/entities/) | Per-entity manuals with exact public API listings |
 
 ## Development
@@ -129,11 +173,9 @@ npm test            # node:test runner
 npm run typecheck   # tsc --noEmit
 npm run lint        # biome check
 npm run build       # ESM + CJS + declarations via tsup
-npm run demo:serve  # build and serve the interactive demo locally
 ```
 
-The repo is pinned to **Node 24.14.0** via `.nvmrc` / `.node-version` /
-`.tool-versions` / Volta.
+The repo is pinned to **Node 24.14.0** via Volta. Use whichever version manager you prefer.
 
 ### Support
 

@@ -2,21 +2,17 @@ import { strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import {
-	calcSkills,
-	computeStepByStepSkill,
-	defineCalcSkill,
-	getCalcSkillByName,
-	listCalcSkills,
-	reviewCalculationHistorySkill,
+	defineTelegramSkill,
+	getTelegramSkillByName,
+	listTelegramSkills,
+	telegramSkills,
 } from './index.ts';
 
 describe('skills barrel', () => {
 	it('exports all expected symbols', () => {
-		strictEqual(typeof defineCalcSkill, 'function');
-		strictEqual(typeof listCalcSkills, 'function');
-		strictEqual(typeof getCalcSkillByName, 'function');
-		strictEqual(Array.isArray(calcSkills), true);
-		strictEqual(typeof computeStepByStepSkill.name, 'string');
-		strictEqual(typeof reviewCalculationHistorySkill.name, 'string');
+		strictEqual(typeof defineTelegramSkill, 'function');
+		strictEqual(typeof listTelegramSkills, 'function');
+		strictEqual(typeof getTelegramSkillByName, 'function');
+		strictEqual(Array.isArray(telegramSkills), true);
 	});
 });

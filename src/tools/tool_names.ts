@@ -1,3 +1,4 @@
-export const calculateToolName = 'calculate' as const;
-export const reviewHistoryToolName = 'review_history' as const;
-export const clearHistoryToolName = 'clear_history' as const;
+export const tgReadToolName = 'tg_read' as const;
+export const tgSendToolName = 'tg_send' as const;
+export const tgManageToolName = 'tg_manage' as const;
+export const tgConnectToolName = 'tg_connect' as const;

@@ -1,16 +1,24 @@
-import { computeStepByStepSkill } from './compute-step-by-step.ts';
-import { reviewCalculationHistorySkill } from './review-calculation-history.ts';
-import type { CalcSkillRegistry } from './skill_types.ts';
+import { broadcastToAudience } from './broadcast-to-audience.ts';
+import { handleGroupAdministration } from './handle-group-administration.ts';
+import { manageTelegramConversations } from './manage-telegram-conversations.ts';
+import { moderateChatEffectively } from './moderate-chat-effectively.ts';
+import { searchAndRetrieveMessages } from './search-and-retrieve-messages.ts';
+import type { TelegramSkillRegistry } from './skill_types.ts';
+import { streamProgressiveResponses } from './stream-progressive-responses.ts';
 
-export const calcSkills = [
-	computeStepByStepSkill,
-	reviewCalculationHistorySkill,
-] satisfies CalcSkillRegistry;
+export const telegramSkills: TelegramSkillRegistry = [
+	manageTelegramConversations,
+	handleGroupAdministration,
+	streamProgressiveResponses,
+	moderateChatEffectively,
+	searchAndRetrieveMessages,
+	broadcastToAudience,
+];
 
-export function listCalcSkills() {
-	return [...calcSkills];
+export function listTelegramSkills() {
+	return [...telegramSkills];
 }
 
-export function getCalcSkillByName(name: string) {
-	return calcSkills.find((skill) => skill.name === name) ?? null;
+export function getTelegramSkillByName(name: string) {
+	return telegramSkills.find((skill) => skill.name === name) ?? null;
 }

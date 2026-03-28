@@ -1,11 +1,11 @@
-export interface CalcSkill {
+export interface TelegramSkill {
 	name: string;
 	description: string;
 	content: string;
 }
 
-export type CalcSkillRegistry = readonly CalcSkill[];
+export type TelegramSkillRegistry = readonly TelegramSkill[];
 
-export function defineCalcSkill<TSkill extends CalcSkill>(skill: TSkill): TSkill {
+export function defineTelegramSkill<TSkill extends TelegramSkill>(skill: TSkill): TSkill {
 	return skill;
 }

@@ -1,11 +1,11 @@
 import { strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { defineCalcSkill } from './skill_types.ts';
+import { defineTelegramSkill } from './skill_types.ts';
 
-describe('defineCalcSkill', () => {
+describe('defineTelegramSkill', () => {
 	it('returns the skill unchanged (identity function for type inference)', () => {
-		const skill = defineCalcSkill({ name: 'test', description: 'a test', content: '# Test' });
+		const skill = defineTelegramSkill({ name: 'test', description: 'a test', content: '# Test' });
 		strictEqual(skill.name, 'test');
 		strictEqual(skill.description, 'a test');
 	});
