@@ -6,8 +6,12 @@ import { incrementStat } from './bot_state/index.ts';
 import { insertCallback } from './callbacks/index.ts';
 import { getChat, upsertChat } from './chats/index.ts';
 import type { TelegramDb } from './database.ts';
+import { downloadFile } from './executor/download_file.ts';
+import { upsertFile } from './files/index.ts';
+import { adaptBot } from './lib/adapt_bot.ts';
 import { upsertMember } from './members/index.ts';
 import { insertMessage, updateMessage } from './messages/index.ts';
+import { extractDownloadableFiles } from './normalize/extract_downloadable_files.ts';
 import { normalizeChat } from './normalize/normalize_chat.ts';
 import { normalizeMember } from './normalize/normalize_member.ts';
 import { normalizeMessage } from './normalize/normalize_message.ts';
@@ -52,6 +56,7 @@ export interface TelegramBot {
 export function createBot(config: BotConfig): TelegramBot {
 	const { db } = config;
 	const grammy = new Bot(config.token);
+	const client = adaptBot(grammy);
 
 	grammy.on('message', async (ctx) => {
 		const msg = ctx.message;
@@ -60,6 +65,14 @@ export function createBot(config: BotConfig): TelegramBot {
 		const chat = upsertChat(db, normalizeChat(msg.chat));
 		const stored = insertMessage(db, normalizeMessage(msg, 'in', ctx.me.id));
 		incrementStat(db, 'messages_in');
+
+		// Eagerly download all files in background — fire and forget.
+		// Errors are swallowed; checksum stays null and can be retried later.
+		for (const f of extractDownloadableFiles(msg)) {
+			upsertFile(db, { ...f, chatId: msg.chat.id, messageId: msg.message_id, checksum: null });
+			downloadFile(client, db, f.fileId).catch(() => {});
+		}
+
 		await config.onMessage?.({
 			message: stored,
 			user,
