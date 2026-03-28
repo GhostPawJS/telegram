@@ -12,7 +12,7 @@ describe('createStream', () => {
 		await stream.end();
 		const sends = mock.calls.filter((c) => c.method === 'sendMessage');
 		assert.equal(sends.length, 1);
-		assert.equal(sends[0]?.args[1], 'hello');
+		assert.equal((sends[0]?.args[0] as Record<string, unknown>)?.text, 'hello');
 		assert.ok(stream.done);
 	});
 
@@ -25,7 +25,7 @@ describe('createStream', () => {
 		await stream.end();
 		const sends = mock.calls.filter((c) => c.method === 'sendMessage');
 		assert.equal(sends.length, 1);
-		assert.equal(sends[0]?.args[1], 'foo bar baz');
+		assert.equal((sends[0]?.args[0] as Record<string, unknown>)?.text, 'foo bar baz');
 	});
 
 	it('edit mode uses editMessageText when messageId provided', async () => {
@@ -35,15 +35,16 @@ describe('createStream', () => {
 		await stream.end();
 		const edits = mock.calls.filter((c) => c.method === 'editMessageText');
 		assert.equal(edits.length, 1);
-		assert.equal(edits[0]?.args[0], 5);
-		assert.equal(edits[0]?.args[1], 42);
-		assert.equal(edits[0]?.args[2], 'updated text');
+		const params = edits[0]?.args[0] as Record<string, unknown>;
+		assert.equal(params?.chat_id, 5);
+		assert.equal(params?.message_id, 42);
+		assert.equal(params?.text, 'updated text');
 		assert.equal(mock.calls.filter((c) => c.method === 'sendMessage').length, 0);
 	});
 
 	it('overflow: text longer than maxLength splits into two messages', async () => {
 		const mock = createMockGrammy();
-		mock.setResponse('sendMessage', { ok: true, result: { message_id: 10 } });
+		mock.setResponse('sendMessage', { message_id: 10 });
 		const longText = `${'a'.repeat(60)}\n${'b'.repeat(60)}`;
 		const stream = createStream(mock.bot, { chatId: 2, maxLength: 64, debounceMs: 0 });
 		stream.write(longText);
@@ -82,5 +83,39 @@ describe('createStream', () => {
 		stream.write('x');
 		await stream.end();
 		assert.equal(stream.done, true);
+	});
+
+	it('append() flushes immediately without debounce', async () => {
+		const mock = createMockGrammy();
+		mock.setResponse('sendMessage', { message_id: 1 });
+		mock.setResponse('editMessageText', {});
+		const stream = createStream(mock.bot, { chatId: 1, debounceMs: 5000 });
+		await stream.append('hello');
+		await stream.append(' world');
+		const sends = mock.calls.filter((c) => c.method === 'sendMessage');
+		const edits = mock.calls.filter((c) => c.method === 'editMessageText');
+		assert.equal(sends.length, 1);
+		assert.equal(edits.length, 1);
+		assert.equal((edits[0]?.args[0] as Record<string, unknown>)?.text, 'hello world');
+	});
+
+	it('replace() resets buffer and flushes immediately', async () => {
+		const mock = createMockGrammy();
+		mock.setResponse('sendMessage', { message_id: 1 });
+		mock.setResponse('editMessageText', {});
+		const stream = createStream(mock.bot, { chatId: 1, debounceMs: 5000 });
+		await stream.append('first');
+		await stream.replace('second');
+		const edits = mock.calls.filter((c) => c.method === 'editMessageText');
+		assert.equal((edits[0]?.args[0] as Record<string, unknown>)?.text, 'second');
+	});
+
+	it('parseMode is passed in params', async () => {
+		const mock = createMockGrammy();
+		const stream = createStream(mock.bot, { chatId: 1, parseMode: 'HTML', debounceMs: 0 });
+		stream.write('<b>bold</b>');
+		await stream.end();
+		const sends = mock.calls.filter((c) => c.method === 'sendMessage');
+		assert.equal((sends[0]?.args[0] as Record<string, unknown>)?.parse_mode, 'HTML');
 	});
 });

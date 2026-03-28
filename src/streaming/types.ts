@@ -8,7 +8,11 @@ export interface StreamOpts {
 }
 
 export interface StreamHandle {
-	/** Append text to the stream */
+	/** Append a chunk and flush immediately (no debounce) */
+	append(chunk: string): Promise<void>;
+	/** Replace entire buffer content and flush immediately (no debounce) */
+	replace(text: string): Promise<void>;
+	/** Append text to the debounce buffer (fire-and-forget) */
 	write(chunk: string): void;
 	/** Signal end of stream — flushes final content */
 	end(): Promise<void>;

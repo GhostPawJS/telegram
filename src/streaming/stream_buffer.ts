@@ -17,6 +17,10 @@ export class StreamBuffer {
 		this._text = '';
 	}
 
+	reset(text: string): void {
+		this._text = text;
+	}
+
 	clone(): string {
 		return this._text;
 	}

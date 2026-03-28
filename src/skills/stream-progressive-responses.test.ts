@@ -25,9 +25,8 @@ describe('streamProgressiveResponses skill', () => {
 		strictEqual(sends.length, 1);
 		const call = sends[0];
 		ok(call !== undefined);
-		// createStream calls bot.call('sendMessage', chatId, text, opts) — args[1] is text
-		const text = call.args[1] as string;
-		strictEqual(text, 'Thinking...');
+		const params = call.args[0] as Record<string, unknown>;
+		strictEqual(params?.text, 'Thinking...');
 	});
 
 	it('multiple chunks are batched into one call', async () => {
@@ -76,9 +75,8 @@ describe('streamProgressiveResponses skill', () => {
 		ok(sends.length > 0);
 		const call = sends[0];
 		ok(call !== undefined);
-		// createStream calls bot.call('sendMessage', chatId, text, opts) — args[2] is opts
-		const opts = call.args[2] as Record<string, unknown>;
-		strictEqual(opts?.parse_mode, 'HTML');
+		const params = call.args[0] as Record<string, unknown>;
+		strictEqual(params?.parse_mode, 'HTML');
 	});
 
 	it('render.markdownToHtml integration — output is passed to stream', async () => {
@@ -94,14 +92,12 @@ describe('streamProgressiveResponses skill', () => {
 		ok(sends.length > 0);
 		const call = sends[0];
 		ok(call !== undefined);
-		// createStream calls bot.call('sendMessage', chatId, text, opts) — args[1] is text
-		const sentText = call.args[1] as string;
-		ok(sentText.includes('<b>bold</b>'));
+		const params = call.args[0] as Record<string, unknown>;
+		ok((params?.text as string)?.includes('<b>bold</b>'));
 	});
 
 	it('overflow: text longer than maxLength splits into two messages', async () => {
 		const mock = createMockGrammy();
-		// maxLength: 50, write 60+ chars with a space so chainOverflow can split
 		const longText = 'abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz12345';
 		ok(longText.length > 50);
 
@@ -158,7 +154,6 @@ describe('streamProgressiveResponses skill', () => {
 		stream.write('first');
 		await stream.end();
 
-		// The skill says "do not call write after end" — verify the system handles it gracefully
 		let threw = false;
 		try {
 			stream.write('after end');
@@ -172,8 +167,7 @@ describe('streamProgressiveResponses skill', () => {
 
 	it('debounceMs guidance: low debounceMs leads to more API calls (verify)', async () => {
 		const mock = createMockGrammy();
-		// With debounceMs:0 and a tick between each write, each write flushes independently
-		mock.setResponse('sendMessage', { ok: true, result: { message_id: 1 } });
+		mock.setResponse('sendMessage', { message_id: 1 });
 
 		const stream = createStream(mock.bot, { chatId: 1, debounceMs: 0 });
 
@@ -188,7 +182,6 @@ describe('streamProgressiveResponses skill', () => {
 
 		await stream.end();
 
-		// With debounceMs:0, each write followed by a tick triggers a separate flush
 		const calls = mock.calls.filter(
 			(c) => c.method === 'sendMessage' || c.method === 'editMessageText',
 		);
