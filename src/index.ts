@@ -1,11 +1,11 @@
-export { adaptBot } from './lib/adapt_bot.ts';
-export * as keyboards from './keyboards/index.ts';
 export { createBot } from './bot.ts';
 export type { TelegramDb } from './database.ts';
 export { DEFAULTS } from './defaults.ts';
 export * from './errors.ts';
 export * as errors from './errors.ts';
 export { initTelegramTables } from './init_telegram_tables.ts';
+export * as keyboards from './keyboards/index.ts';
+export { adaptBot } from './lib/adapt_bot.ts';
 export * as network from './network.ts';
 export * as read from './read.ts';
 export * as render from './render.ts';
