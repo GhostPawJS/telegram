@@ -1,6 +1,6 @@
 {
 	"name": "@ghostpaw/telegram",
-	"version": "0.1.4",
+	"version": "0.2.0",
 	"description": "Telegram bot channel engine — grammy transport, SQLite message mirror, FTS5 full-text search, markdown rendering, and a structured LLM tool facade. Node 24+, built-in node:sqlite.",
 	"type": "module",
 	"exports": {
