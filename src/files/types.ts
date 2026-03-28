@@ -9,7 +9,6 @@ export type FileType =
 	| 'video_note'
 	| 'thumbnail'
 	| 'other';
-export type StorageStatus = 'remote_only' | 'downloaded' | 'failed';
 
 export interface FileRow {
 	file_id: string;
@@ -23,10 +22,7 @@ export interface FileRow {
 	width: number | null;
 	height: number | null;
 	duration: number | null;
-	local_path: string | null;
-	local_hash: string | null;
-	storage_status: string;
-	downloaded_at: number | null;
+	checksum: string | null;
 	created_at: number;
 	updated_at: number;
 }
@@ -43,10 +39,8 @@ export interface FileEntry {
 	width: number | null;
 	height: number | null;
 	duration: number | null;
-	localPath: string | null;
-	localHash: string | null;
-	storageStatus: StorageStatus;
-	downloadedAt: number | null;
+	/** SHA-256 hex of the file content. null = not yet downloaded. */
+	checksum: string | null;
 	createdAt: number;
 	updatedAt: number;
 }
@@ -55,7 +49,8 @@ export interface FileQuery {
 	chatId?: number;
 	messageId?: number;
 	type?: FileType;
-	storageStatus?: StorageStatus;
+	/** Filter to only entries that have (or have not) been downloaded. */
+	hasBlob?: boolean;
 	limit?: number;
 }
 

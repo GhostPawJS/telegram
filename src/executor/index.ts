@@ -1,7 +1,6 @@
 export { answerCallback } from './answer_callback.ts';
 export { broadcast } from './broadcast.ts';
 export { deleteMessage } from './delete_message.ts';
-export type { DownloadResult } from './download_file.ts';
 export { downloadFile } from './download_file.ts';
 export { editMessage } from './edit_message.ts';
 export { forwardMessage } from './forward_message.ts';

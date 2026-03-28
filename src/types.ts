@@ -10,7 +10,7 @@ export type {
 	SendOpts,
 	SentMessage,
 } from './executor/index.ts';
-export type { FileEntry, FileInput, FileQuery, FileType, StorageStatus } from './files/types.ts';
+export type { FileEntry, FileInput, FileQuery, FileType } from './files/types.ts';
 export type {
 	AdminRights,
 	ChatPermissions,

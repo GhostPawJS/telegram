@@ -2,7 +2,6 @@ export type {
 	BroadcastOpts,
 	BroadcastResult,
 	ChatAction,
-	DownloadResult,
 	EditOpts,
 	MediaInput,
 	ParseMode,
@@ -29,5 +28,7 @@ export {
 	setReaction,
 	unpinMessage,
 } from './executor/index.ts';
+export type { FileEntry } from './files/index.ts';
+export { getFileBlob, storeFileBlob } from './files/index.ts';
 export type { StreamHandle, StreamOpts } from './streaming/index.ts';
 export { createStream } from './streaming/index.ts';

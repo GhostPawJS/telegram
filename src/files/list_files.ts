@@ -10,20 +10,18 @@ export function listFiles(db: TelegramDb, query: FileQuery = {}): FileEntry[] {
 		conditions.push('chat_id = ?');
 		params.push(query.chatId);
 	}
-
 	if (query.messageId !== undefined) {
 		conditions.push('message_id = ?');
 		params.push(query.messageId);
 	}
-
 	if (query.type !== undefined) {
 		conditions.push('type = ?');
 		params.push(query.type);
 	}
-
-	if (query.storageStatus !== undefined) {
-		conditions.push('storage_status = ?');
-		params.push(query.storageStatus);
+	if (query.hasBlob === true) {
+		conditions.push('checksum IS NOT NULL');
+	} else if (query.hasBlob === false) {
+		conditions.push('checksum IS NULL');
 	}
 
 	const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';

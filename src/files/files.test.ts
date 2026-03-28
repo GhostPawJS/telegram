@@ -1,15 +1,15 @@
-import { strictEqual, throws } from 'node:assert/strict';
+import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict';
 import { beforeEach, describe, it } from 'node:test';
 
 import type { TelegramDb } from '../database.ts';
-import { TelegramNotFoundError, TelegramStateError } from '../errors.ts';
+import { TelegramNotFoundError } from '../errors.ts';
 import { openTestDatabase } from '../lib/open-test-database.ts';
-import { downloadFile } from './download_file.ts';
 import { getFile } from './get_file.ts';
+import { getFileBlob } from './get_file_blob.ts';
 import { initFileTables } from './init_file_tables.ts';
 import { listFiles } from './list_files.ts';
+import { storeFileBlob } from './store_file_blob.ts';
 import type { FileInput } from './types.ts';
-import { updateStorageStatus } from './update_storage_status.ts';
 import { upsertFile } from './upsert_file.ts';
 
 const baseInput: FileInput = {
@@ -24,10 +24,7 @@ const baseInput: FileInput = {
 	width: 800,
 	height: 600,
 	duration: null,
-	localPath: null,
-	localHash: null,
-	storageStatus: 'remote_only',
-	downloadedAt: null,
+	checksum: null,
 };
 
 describe('files module', () => {
@@ -53,49 +50,47 @@ describe('files module', () => {
 			strictEqual(entry.width, 800);
 			strictEqual(entry.height, 600);
 			strictEqual(entry.duration, null);
-			strictEqual(entry.localPath, null);
-			strictEqual(entry.localHash, null);
-			strictEqual(entry.storageStatus, 'remote_only');
-			strictEqual(entry.downloadedAt, null);
+			strictEqual(entry.checksum, null);
 			strictEqual(entry.createdAt, 1000);
 			strictEqual(entry.updatedAt, 1000);
 		});
 
 		it('idempotency: second call updates metadata and preserves created_at', () => {
 			upsertFile(db, baseInput, 1000);
-
 			const updated = upsertFile(
 				db,
-				{
-					...baseInput,
-					fileUniqueId: 'unique-001-v2',
-					mimeType: 'image/png',
-					fileName: 'photo_updated.png',
-					fileSize: 99999,
-				},
+				{ ...baseInput, fileUniqueId: 'unique-001-v2', mimeType: 'image/png', fileSize: 99999 },
 				2000,
 			);
 
 			strictEqual(updated.fileUniqueId, 'unique-001-v2');
 			strictEqual(updated.mimeType, 'image/png');
-			strictEqual(updated.fileName, 'photo_updated.png');
 			strictEqual(updated.fileSize, 99999);
 			strictEqual(updated.createdAt, 1000);
 			strictEqual(updated.updatedAt, 2000);
+		});
+
+		it('upsert does not overwrite an existing checksum', () => {
+			upsertFile(db, baseInput, 1000);
+			const data = Buffer.from('hello');
+			storeFileBlob(db, 'file-001', data, 1500);
+
+			// second upsert must not clear the checksum
+			upsertFile(db, { ...baseInput, fileName: 'renamed.jpg' }, 2000);
+			const entry = getFile(db, 'file-001');
+			ok(entry?.checksum !== null, 'checksum must survive re-upsert');
 		});
 	});
 
 	describe('getFile', () => {
 		it('returns null for unknown fileId', () => {
-			const result = getFile(db, 'nonexistent');
-			strictEqual(result, null);
+			strictEqual(getFile(db, 'nonexistent'), null);
 		});
 	});
 
 	describe('listFiles', () => {
 		it('returns empty array with no rows', () => {
-			const results = listFiles(db);
-			strictEqual(results.length, 0);
+			strictEqual(listFiles(db).length, 0);
 		});
 
 		it('filters by type', () => {
@@ -105,23 +100,27 @@ describe('files module', () => {
 
 			const photos = listFiles(db, { type: 'photo' });
 			strictEqual(photos.length, 2);
-			strictEqual(
-				photos.every((e) => e.type === 'photo'),
-				true,
-			);
+			ok(photos.every((e) => e.type === 'photo'));
 		});
 
-		it('filters by storageStatus', () => {
-			upsertFile(db, { ...baseInput, fileId: 'f1', storageStatus: 'remote_only' }, 1000);
-			upsertFile(db, { ...baseInput, fileId: 'f2', storageStatus: 'downloaded' }, 1001);
-			upsertFile(db, { ...baseInput, fileId: 'f3', storageStatus: 'downloaded' }, 1002);
+		it('filters by hasBlob: true returns only downloaded entries', () => {
+			upsertFile(db, { ...baseInput, fileId: 'f1' }, 1000);
+			upsertFile(db, { ...baseInput, fileId: 'f2' }, 1001);
+			storeFileBlob(db, 'f1', Buffer.from('data'), 1500);
 
-			const downloaded = listFiles(db, { storageStatus: 'downloaded' });
-			strictEqual(downloaded.length, 2);
-			strictEqual(
-				downloaded.every((e) => e.storageStatus === 'downloaded'),
-				true,
-			);
+			const downloaded = listFiles(db, { hasBlob: true });
+			strictEqual(downloaded.length, 1);
+			strictEqual(downloaded[0]?.fileId, 'f1');
+		});
+
+		it('filters by hasBlob: false returns only pending entries', () => {
+			upsertFile(db, { ...baseInput, fileId: 'f1' }, 1000);
+			upsertFile(db, { ...baseInput, fileId: 'f2' }, 1001);
+			storeFileBlob(db, 'f1', Buffer.from('data'), 1500);
+
+			const pending = listFiles(db, { hasBlob: false });
+			strictEqual(pending.length, 1);
+			strictEqual(pending[0]?.fileId, 'f2');
 		});
 
 		it('filters by chatId', () => {
@@ -131,63 +130,88 @@ describe('files module', () => {
 
 			const chat100 = listFiles(db, { chatId: 100 });
 			strictEqual(chat100.length, 2);
-			strictEqual(
-				chat100.every((e) => e.chatId === 100),
-				true,
-			);
+			ok(chat100.every((e) => e.chatId === 100));
 		});
 	});
 
-	describe('updateStorageStatus', () => {
-		it('sets downloaded_at when status is downloaded', () => {
+	describe('storeFileBlob', () => {
+		it('stores bytes and sets checksum on the file entry', () => {
 			upsertFile(db, baseInput, 1000);
-			const entry = updateStorageStatus(
-				db,
-				'file-001',
-				'downloaded',
-				'/tmp/file.jpg',
-				'abc123',
-				2000,
-			);
+			const data = Buffer.from('hello world');
+			const entry = storeFileBlob(db, 'file-001', data, 2000);
 
-			strictEqual(entry.storageStatus, 'downloaded');
-			strictEqual(entry.localPath, '/tmp/file.jpg');
-			strictEqual(entry.localHash, 'abc123');
-			strictEqual(entry.downloadedAt, 2000);
+			ok(entry.checksum !== null);
+			strictEqual(entry.checksum?.length, 64); // SHA-256 hex = 64 chars
 			strictEqual(entry.updatedAt, 2000);
 		});
 
-		it('sets downloaded_at to null when status is failed', () => {
-			upsertFile(db, baseInput, 1000);
-			// First mark as downloaded
-			updateStorageStatus(db, 'file-001', 'downloaded', '/tmp/file.jpg', 'abc123', 2000);
-			// Then mark as failed
-			const entry = updateStorageStatus(db, 'file-001', 'failed', null, null, 3000);
+		it('deduplication: identical bytes stored only once in file_blobs', () => {
+			upsertFile(db, { ...baseInput, fileId: 'f1' }, 1000);
+			upsertFile(db, { ...baseInput, fileId: 'f2' }, 1001);
+			const data = Buffer.from('same content');
 
-			strictEqual(entry.storageStatus, 'failed');
-			strictEqual(entry.downloadedAt, null);
-			strictEqual(entry.updatedAt, 3000);
+			const e1 = storeFileBlob(db, 'f1', data, 1500);
+			const e2 = storeFileBlob(db, 'f2', data, 1600);
+
+			// Both file entries point to the same blob row
+			strictEqual(e1.checksum, e2.checksum);
+
+			// Only one blob row exists
+			const count = (db.prepare('SELECT COUNT(*) as n FROM file_blobs').get() as { n: number }).n;
+			strictEqual(count, 1);
+		});
+
+		it('different content produces different checksums', () => {
+			upsertFile(db, { ...baseInput, fileId: 'f1' }, 1000);
+			upsertFile(db, { ...baseInput, fileId: 'f2' }, 1001);
+
+			const e1 = storeFileBlob(db, 'f1', Buffer.from('content-a'), 1500);
+			const e2 = storeFileBlob(db, 'f2', Buffer.from('content-b'), 1600);
+
+			ok(e1.checksum !== e2.checksum);
 		});
 
 		it('throws TelegramNotFoundError for unknown fileId', () => {
-			throws(
-				() => updateStorageStatus(db, 'nonexistent', 'downloaded'),
-				(err: unknown) => err instanceof TelegramNotFoundError,
-			);
+			let threw = false;
+			try {
+				storeFileBlob(db, 'nonexistent', Buffer.from('data'));
+			} catch (err) {
+				threw = true;
+				ok(err instanceof TelegramNotFoundError);
+			}
+			ok(threw);
 		});
 	});
 
-	describe('downloadFile', () => {
-		it('throws TelegramStateError', async () => {
-			await upsertFile(db, baseInput, 1000);
-			let threw = false;
-			try {
-				await downloadFile(db, null, 'file-001', '/tmp/out.jpg');
-			} catch (err) {
-				threw = true;
-				strictEqual(err instanceof TelegramStateError, true);
-			}
-			strictEqual(threw, true);
+	describe('getFileBlob', () => {
+		it('returns null when file has not been downloaded', () => {
+			upsertFile(db, baseInput, 1000);
+			strictEqual(getFileBlob(db, 'file-001'), null);
+		});
+
+		it('returns null for unknown fileId', () => {
+			strictEqual(getFileBlob(db, 'nonexistent'), null);
+		});
+
+		it('returns the exact bytes that were stored', () => {
+			upsertFile(db, baseInput, 1000);
+			const original = Buffer.from('exact bytes here');
+			storeFileBlob(db, 'file-001', original, 2000);
+
+			const retrieved = getFileBlob(db, 'file-001');
+			ok(retrieved !== null);
+			deepStrictEqual(retrieved, original);
+		});
+
+		it('two file_ids sharing a blob both return the correct bytes', () => {
+			upsertFile(db, { ...baseInput, fileId: 'f1' }, 1000);
+			upsertFile(db, { ...baseInput, fileId: 'f2' }, 1001);
+			const data = Buffer.from('shared content');
+			storeFileBlob(db, 'f1', data, 1500);
+			storeFileBlob(db, 'f2', data, 1600);
+
+			deepStrictEqual(getFileBlob(db, 'f1'), data);
+			deepStrictEqual(getFileBlob(db, 'f2'), data);
 		});
 	});
 });

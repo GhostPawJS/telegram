@@ -1,4 +1,4 @@
-import type { FileEntry, FileRow, FileType, StorageStatus } from './types.ts';
+import type { FileEntry, FileRow, FileType } from './types.ts';
 
 export function mapFileRow(row: FileRow): FileEntry {
 	return {
@@ -13,10 +13,7 @@ export function mapFileRow(row: FileRow): FileEntry {
 		width: row.width,
 		height: row.height,
 		duration: row.duration,
-		localPath: row.local_path,
-		localHash: row.local_hash,
-		storageStatus: row.storage_status as StorageStatus,
-		downloadedAt: row.downloaded_at,
+		checksum: row.checksum,
 		createdAt: row.created_at,
 		updatedAt: row.updated_at,
 	};

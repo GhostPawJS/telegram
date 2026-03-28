@@ -10,9 +10,8 @@ export function upsertFile(db: TelegramDb, data: FileInput, now?: number): FileE
 	db.prepare(
 		`INSERT INTO files (
       file_id, file_unique_id, chat_id, message_id, type, mime_type, file_name,
-      file_size, width, height, duration, local_path, local_hash, storage_status,
-      downloaded_at, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      file_size, width, height, duration, checksum, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(file_id) DO UPDATE SET
       file_unique_id = excluded.file_unique_id,
       chat_id        = excluded.chat_id,
@@ -24,10 +23,6 @@ export function upsertFile(db: TelegramDb, data: FileInput, now?: number): FileE
       width          = excluded.width,
       height         = excluded.height,
       duration       = excluded.duration,
-      local_path     = excluded.local_path,
-      local_hash     = excluded.local_hash,
-      storage_status = excluded.storage_status,
-      downloaded_at  = excluded.downloaded_at,
       updated_at     = excluded.updated_at`,
 	).run(
 		data.fileId,
@@ -41,10 +36,7 @@ export function upsertFile(db: TelegramDb, data: FileInput, now?: number): FileE
 		data.width ?? null,
 		data.height ?? null,
 		data.duration ?? null,
-		data.localPath ?? null,
-		data.localHash ?? null,
-		data.storageStatus,
-		data.downloadedAt ?? null,
+		data.checksum ?? null,
 		ts,
 		ts,
 	);
