@@ -144,18 +144,6 @@ Six workflow playbooks as markdown strings:
 | `search-and-retrieve-messages` | Full-text search, reply chains, edit history |
 | `stream-progressive-responses` | Debounced streaming with overflow and error recovery |
 
-## Ecosystem
-
-Telegram is one component of the GhostPaw cognitive substrate:
-
-| Package | Domain |
-|---|---|
-| **souls** | Cognitive identity — traits, crystallization, level-up |
-| **questlog** | Tasks and commitments — plan, track, complete, reward |
-| **telegram** | Bot channel — mirror, query, send, moderate |
-
-Each package owns one slice of state with the same architecture: Node 24+, built-in `node:sqlite`, zero config.
-
 ## Documentation
 
 | Document | Audience |
