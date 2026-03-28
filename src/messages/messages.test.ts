@@ -454,5 +454,25 @@ describe('messages module', () => {
 			const results = searchMessages(db, 100, 'nonexistentword');
 			strictEqual(results.length, 0);
 		});
+
+		it('diacritic folding: query without accent finds text with accent', () => {
+			insertMessage(
+				db,
+				makeMessage({ messageId: 1, textPlain: 'Meeting in café tomorrow' }),
+				1000,
+			);
+			const results = searchMessages(db, 100, 'cafe');
+			strictEqual(results.length, 1);
+		});
+
+		it('diacritic folding: query with accent finds text without accent', () => {
+			insertMessage(
+				db,
+				makeMessage({ messageId: 1, textPlain: 'Meeting in cafe tomorrow' }),
+				1000,
+			);
+			const results = searchMessages(db, 100, 'café');
+			strictEqual(results.length, 1);
+		});
 	});
 });

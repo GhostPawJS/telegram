@@ -47,7 +47,10 @@ export function initMessageTables(db: TelegramDb): void {
     CREATE INDEX IF NOT EXISTS idx_messages_reply ON messages(chat_id, reply_to_message_id) WHERE reply_to_message_id IS NOT NULL;
 
     CREATE VIRTUAL TABLE IF NOT EXISTS messages_fts USING fts5(
-      text_plain, content='messages', content_rowid='rowid'
+      text_plain,
+      content='messages',
+      content_rowid='rowid',
+      tokenize='unicode61 remove_diacritics 2'
     );
 
     CREATE TRIGGER IF NOT EXISTS tg_messages_ai AFTER INSERT ON messages BEGIN
