@@ -1,4 +1,5 @@
 import type { CallbackEntry } from '../callbacks/types.ts';
+import type { Chat } from '../chats/types.ts';
 import type { Member } from '../members/types.ts';
 import type { StoredMessage } from '../messages/types.ts';
 import type { User } from '../users/types.ts';
@@ -6,11 +7,15 @@ import type { User } from '../users/types.ts';
 export interface IncomingMessage {
 	message: StoredMessage;
 	user: User | null;
+	chat: Chat | null;
+	reply: (text: string) => Promise<void>;
 }
 
 export interface CallbackEvent {
 	callback: CallbackEntry;
 	user: User | null;
+	chat: Chat | null;
+	answer: (text?: string) => Promise<void>;
 }
 
 export interface MemberUpdateEvent {

@@ -1,7 +1,8 @@
 import { Bot } from 'grammy';
 
+import { incrementStat } from './bot_state/index.ts';
 import { insertCallback } from './callbacks/index.ts';
-import { upsertChat } from './chats/index.ts';
+import { getChat, upsertChat } from './chats/index.ts';
 import type { TelegramDb } from './database.ts';
 import { upsertMember } from './members/index.ts';
 import { insertMessage, updateMessage } from './messages/index.ts';
@@ -47,21 +48,34 @@ export function createBot(config: BotConfig): TelegramBot {
 		const msg = ctx.message;
 		if (!msg) return;
 		const user = msg.from ? upsertUser(db, normalizeUser(msg.from)) : null;
-		upsertChat(db, normalizeChat(msg.chat));
+		const chat = upsertChat(db, normalizeChat(msg.chat));
 		const stored = insertMessage(db, normalizeMessage(msg, 'in', ctx.me.id));
-		await config.onMessage?.({ message: stored, user });
+		incrementStat(db, 'messages_in');
+		await config.onMessage?.({
+			message: stored,
+			user,
+			chat,
+			reply: (text) => ctx.reply(text).then(() => undefined),
+		});
 	});
 
 	grammy.on('edited_message', async (ctx) => {
 		const msg = ctx.editedMessage;
 		if (!msg) return;
 		const user = msg.from ? upsertUser(db, normalizeUser(msg.from)) : null;
+		const chat = getChat(db, msg.chat.id);
 		try {
 			const updated = updateMessage(db, msg.chat.id, msg.message_id, {
 				editDate: msg.edit_date ? msg.edit_date * 1000 : null,
 				text: msg.text ?? null,
 			});
-			await config.onEditedMessage?.({ message: updated, user });
+			incrementStat(db, 'edits');
+			await config.onEditedMessage?.({
+				message: updated,
+				user,
+				chat,
+				reply: (text) => ctx.reply(text).then(() => undefined),
+			});
 		} catch {
 			// message not persisted yet — ignore
 		}
@@ -70,9 +84,11 @@ export function createBot(config: BotConfig): TelegramBot {
 	grammy.on('callback_query', async (ctx) => {
 		const cq = ctx.callbackQuery;
 		const user = upsertUser(db, normalizeUser(cq.from));
+		const chatId = cq.message?.chat.id ?? 0;
+		const chat = chatId ? getChat(db, chatId) : null;
 		const entry = insertCallback(db, {
 			callbackId: cq.id,
-			chatId: cq.message?.chat.id ?? 0,
+			chatId,
 			messageId: cq.message?.message_id ?? 0,
 			userId: cq.from.id,
 			data: cq.data ?? null,
@@ -81,7 +97,16 @@ export function createBot(config: BotConfig): TelegramBot {
 			answeredAt: null,
 			expiresAt: null,
 		});
-		await config.onCallback?.({ callback: entry, user });
+		incrementStat(db, 'callbacks');
+		await config.onCallback?.({
+			callback: entry,
+			user,
+			chat,
+			answer: (text) =>
+				text !== undefined
+					? ctx.answerCallbackQuery({ text }).then(() => undefined)
+					: ctx.answerCallbackQuery().then(() => undefined),
+		});
 	});
 
 	grammy.on('my_chat_member', async (ctx) => {
@@ -114,6 +139,7 @@ export function createBot(config: BotConfig): TelegramBot {
 			oldEmojis,
 			newEmojis,
 		);
+		incrementStat(db, 'reactions');
 		await config.onReaction?.({
 			chatId: reaction.chat.id,
 			messageId: reaction.message_id,
