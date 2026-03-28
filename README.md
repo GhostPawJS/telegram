@@ -5,9 +5,9 @@
 [![license](https://img.shields.io/npm/l/@ghostpaw/telegram)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 
-Telegram bot channel engine — grammy transport, SQLite message mirror, markdown rendering, and agent tools.
+Telegram bot channel engine — grammy transport, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
 
-Every incoming update is mirrored into a local SQLite database before your handler runs, giving you a persistent, queryable record of everything the bot sees. It ships as a single prebundled blob designed for two audiences at once: human developers building bot backends in code, and LLM agents operating through a structured tool facade.
+Every incoming update is mirrored into a local SQLite database before your handler runs, giving you a persistent, queryable record of everything the bot sees — including the raw bytes of every photo, document, voice message, and video, downloaded and stored immediately on receipt. It ships as a single prebundled blob designed for two audiences at once: human developers building bot backends in code, and LLM agents operating through a structured tool facade.
 
 ## Install
 
@@ -34,19 +34,32 @@ const bot = createBot({
   },
 });
 
-await bot.start();
+await bot.start(); // long-polling
+```
+
+Webhook mode — pass a `webhook` config instead:
+
+```ts
+const bot = createBot({
+  token: process.env.TELEGRAM_TOKEN!,
+  db,
+  webhook: { path: '/webhook', port: 8443, secretToken: process.env.TG_SECRET },
+  onMessage: async ({ message, user }) => { /* ... */ },
+});
+
+await bot.start(); // listens on port 8443
 ```
 
 ## What It Stores
 
 Every update is mirrored into SQLite before your handler runs:
 
-- **Messages** — text, media, edits, reply edges, albums, threads (FTS5 full-text index)
+- **Messages** — text, media, edits, reply edges, albums, threads (FTS5 full-text index with Unicode diacritic folding)
 - **Users** — first name, last name, username, language code
 - **Chats** — title, type, member count, forum flag
 - **Members** — status, permissions, admin title per chat
 - **Reactions** — emoji per user per message, with per-emoji counts and event log
-- **Files** — file ID, size, MIME type, local download status
+- **Files** — metadata + raw bytes stored as BLOB, SHA-256 deduplicated; downloaded eagerly on receipt
 - **Callbacks** — inline button presses with data and answered state
 - **Bot state** — arbitrary key/value store and running statistics
 
@@ -67,13 +80,17 @@ const messages = read.listMessages(db, { chatId, limit: 50 });
 const results = read.searchMessages(db, chatId, 'invoice');
 const chain = read.replyChain(db, chatId, messageId);
 
-// send and manage
+// retrieve a stored file blob
+const bytes = write.getFileBlob(db, fileId); // Buffer | null
+
+// send text and media
 await write.sendMessage(bot, chatId, 'Hello');
-await write.pinMessage(bot, chatId, messageId);
+await write.sendPhoto(bot, chatId, fileId);
+await write.sendDocument(bot, chatId, buffer, { caption: 'Report' });
 await write.broadcast(bot, chatIds, 'Announcement');
 
-// streaming — debounced progressive edits
-const stream = write.createStream(bot, chatId);
+// streaming — progressive in-place edits
+const stream = write.createStream(bot, { chatId });
 await stream.append('Thinking...');
 await stream.replace('Done.');
 ```
@@ -108,9 +125,11 @@ See [docs/LLM.md](docs/LLM.md) for the full AI-facing guide covering soul, tools
 | Export | Role |
 |---|---|
 | `initTelegramTables(db)` | One-shot DDL — call once at startup |
-| `createBot(config)` | Full bot composition over grammy |
+| `createBot(config)` | Full bot composition over grammy; polling or webhook |
+| `adaptBot(grammy)` | Bridge a raw grammy `Bot` to the `MockBot` executor interface |
 | `read` | Query the local SQLite mirror (no network) |
-| `write` | Send messages and actions via grammy |
+| `write` | Send messages, media, and actions; manage file BLOBs |
+| `keyboards` | Build inline keyboards and callback buttons |
 | `network` | Manage polling and update dispatch |
 | `render` | Pure markdown and text transformation |
 | `tools` | 4 JSON-schema tools for LLM agents |
@@ -150,6 +169,7 @@ Six workflow playbooks as markdown strings:
 |---|---|
 | [docs/HUMAN.md](docs/HUMAN.md) | Human developers using the `read`/`write`/`network` API |
 | [docs/LLM.md](docs/LLM.md) | Agent builders wiring tools, skills, and soul |
+| [docs/RECIPES.md](docs/RECIPES.md) | Advanced UI/UX patterns: streaming, approval flows, pagination |
 | [docs/README.md](docs/README.md) | Architecture overview: storage model, surfaces, invariants |
 | [docs/entities/](docs/entities/) | Per-entity manuals with exact public API listings |
 
