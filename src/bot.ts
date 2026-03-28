@@ -1,4 +1,6 @@
-import { Bot } from 'grammy';
+import * as http from 'node:http';
+import type { WebhookOptions } from 'grammy';
+import { Bot, webhookCallback } from 'grammy';
 
 import { incrementStat } from './bot_state/index.ts';
 import { insertCallback } from './callbacks/index.ts';
@@ -22,9 +24,16 @@ import type {
 import { applyReactionUpdate } from './reactions/index.ts';
 import { upsertUser } from './users/index.ts';
 
+export interface WebhookConfig {
+	path: string;
+	port: number;
+	secretToken?: string;
+}
+
 export interface BotConfig {
 	token: string;
 	db: TelegramDb;
+	webhook?: WebhookConfig;
 	onMessage?: MessageHandler;
 	onEditedMessage?: EditedMessageHandler;
 	onCallback?: CallbackHandler;
@@ -148,6 +157,39 @@ export function createBot(config: BotConfig): TelegramBot {
 			newReactions: newEmojis,
 		});
 	});
+
+	if (config.webhook) {
+		const webhookCfg = config.webhook;
+		const webhookOpts: WebhookOptions = {};
+		if (webhookCfg.secretToken !== undefined) {
+			webhookOpts.secretToken = webhookCfg.secretToken;
+		}
+		const handleUpdate = webhookCallback(grammy, 'http', webhookOpts);
+		const server = http.createServer((req, res) => {
+			if (req.url !== webhookCfg.path) {
+				res.writeHead(404).end();
+				return;
+			}
+			if (webhookCfg.secretToken !== undefined) {
+				const header = req.headers['x-telegram-bot-api-secret-token'];
+				if (header !== webhookCfg.secretToken) {
+					res.writeHead(401).end();
+					return;
+				}
+			}
+			handleUpdate(req, res);
+		});
+		return {
+			config,
+			start: () =>
+				new Promise<void>((resolve) => {
+					server.listen(webhookCfg.port, () => resolve());
+				}),
+			stop: () => {
+				server.close();
+			},
+		};
+	}
 
 	return {
 		config,

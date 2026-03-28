@@ -2,6 +2,19 @@ import type { ParseMode } from '../keyboards/types.ts';
 
 export type { ParseMode };
 
+export type MediaInput = string | Buffer | { url: string };
+
+export interface SendMediaOpts {
+	caption?: string;
+	parseMode?: ParseMode;
+	replyToMessageId?: number;
+	replyMarkup?: unknown;
+}
+
+export interface SentMedia {
+	messageId: number;
+}
+
 export interface SendOpts {
 	parseMode?: ParseMode;
 	replyMarkup?: unknown;
