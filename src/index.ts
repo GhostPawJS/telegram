@@ -1,3 +1,4 @@
+export { adaptBot } from './lib/adapt_bot.ts';
 export { createBot } from './bot.ts';
 export type { TelegramDb } from './database.ts';
 export { DEFAULTS } from './defaults.ts';
