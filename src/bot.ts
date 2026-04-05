@@ -9,6 +9,7 @@ import type { TelegramDb } from './database.ts';
 import { downloadFile } from './executor/download_file.ts';
 import { upsertFile } from './files/index.ts';
 import { adaptBot } from './lib/adapt_bot.ts';
+import type { MockBot } from './lib/mock_grammy.ts';
 import { upsertMember } from './members/index.ts';
 import { insertMessage, updateMessage } from './messages/index.ts';
 import { extractDownloadableFiles } from './normalize/extract_downloadable_files.ts';
@@ -47,8 +48,11 @@ export interface BotConfig {
 	onJoinRequest?: JoinRequestHandler;
 }
 
+export type { MockBot };
+
 export interface TelegramBot {
 	readonly config: BotConfig;
+	readonly client: MockBot;
 	start(): Promise<void>;
 	stop(): void;
 }
@@ -194,6 +198,7 @@ export function createBot(config: BotConfig): TelegramBot {
 		});
 		return {
 			config,
+			client,
 			start: () =>
 				new Promise<void>((resolve) => {
 					server.listen(webhookCfg.port, () => resolve());
@@ -206,6 +211,7 @@ export function createBot(config: BotConfig): TelegramBot {
 
 	return {
 		config,
+		client,
 		start: () => grammy.start(),
 		stop: () => grammy.stop(),
 	};

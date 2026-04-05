@@ -10,6 +10,17 @@ describe('createBot', () => {
 	it('is a function', () => {
 		assert.strictEqual(typeof createBot, 'function');
 	});
+
+	it('exposes client with api and call', async () => {
+		const db = await createInitializedTelegramDb();
+		const port = await getFreePort();
+		const bot = createBot({ token: 'test:token', db, webhook: { path: '/wh', port } });
+		assert.strictEqual(typeof bot.client, 'object');
+		assert.strictEqual(typeof bot.client.api, 'object');
+		assert.strictEqual(typeof bot.client.call, 'function');
+		assert.strictEqual(bot.client.token, 'test:token');
+		db.close();
+	});
 });
 
 function getFreePort(): Promise<number> {

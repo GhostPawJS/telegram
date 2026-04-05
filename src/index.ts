@@ -1,4 +1,5 @@
 export { createBot } from './bot.ts';
+export type { MockBot, TelegramBot, BotConfig, WebhookConfig } from './bot.ts';
 export type { TelegramDb } from './database.ts';
 export { DEFAULTS } from './defaults.ts';
 export * from './errors.ts';
