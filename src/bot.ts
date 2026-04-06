@@ -11,7 +11,7 @@ import { upsertFile } from './files/index.ts';
 import { adaptBot } from './lib/adapt_bot.ts';
 import type { MockBot } from './lib/mock_grammy.ts';
 import { upsertMember } from './members/index.ts';
-import { insertMessage, updateMessage } from './messages/index.ts';
+import { applyEdit, insertMessage } from './messages/index.ts';
 import { extractDownloadableFiles } from './normalize/extract_downloadable_files.ts';
 import { normalizeChat } from './normalize/normalize_chat.ts';
 import { normalizeMember } from './normalize/normalize_member.ts';
@@ -26,8 +26,9 @@ import type {
 	PollAnswerHandler,
 	ReactionHandler,
 } from './normalize/types.ts';
-import { applyReactionUpdate } from './reactions/index.ts';
+import { applyReactionCounts, applyReactionUpdate } from './reactions/index.ts';
 import { upsertUser } from './users/index.ts';
+import { withTransaction } from './with_transaction.ts';
 
 export interface WebhookConfig {
 	path: string;
@@ -65,10 +66,15 @@ export function createBot(config: BotConfig): TelegramBot {
 	grammy.on('message', async (ctx) => {
 		const msg = ctx.message;
 		if (!msg) return;
-		const user = msg.from ? upsertUser(db, normalizeUser(msg.from)) : null;
-		const chat = upsertChat(db, normalizeChat(msg.chat));
-		const stored = insertMessage(db, normalizeMessage(msg, 'in', ctx.me.id));
-		incrementStat(db, 'messages_in');
+
+		// All DB writes for a single update are atomic.
+		const { user, chat, stored } = withTransaction(db, () => {
+			const user = msg.from ? upsertUser(db, normalizeUser(msg.from)) : null;
+			const chat = upsertChat(db, normalizeChat(msg.chat));
+			const stored = insertMessage(db, normalizeMessage(msg, 'in', ctx.me.id));
+			incrementStat(db, 'messages_in');
+			return { user, chat, stored };
+		});
 
 		// Eagerly download all files in background — fire and forget.
 		// Errors are swallowed; checksum stays null and can be retried later.
@@ -91,7 +97,7 @@ export function createBot(config: BotConfig): TelegramBot {
 		const user = msg.from ? upsertUser(db, normalizeUser(msg.from)) : null;
 		const chat = getChat(db, msg.chat.id);
 		try {
-			const updated = updateMessage(db, msg.chat.id, msg.message_id, {
+			const updated = applyEdit(db, msg.chat.id, msg.message_id, {
 				editDate: msg.edit_date ? msg.edit_date * 1000 : null,
 				text: msg.text ?? null,
 			});
@@ -173,6 +179,22 @@ export function createBot(config: BotConfig): TelegramBot {
 			oldReactions: oldEmojis,
 			newReactions: newEmojis,
 		});
+	});
+
+	grammy.on('message_reaction_count', (ctx) => {
+		const update = ctx.messageReactionCount;
+		const toEmoji = (r: { type: string; emoji?: string; custom_emoji_id?: string }) =>
+			r.type === 'emoji'
+				? (r.emoji ?? '')
+				: r.type === 'custom_emoji'
+					? (r.custom_emoji_id ?? '')
+					: 'paid';
+		const counts = (update.reactions ?? []).map((r) => ({
+			emoji: toEmoji(r.type),
+			emojiType: r.type.type as 'emoji' | 'custom_emoji' | 'paid',
+			count: r.total_count,
+		}));
+		applyReactionCounts(db, update.chat.id, update.message_id, counts);
 	});
 
 	if (config.webhook) {
