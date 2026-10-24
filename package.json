@@ -25,7 +25,7 @@
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
-		"test": "node --experimental-strip-types --test --test-reporter=dot 'src/**/*.test.ts'",
+		"test": "node --experimental-strip-types --test --test-reporter=dot 'src/**/*.test.ts' 'tests/*.test.ts'",
 		"lint": "biome check",
 		"lint:fix": "biome check --fix",
 		"format": "biome format --write",

@@ -1,7 +1,4 @@
-import * as http from 'node:http';
 import type { WebhookOptions } from 'grammy';
-import { Bot, webhookCallback } from 'grammy';
-
 import { incrementStat } from './bot_state/index.ts';
 import { insertCallback } from './callbacks/index.ts';
 import { getChat, upsertChat } from './chats/index.ts';
@@ -9,6 +6,7 @@ import type { TelegramDb } from './database.ts';
 import { downloadFile } from './executor/download_file.ts';
 import { upsertFile } from './files/index.ts';
 import { adaptBot } from './lib/adapt_bot.ts';
+import { loadGrammy, loadHttp } from './lib/lazy_dependencies.ts';
 import type { MockBot } from './lib/mock_grammy.ts';
 import { upsertMember } from './members/index.ts';
 import { applyEdit, insertMessage } from './messages/index.ts';
@@ -60,6 +58,7 @@ export interface TelegramBot {
 
 export function createBot(config: BotConfig): TelegramBot {
 	const { db } = config;
+	const { Bot, webhookCallback } = loadGrammy();
 	const grammy = new Bot(config.token);
 	const client = adaptBot(grammy);
 
@@ -204,7 +203,7 @@ export function createBot(config: BotConfig): TelegramBot {
 			webhookOpts.secretToken = webhookCfg.secretToken;
 		}
 		const handleUpdate = webhookCallback(grammy, 'http', webhookOpts);
-		const server = http.createServer((req, res) => {
+		const server = loadHttp().createServer((req, res) => {
 			if (req.url !== webhookCfg.path) {
 				res.writeHead(404).end();
 				return;

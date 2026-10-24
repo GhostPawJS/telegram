@@ -35,7 +35,7 @@ export const tgSendTool = defineTelegramTool<TgSendInput, unknown>({
 	description:
 		'Outbound actions: send, edit, delete, pin/unpin messages, send typing indicator, and forward messages.',
 	whenToUse:
-		'Use when you need to send or modify messages, show a typing indicator, or forward a message to another chat.',
+		'Plans only by default. Use createTelegramToolFacade with execute: true and a client to perform actions with configurable limits. Use when you need to send or modify messages, show a typing indicator, or forward a message to another chat.',
 	whenNotToUse: 'Do not use for reading or querying stored data.',
 	sideEffects: 'writes_state',
 	readOnly: false,

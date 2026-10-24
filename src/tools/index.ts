@@ -1,3 +1,5 @@
+export type { ExecutionOptions } from './execution.ts';
+export { createTelegramToolFacade, maskToken } from './execution.ts';
 export { translateToolError, withToolHandling } from './tool_errors.ts';
 export type {
 	JsonSchema,

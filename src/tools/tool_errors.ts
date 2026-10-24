@@ -1,4 +1,5 @@
 import { TelegramError } from '../errors.ts';
+import { maskToken } from './execution.ts';
 import type { ToolFailure, ToolResult } from './tool_types.ts';
 import { toolFailure } from './tool_types.ts';
 
@@ -13,9 +14,9 @@ export function translateToolError(err: unknown): ToolFailure {
 					: err.code === 'TELEGRAM_API' || err.code === 'TELEGRAM_RATE_LIMIT'
 						? 'protocol'
 						: 'system';
-		return toolFailure(kind, 'system_error', err.message, err.message);
+		return toolFailure(kind, 'system_error', maskToken(err.message), maskToken(err.message));
 	}
-	const message = err instanceof Error ? err.message : String(err);
+	const message = maskToken(err instanceof Error ? err.message : String(err));
 	return toolFailure('system', 'system_error', message, message);
 }
 

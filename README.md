@@ -139,6 +139,30 @@ See [docs/LLM.md](docs/LLM.md) for the full AI-facing guide covering soul, tools
 
 ## Tools
 
+Tools return plans by default; existing synchronous handlers perform no outbound actions.
+To execute send and moderation actions, create an async facade explicitly:
+
+```ts
+const facade = tools.createTelegramToolFacade({
+  client: bot.client,
+  execute: true,
+  perChatPerSecond: 1,
+  globalPerSecond: 30,
+  maxRetries: 2,
+});
+const result = await facade.handler(db, 'tg_send', {
+  subcommand: 'send_message', chatId: 123, text: 'Hello',
+});
+```
+
+Omit `execute` to retain plan-only behavior. Execution reuses the outbound
+executors, returns the shared result shape with action data and `sent` message
+IDs where applicable, and masks bot tokens in errors. Capacity-one token buckets
+limit each API call per chat and globally; Telegram 429 `retry_after` responses
+pause retries, with two retries by default. Limits apply per facade instance;
+reuse one facade for callers sharing a bot. Partial execution can occur when a
+multi-call action fails (for example, kick bans then unbans).
+
 Four tools shaped around operator intent:
 
 | Tool | What it does |

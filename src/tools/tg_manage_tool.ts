@@ -38,7 +38,7 @@ export const tgManageTool = defineTelegramTool<TgManageInput, unknown>({
 	description:
 		'Moderation and chat administration: ban, unban, restrict, promote, kick users, and query member info.',
 	whenToUse:
-		'Use when you need to moderate users, manage chat permissions, or look up member status.',
+		'Plans only by default. Use createTelegramToolFacade with execute: true and a client to perform actions with configurable limits. Use when you need to moderate users, manage chat permissions, or look up member status.',
 	whenNotToUse: 'Do not use for sending messages or reading message history.',
 	sideEffects: 'writes_state',
 	readOnly: false,
