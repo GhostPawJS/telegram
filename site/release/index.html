@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>telegram: a Telegram bot engine for Node.js that mirrors every chat into SQLite</title>
+<meta name=description content="@ghostpaw/telegram mirrors every Telegram update into SQLite before your handler runs, with edit history, reply chains and FTS5 search, and gives agents four tools that return plans unless you switch execution on. Node.js 24, zero dependencies, MIT.">
+<link rel=canonical href=https://telegram.ghostpaw.dev/>
+<meta property=og:type content=website>
+<meta property=og:url content=https://telegram.ghostpaw.dev/>
+<meta property=og:title content="telegram: a Telegram bot engine for Node.js that mirrors every chat into SQLite">
+<meta property=og:description content="@ghostpaw/telegram mirrors every Telegram update into SQLite before your handler runs, with edit history, reply chains and FTS5 search, and gives agents four tools that return plans unless you switch execution on. Node.js 24, zero dependencies, MIT.">
+<meta property=og:image content=https://telegram.ghostpaw.dev/share-e43367ce4862.png><meta property=og:image:width content=1200><meta property=og:image:height content=630>
+<meta property=og:image:alt content="A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited.">
+<meta name=twitter:card content=summary_large_image>
+<link rel=preload href=./tektur-var-4c711ade6b7f.woff2 as=font type=font/woff2 crossorigin>
+<link rel=preload href=./martian-mono-var-3048bdad51b1.woff2 as=font type=font/woff2 crossorigin>
+<meta name=theme-color content=#04070b>
+
+
+<style>@font-face{font-family:Tektur;src:url("./tektur-var-4c711ade6b7f.woff2") format("woff2");font-weight:500 900;font-stretch:75% 100%;font-style:normal;font-display:swap}@font-face{font-family:Martian Mono;src:url("./martian-mono-var-3048bdad51b1.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap}:root{--void: #04070b;--panel: #0a1119;--rule: #1d2c3c;--ghost: #e3edf5;--haze: #93a5b9;--spectral: #62e6f2;--wraith: #b39dff;--alarm: #ff7aa6;--ward: #7af0b4;--glow: rgba(98, 230, 242, .28);--display: "Tektur", Bahnschrift, "Arial Narrow", sans-serif;--body: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;--mono: "Martian Mono", "Cascadia Mono", Consolas, monospace;--edge: 1px solid var(--rule);--cut: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);--wrap: 72rem;color-scheme:dark}*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--void)}body{margin:0;color:var(--ghost);font:400 1.0625rem/1.6 var(--body);font-synthesis:none;background-color:var(--void);background-image:linear-gradient(rgba(98,230,242,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(98,230,242,.035) 1px,transparent 1px);background-size:48px 48px}img{display:block;max-width:100%;height:auto}code,input,kbd,samp{font-family:var(--mono);font-synthesis:none}code{font-size:.86em;letter-spacing:-.01em}a{color:var(--ghost);text-decoration-color:var(--spectral);text-decoration-thickness:1px;text-underline-offset:.22em}a:hover{color:var(--spectral)}:focus-visible{outline:2px solid var(--spectral);outline-offset:3px}h1,h2,h3,h4{font-family:var(--display);line-height:1.06;margin:0 0 .5em;text-wrap:balance;font-weight:700}h1{font-size:clamp(2.35rem,6.4vw,4.7rem);font-stretch:88%;letter-spacing:-.01em;text-shadow:0 0 34px rgba(98,230,242,.18)}h2{font-size:clamp(1.75rem,3.7vw,2.7rem);font-stretch:90%;font-weight:650}h3{font-size:1.3rem;font-weight:600;font-stretch:95%}h4{font-size:1rem;font-weight:600;font-stretch:95%}p{margin:0 0 1em}::selection{background:var(--spectral);color:var(--void)}.top,main>section,.foot{max-width:var(--wrap);margin:0 auto;padding-left:1.25rem;padding-right:1.25rem}.top{display:flex;justify-content:space-between;align-items:center;padding-top:1.1rem;padding-bottom:1.1rem;border-bottom:var(--edge)}.brand{font:700 1.2rem/1 var(--display);font-stretch:85%;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem}.brand:after{content:"";width:.5rem;height:1.05rem;background:var(--spectral);box-shadow:0 0 12px var(--glow)}.top nav{display:flex;gap:1.25rem}.top nav a{text-decoration:none;color:var(--haze)}.top nav a:hover{color:var(--spectral)}.cmd{display:flex;align-items:stretch;border:var(--edge);background:var(--panel);max-width:30rem}.cmd:before{content:"$";font:400 .9rem/1 var(--mono);color:var(--haze);padding:0 0 0 .75rem;align-self:center}.cmd input{flex:1;min-width:0;border:0;background:transparent;color:var(--ghost);font-size:.8rem;padding:.75rem .6rem}.copy{border:0;background:var(--spectral);color:var(--void);font:650 .95rem var(--display);padding:0 .9rem;cursor:pointer;min-width:4.75rem}.copy:hover{background:var(--ghost)}.button{display:inline-block;background:var(--spectral);color:var(--void);text-decoration:none;font:650 1rem var(--display);padding:.8rem 1.4rem .8rem 1.2rem;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}.button:hover{background:var(--ghost);color:var(--void)}.note{color:var(--haze);font-size:.9rem;margin-top:1rem;max-width:46rem}.scope{position:relative;overflow:hidden}.scope img{mix-blend-mode:screen;width:100%}.scope:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(4,7,11,.38) 3px 4px);z-index:1}.scan{position:absolute;inset:0;z-index:2;pointer-events:none;transform:translateY(101%);background:linear-gradient(to bottom,var(--spectral) 0 2px,rgba(4,7,11,.92) 2px);box-shadow:0 -6px 24px var(--glow)}.js .scan{animation:sweep .9s cubic-bezier(.45,.05,.35,1) .15s both}@keyframes sweep{0%{transform:translateY(0);opacity:1}92%{opacity:1}to{transform:translateY(101%);opacity:0}}.scan{opacity:0}.frame{position:relative;margin:0}.frame:after{content:"";position:absolute;inset:-.5rem;pointer-events:none;background:linear-gradient(var(--spectral),var(--spectral)) top left / 18px 1px no-repeat,linear-gradient(var(--spectral),var(--spectral)) top left / 1px 18px no-repeat,linear-gradient(var(--spectral),var(--spectral)) top right / 18px 1px no-repeat,linear-gradient(var(--spectral),var(--spectral)) top right / 1px 18px no-repeat,linear-gradient(var(--spectral),var(--spectral)) bottom left / 18px 1px no-repeat,linear-gradient(var(--spectral),var(--spectral)) bottom left / 1px 18px no-repeat,linear-gradient(var(--spectral),var(--spectral)) bottom right / 18px 1px no-repeat,linear-gradient(var(--spectral),var(--spectral)) bottom right / 1px 18px no-repeat;opacity:.7}.foot{padding-top:2rem;padding-bottom:3rem;border-top:var(--edge);color:var(--haze)}.foot-links{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem}.foot a{color:var(--haze)}.foot a:hover{color:var(--spectral)}@media(min-width:52rem){.cmd input{font-size:.9rem}}@media(prefers-reduced-motion:reduce){.js .scan{animation:none}*{transition:none!important}}.hero{display:grid;gap:2.5rem;padding-top:2.5rem;padding-bottom:3.5rem;align-items:center}.hero-copy{min-width:0}.lede{font-size:1.22rem;color:var(--ghost)}.lede code{white-space:nowrap;color:var(--spectral)}.hero-copy>p:not(.lede):not(.actions):not(.terms){color:var(--haze)}.install label{display:block;font:600 .95rem var(--display);color:var(--haze);margin-bottom:.4rem}.actions{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center;margin-top:1.5rem}.terms{color:var(--haze);font-size:.95rem}.hero-art{min-width:0}.readout{position:absolute;left:.75rem;bottom:.75rem;z-index:3;margin:0;display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;align-items:center;padding:.55rem 1rem .55rem .8rem;background:#04070bd1;border:1px solid rgba(98,230,242,.45);clip-path:var(--cut)}.readout .big{grid-row:span 2;font:700 2.6rem/1 var(--display);color:var(--spectral);text-shadow:0 0 18px var(--glow)}.readout span:not(.big){font:600 1rem/1.15 var(--display)}.readout small{color:var(--haze);font-size:.8rem}.readout{display:flex;gap:.7rem}.kicker{margin:0 0 .85rem;color:var(--haze)}.kicker code{color:var(--spectral)}.cmd-label{font:600 .95rem var(--display);color:var(--haze);margin:0 0 .4rem}.intro{max-width:46rem;color:var(--haze)}.board-sec .intro:first-of-type,.todo>.intro:first-of-type{color:var(--ghost);font:600 1.25rem var(--display)}.links{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin:1.2rem 0 0}.links .more{font-weight:700;color:var(--spectral)}.board-sec,.todo,.time,.worry,.numbers,.start{padding-top:3.5rem;padding-bottom:2.5rem;border-top:var(--edge)}pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:1rem 0 0;background:var(--void);color:var(--ghost);border:var(--edge);border-left:2px solid var(--wraith);padding:1rem 1.1rem;overflow-x:auto;font-size:.8rem;line-height:1.65}pre code{font-size:inherit;color:var(--ghost)}.button.ghost{background:transparent;color:var(--spectral);border:1px solid var(--spectral);cursor:pointer;padding:.55rem 1.1rem .55rem 1rem}.button.ghost:hover,.button.ghost[aria-pressed=true]{background:var(--spectral);color:var(--void)}.sec{padding-top:3.5rem;padding-bottom:2.5rem;border-top:var(--edge)}.sec>.intro:first-of-type{color:var(--ghost);font:600 1.25rem var(--display)}.note code,.form code,.worry code,.start code,.step code,.state code,h2 code,.intro code{color:var(--spectral)}pre code{color:var(--ghost)}h2 code{font-size:.8em}.run{display:grid;gap:1.25rem;margin-top:1.5rem}.run>*{min-width:0}.state{background:var(--panel);border:var(--edge);padding:1rem 1.15rem 1.1rem;clip-path:var(--cut);box-shadow:inset 0 3px 0 var(--spectral);align-self:start}.state-label{font:600 .95rem var(--display);color:var(--haze);margin:0 0 .6rem;letter-spacing:.04em;text-transform:uppercase}.state ul{list-style:none;margin:0;padding:0}.state li{display:grid;grid-template-columns:auto 1fr;gap:.1rem .75rem;padding:.5rem 0;border-bottom:1px solid rgba(29,44,60,.9)}.state li:last-child{border-bottom:0}.state .k{font:600 1.05rem var(--display);color:var(--ghost)}.state .v{font:400 .8rem/1.5 var(--body);color:var(--haze);text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.state .bar{grid-column:1 / -1;height:3px;background:var(--rule);position:relative;display:none}.js .state .bar{display:block}.state .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--spectral);box-shadow:0 0 10px var(--glow);transition:width .3s ease}.state .t-violet .k,.state .t-violet .v{color:var(--wraith)}.state .t-violet .bar i{background:var(--wraith);box-shadow:none}.state .t-alarm .k,.state .t-alarm .v{color:var(--alarm)}.state .t-alarm .bar i{background:var(--alarm);box-shadow:none}.state .t-ward .k,.state .t-ward .v{color:var(--ward)}.state .t-ward .bar i{background:var(--ward)}.state .t-cyan .v{color:var(--spectral)}.state-foot{margin:.75rem 0 0;color:var(--haze);font-size:.85rem}.steps{list-style:none;margin:0;padding:0;display:grid;gap:1rem;counter-reset:step}.step{background:var(--panel);border:var(--edge);padding:1rem 1.15rem 1.15rem;clip-path:var(--cut);box-shadow:inset 0 3px 0 var(--rule);transition:box-shadow .3s ease}.step h3{display:flex;gap:.6rem;align-items:baseline;font-size:1.2rem;margin-bottom:.35rem}.step h3 .n{font:600 .85rem var(--body);color:var(--spectral);font-variant-numeric:tabular-nums}.step>p{color:var(--haze);margin-bottom:.25rem}.step pre{margin-top:.7rem;font-size:.78rem}.step .result pre{border-left-color:var(--ward)}.step.refused .result pre{border-left-color:var(--alarm)}.result .say{margin:.6rem 0 0;color:var(--ghost)}.step.refused .say{color:var(--alarm)}.run-btn,.run-tools{display:none}.js .step.next .run-btn{display:inline-block;margin-top:.85rem}.js .step:not(.done) .result{display:none}.js .step.next{box-shadow:inset 0 3px 0 var(--spectral)}.js .step.done{box-shadow:inset 0 3px 0 var(--ward)}.js .step.done.refused{box-shadow:inset 0 3px 0 var(--alarm)}.js .step.flash{animation:flash .42s ease-out}@keyframes flash{0%{border-color:var(--alarm)}to{border-color:var(--rule)}}.js .run-tools{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1rem;align-items:center}.run-tools p{margin:0;color:var(--haze);font-size:.9rem}.act{font:650 .95rem var(--display);background:var(--spectral);color:var(--void);border:0;padding:.5rem 1rem;cursor:pointer}.act:hover{background:var(--ghost)}.sec-head{display:grid;gap:.5rem;align-items:end}.graph{mix-blend-mode:screen;width:100%;max-width:22rem;justify-self:end;margin:-.5rem 0}.form{margin:1.5rem 0 0;border:var(--edge);background:var(--panel)}.form div{display:grid;grid-template-columns:minmax(0,1fr);gap:.15rem 1.5rem;padding:.8rem 1.1rem;border-bottom:var(--edge)}.form dt,.form dd{min-width:0;overflow-wrap:anywhere}.form div:last-child{border-bottom:0}.form dt{font:600 1rem var(--display);color:var(--ghost)}.form dd{margin:0;color:var(--haze)}.worry ul{padding:0;margin:0;list-style:none;max-width:46rem}.worry li{margin-bottom:.7rem;padding-left:1.4rem;position:relative}.worry li:before{content:"";position:absolute;left:0;top:.62em;width:.5rem;height:.5rem;border:1px solid var(--spectral)}.worry-grid>p{color:var(--haze);font-size:1.1rem}.ledger{margin:0;border-top:var(--edge);max-width:40rem}.ledger div{display:flex;justify-content:space-between;gap:1rem;border-bottom:var(--edge);padding:.55rem 0}.ledger dt{color:var(--haze)}.ledger dd{margin:0;color:var(--spectral);font:500 .9rem/1.6 var(--body);text-align:right;font-variant-numeric:tabular-nums}.start pre{max-width:46rem}.start>p{max-width:46rem;margin-top:1.25rem}.cmd input{padding:.75rem .5rem}.copy{min-width:4rem;padding:0 .7rem}@media(min-width:52rem){.hero{grid-template-columns:1.08fr 1fr;padding-top:4rem;padding-bottom:4.5rem}.run{grid-template-columns:minmax(17rem,.8fr) 1.6fr;gap:1.75rem;align-items:start}.state{position:sticky;top:1rem}.sec-head{grid-template-columns:1fr 22rem}.form div{grid-template-columns:11rem minmax(0,1fr)}.worry-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:3rem;align-items:start}pre{font-size:.84rem}.step pre{font-size:.8rem}}@media(prefers-reduced-motion:reduce){.js .step.flash{animation:none}}
+</style><link rel=icon type=image/png sizes=96x96 href=./favicon.png></head>
+<body>
+<header class=top>
+  <a class=brand href=https://ghostpaw.dev/>GhostPaw</a>
+  <nav aria-label="telegram elsewhere">
+    <a href=https://github.com/GhostPawJS/telegram>GitHub</a>
+    <a href=https://www.npmjs.com/package/@ghostpaw/telegram>npm</a>
+    <a href=https://github.com/GhostPawJS/telegram#readme>README</a>
+  </nav>
+</header>
+<main>
+  <section class=hero aria-labelledby=hero-title>
+    <div class=hero-copy>
+      <p class=kicker><code>@ghostpaw/telegram</code> 0.6.0</p>
+      <h1 id=hero-title>Your bot remembers the chat, including what was edited.</h1>
+      <p class=lede>telegram writes every incoming update into a SQLite file before your handler runs: messages, edits, replies, reactions, members and files. Your bot and your agent read from that record, and the agent&#39;s tools return plans until you switch execution on.</p>
+      <div class=install>
+        <p class=cmd-label id=lib-label>As a library</p>
+        <div class=cmd><input id=cmd-lib readonly value="npm install @ghostpaw/telegram" aria-labelledby=lib-label spellcheck=false><button type=button class=copy data-copy=cmd-lib>Copy</button></div>
+        <p class=cmd-label id=mcp-label>As a local MCP server</p>
+        <div class=cmd><input id=cmd-mcp readonly value="npx -y @ghostpaw/telegram mcp" aria-labelledby=mcp-label spellcheck=false><button type=button class=copy data-copy=cmd-mcp>Copy</button></div>
+      </div>
+      <p class=actions><a class=button href=#run>Replay the run</a> <a href=https://github.com/GhostPawJS/telegram>Read the source on GitHub</a></p>
+      <p class=terms>Free and MIT licensed for Node.js 24 or newer, with zero runtime dependencies. The mirror is a SQLite file on your disk; the bot token stays in your environment.</p>
+    </div>
+    <figure class="hero-art frame">
+      <div class=scope><picture><source media="(min-width: 52rem)" srcset=./hero-720-bd450a2fb33d.webp width=720 height=540><img src=./hero-480-57bd20b1d817.webp width=480 height=360 alt="A wireframe paper plane drawn in cyan light, a violet dotted orbit looping from it into a stacked database cylinder with a glowing paw on its lid." fetchpriority=high></picture><span class=scan aria-hidden=true></span></div>
+      <p class=readout aria-label="Zero runtime dependencies"><span class=big>0</span><span>runtime dependencies</span></p>
+    </figure>
+  </section>
+
+  <section id=run class="sec run-sec" aria-labelledby=run-title>
+    <h2 id=run-title>One group, three updates, six calls</h2>
+    <p class=intro>Your handler never has to save anything. The row is already there.</p>
+    <p class=intro>This ran with <code>createBot</code> and long polling against telegram 0.6.0 on 2026-10-24. The Telegram servers were replaced by a local stand-in passed through the documented <code>api.fetch</code> option, so three updates arrive in a group called Renewal desk and nothing reaches Telegram. Everything else is the library. Run the steps in order.</p>
+    <div class=run>
+      <div class=state role=region aria-labelledby=state-title aria-live=polite>
+        <p class=state-label id=state-title>Mirror</p>
+        <ul id=state-list>
+          <li><span class=k>Messages stored</span><span class=v>0</span></li>
+          <li><span class=k>Edits kept</span><span class=v>0</span></li>
+          <li><span class=k>Outbound calls</span><span class=v>0</span></li>
+          <li><span class=k>Last read</span><span class=v>—</span></li>
+          <li><span class=k>Tool result</span><span class=v>—</span></li>
+        </ul>
+        <p class=state-foot id=state-foot>Eight empty tables after initTelegramTables(db).</p>
+      </div>
+      <ol class=steps>
+        <li class=step id=step-1>
+          <h3><span class=n>01</span> Lena posts in the group</h3>
+          <p>The first update arrives through long polling.</p>
+          <pre class=call><code>const bot = createBot({ token, db, api: { fetch: standIn },
+  onMessage: async ({ message }) =&gt; {
+    read.getMessage(db, message.chatId, message.messageId); // already there?
+  },
+});
+await bot.start();</code></pre>
+          <div class=result><pre><code>// update 1, chat -1001234 &#34;Renewal desk&#34;, from Lena (@lena_ops)
+// &#34;Invoice 4471 is paid. The café receipt is in the shared drive.&#34;
+// inside onMessage: read.getMessage(...) -&gt; row found
+//   { messageId: 10, direction: &#39;in&#39;, fromDisplayName: &#39;Lena&#39;, type: &#39;text&#39;, … }</code></pre><p class=say>The row was written before the handler ran, so the handler can rely on it.</p></div>
+          <button type=button class="act run-btn">Run step 1</button>
+        </li>
+        <li class=step id=step-2>
+          <h3><span class=n>02</span> The handler replies</h3>
+          <p>One plain-text reply from inside onMessage.</p>
+          <pre class=call><code>await write.sendMessage(bot.client, -1001234, &#39;Noted. Filed under 4471.&#39;);</code></pre>
+          <div class=result><pre><code>// the stand-in received:
+// POST sendMessage { chat_id: -1001234, text: &#39;Noted. Filed under 4471.&#39; }</code></pre><p class=say>One outbound call. With a real token this goes to api.telegram.org.</p></div>
+          <button type=button class="act run-btn">Run step 2</button>
+        </li>
+        <li class=step id=step-3>
+          <h3><span class=n>03</span> Lena edits her message</h3>
+          <p>An <code>edited_message</code> update, one minute later.</p>
+          <pre class=call><code>// update 2: edited_message, msg 10
+read.getMessage(db, -1001234, 10).text;
+read.editHistory(db, -1001234, 10);</code></pre>
+          <div class=result><pre><code>// &#34;Invoice 4471 is paid. The café receipt is in the finance folder.&#34;
+// [{ id: 1, messageId: 10,
+//    text: &#39;Invoice 4471 is paid. The café receipt is in the shared drive.&#39; }]</code></pre><p class=say>The message shows the new text, and the old one is kept. You can see what changed and when.</p></div>
+          <button type=button class="act run-btn">Run step 3</button>
+        </li>
+        <li class=step id=step-4>
+          <h3><span class=n>04</span> Jun replies to it</h3>
+          <p>A reply to message 10.</p>
+          <pre class=call><code>// update 3: &#34;Which café?&#34;, reply_to_message: 10
+read.replyChain(db, -1001234, 11);</code></pre>
+          <div class=result><pre><code>// [{ messageId: 10, text: &#39;Invoice 4471 is paid. The café receipt is in the finance folder.&#39; },
+//  { messageId: 11, text: &#39;Which café?&#39; }]</code></pre><p class=say>The chain runs from the original down to the reply.</p></div>
+          <button type=button class="act run-btn">Run step 4</button>
+        </li>
+        <li class=step id=step-5>
+          <h3><span class=n>05</span> Search without the accent</h3>
+          <p>FTS5 over the mirror, no network.</p>
+          <pre class=call><code>read.searchMessages(db, -1001234, &#39;cafe&#39;);</code></pre>
+          <div class=result><pre><code>// [{ messageId: 11, snippet: &#39;Which &lt;b&gt;café&lt;/b&gt;?&#39; },
+//  { messageId: 10, snippet: &#39;Invoice 4471 is paid. The &lt;b&gt;café&lt;/b&gt; receipt is in the shared drive.&#39; }]</code></pre><p class=say>Both messages, accent or not. The snippet for message 10 still shows the text from before the edit; see the note below.</p></div>
+          <button type=button class="act run-btn">Run step 5</button>
+        </li>
+        <li class=step id=step-6>
+          <h3><span class=n>06</span> The agent wants to answer</h3>
+          <p>The <code>tg_send</code> tool, called the way an agent harness calls it.</p>
+          <pre class=call><code>tools.getTelegramToolByName(&#39;tg_send&#39;).handler(db, {
+  subcommand: &#39;send_message&#39;, chatId: -1001234, text: &#39;Receipt found, thanks.&#39;,
+});</code></pre>
+          <div class=result><pre><code>// { ok: true, outcome: &#39;success&#39;, summary: &#39;Message ready to send&#39;,
+//   data: { action: &#39;send_message&#39;, chatId: -1001234, text: &#39;Receipt found, thanks.&#39; } }</code></pre><p class=say>A plan, and the outbound count is still one. Sending takes <code>createTelegramToolFacade({ client, execute: true })</code>, which you have to write yourself.</p></div>
+          <button type=button class="act run-btn">Run step 6</button>
+        </li>
+      </ol>
+    </div>
+    <div class=run-tools><button type=button class="button ghost" id=reset>Start over</button><p id=run-status role=status></p></div>
+    <p class=note>In this run the search index kept the text from before the edit: a search for “finance” found nothing and “shared” still found message 10. <code>editHistory</code> and <code>getMessage</code> were right. We do not claim that search sees edits.</p>
+    <p class=note>The README says files are downloaded eagerly. In 0.6.0 <code>DEFAULTS.autoDownload</code> is <code>false</code>, so check that setting if you want file bytes stored.</p>
+  </section>
+
+  <section class="sec explain" aria-labelledby=explain-title>
+    <div class=sec-head>
+    <h2 id=explain-title>What the mirror keeps, and four tools to read it</h2>
+    <img class=graph src=./art-640-de66de717d02.webp width=640 height=360 alt="Cyan speech bubbles stacking down into a band of stored lines, with a violet magnifying glass over them." loading=lazy>
+    </div>
+    <p class=intro>Eight tables, created in one call. The agent reads them through four tools.</p>
+    <dl class=form>
+      <div><dt>Messages</dt><dd>Text, media, edits, reply edges, albums and threads, with an FTS5 index that folds diacritics.</dd></div>
+      <div><dt>Users, chats, members</dt><dd>Names, chat titles and types, member status, permissions and admin titles.</dd></div>
+      <div><dt>Reactions, callbacks</dt><dd>Emoji per user per message, and inline button presses with their data.</dd></div>
+      <div><dt>Files</dt><dd>Metadata, and the bytes as a BLOB deduplicated by SHA-256 when downloading is on.</dd></div>
+      <div><dt><code>tg_read</code></dt><dd>Messages, chats, users, reactions, edit history and reply chains.</dd></div>
+      <div><dt><code>tg_send</code></dt><dd>Send, edit, delete, forward and pin, set reactions, broadcast.</dd></div>
+      <div><dt><code>tg_manage</code></dt><dd>Ban, unban, restrict, promote and kick, and member status.</dd></div>
+      <div><dt><code>tg_connect</code></dt><dd>Bot stats, bot state and active chats.</dd></div>
+    </dl>
+    <p class=note>Each tool carries its JSON Schema, a side-effect level and a <code>readOnly</code> flag, so a harness can tell reading from acting without reading docs.</p>
+  </section>
+
+  <section class="sec worry" aria-labelledby=worry-title>
+    <h2 id=worry-title>If a bot that posts by itself worries you</h2>
+    <div class=worry-grid>
+      <p>Some people log every agent action to a Telegram bot as an audit trail. That trail is only useful if you know what the bot did on its own.</p>
+      <ul>
+        <li>The tools return plans by default. Execution needs an explicit facade with <code>execute: true</code>.</li>
+        <li>The executing facade limits calls per chat and globally with token buckets, waits on Telegram&#39;s <code>retry_after</code> and retries twice by default. It masks bot tokens in errors.</li>
+        <li>The MCP server executes sends only when <code>TELEGRAM_BOT_TOKEN</code> is set, keeps the mirror in <code>~/.ghostpaw/telegram.db</code> and does not poll for updates itself.</li>
+        <li>The library does not filter senders for you. In 0.6.0 <code>DEFAULTS.allowedChatIds</code> exists but nothing reads it, so the allowlist belongs in your handler.</li>
+        <li>Node.js 24 or newer, because it uses the built-in <code>node:sqlite</code> and global fetch.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec numbers" aria-labelledby=numbers-title>
+    <h2 id=numbers-title>What it costs to add</h2>
+    <dl class=ledger>
+      <div><dt>Runtime dependencies</dt><dd>0</dd></div>
+      <div><dt>Node.js</dt><dd>24 or newer (node:sqlite)</dd></div>
+      <div><dt>Size of dist/index.js, gzip</dt><dd>33.7 KB</dd></div>
+      <div><dt>Import time</dt><dd>about 11.8 ms</dd></div>
+      <div><dt>Tests</dt><dd>883 passing</dd></div>
+      <div><dt>Line coverage</dt><dd>97.9%</dd></div>
+      <div><dt>Agent tools</dt><dd>4</dd></div>
+    </dl>
+    <p class=note>Measured 2026-10-24 on the maintainer&#39;s machine with Node.js 24.14.0 against telegram 0.6.0: size of the published dist/index.js at gzip -9, median of 11 cold imports, tests and coverage from the v0.6.0 tag.</p>
+  </section>
+
+  <section class="sec start" aria-labelledby=start-title>
+    <h2 id=start-title>Start from the README</h2>
+    <pre><code>import { DatabaseSync } from &#39;node:sqlite&#39;;
+import { createBot, initTelegramTables } from &#39;@ghostpaw/telegram&#39;;
+
+const db = new DatabaseSync(&#39;bot.db&#39;);
+initTelegramTables(db);
+
+const bot = createBot({
+  token: process.env.TELEGRAM_TOKEN,
+  db,
+  onMessage: async ({ message, user }) =&gt; {
+    console.log(user?.firstName, message.text);
+  },
+});
+
+await bot.start(); // long-polling</code></pre>
+    <p>To give an agent the mirror as an MCP server, add <code>npx -y @ghostpaw/telegram mcp</code> to your client.</p>
+    <p class=links><a class=more href=https://github.com/GhostPawJS/telegram#readme>Read the README</a><a href=https://www.npmjs.com/package/@ghostpaw/telegram>telegram on npm</a></p>
+    <p class=links><a href=https://ghostpaw.dev/>All seven GhostPaw libraries</a><a href=https://codex.ghostpaw.dev/>codex, for memory</a><a href=https://questlog.ghostpaw.dev/>questlog, for tasks</a><a href=https://affinity.ghostpaw.dev/>affinity, for contacts</a><a href=https://souls.ghostpaw.dev/>souls, for identity</a><a href=https://grimoire.ghostpaw.dev/>grimoire, for skills</a><a href=https://email.ghostpaw.dev/>email, for mail</a></p>
+  </section>
+</main>
+<footer class=foot>
+  <p>telegram is maintained in the open by GhostPaw under the MIT licence.</p>
+  <p class=foot-links><a href=https://github.com/GhostPawJS/telegram>Source</a><a href=https://lab.anonyfox.com/impressum/>Impressum</a><a href=https://lab.anonyfox.com/datenschutz/>Datenschutz</a></p>
+</footer>
+
+
+
+<script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"SoftwareSourceCode","author":{"@id":"https://ghostpaw.dev/#org","@type":"Organization","name":"GhostPaw"},"codeRepository":"https://github.com/GhostPawJS/telegram","description":"@ghostpaw/telegram mirrors every Telegram update into SQLite before your handler runs, with edit history, reply chains and FTS5 search, and gives agents four tools that return plans unless you switch execution on. Node.js 24, zero dependencies, MIT.","license":"https://opensource.org/license/mit","name":"@ghostpaw/telegram","programmingLanguage":"TypeScript","runtimePlatform":"Node.js 24","version":"0.6.0"}]}</script><script>document.documentElement.classList.add("js");
+</script><script type=module>var E=[{rows:[{k:"Messages stored",v:"0"},{k:"Edits kept",v:"0"},{k:"Outbound calls",v:"0"},{k:"Last read",v:"—"},{k:"Tool result",v:"—"}],foot:"Eight empty tables after initTelegramTables(db)."},{rows:[{k:"Messages stored",v:"1 · Lena, msg 10",t:"cyan"},{k:"Edits kept",v:"0"},{k:"Outbound calls",v:"0"},{k:"Last read",v:"handler: row already stored",t:"cyan"},{k:"Tool result",v:"—"}],foot:"Stored before onMessage ran."},{rows:[{k:"Messages stored",v:"1"},{k:"Edits kept",v:"0"},{k:"Outbound calls",v:"1 · sendMessage",t:"cyan"},{k:"Last read",v:"—"},{k:"Tool result",v:"—"}],foot:"The handler's reply went to the stand-in."},{rows:[{k:"Messages stored",v:"1 · msg 10 edited",t:"violet"},{k:"Edits kept",v:"1 · “…shared drive.”",t:"violet"},{k:"Outbound calls",v:"1"},{k:"Last read",v:"—"},{k:"Tool result",v:"—"}],foot:"The old text is kept as edit history."},{rows:[{k:"Messages stored",v:"2 · Jun, msg 11",t:"cyan"},{k:"Edits kept",v:"1"},{k:"Outbound calls",v:"1"},{k:"Last read",v:"replyChain → 10, 11",t:"violet"},{k:"Tool result",v:"—"}],foot:"Reply edges come from reply_to_message."},{rows:[{k:"Messages stored",v:"2"},{k:"Edits kept",v:"1"},{k:"Outbound calls",v:"1"},{k:"Last read",v:"search “cafe” → 11, 10",t:"cyan"},{k:"Tool result",v:"—"}],foot:"Diacritics folded: cafe finds café."},{rows:[{k:"Messages stored",v:"2"},{k:"Edits kept",v:"1"},{k:"Outbound calls",v:"1 · still one",t:"ward"},{k:"Last read",v:"—"},{k:"Tool result",v:"tg_send · plan",t:"ward"}],foot:"A plan. Nothing was sent."}];(()=>{let r=document.getElementById("state-list"),p=document.getElementById("state-foot"),n=Array.from(document.querySelectorAll(".step")),y=document.getElementById("reset"),g=document.getElementById("run-status");if(!r||!n.length)return;let c=!matchMedia("(prefers-reduced-motion: reduce)").matches,o=0;function d(t){let s=E[t];r.textContent="";for(let e of s.rows){let a=document.createElement("li");e.t&&(a.className="t-"+e.t);let u=document.createElement("span");u.className="k",u.textContent=e.k;let m=document.createElement("span");if(m.className="v",m.textContent=e.v,a.append(u,m),e.w!=null){let v=document.createElement("span");v.className="bar";let k=document.createElement("i");v.append(k),a.append(v);let h=Math.max(0,Math.min(1,e.w))*100+"%",f=r.dataset.prev&&JSON.parse(r.dataset.prev)[e.k];k.style.width=c&&f!=null?f:h,c&&f!=null&&requestAnimationFrame(()=>requestAnimationFrame(()=>{k.style.width=h}))}r.append(a)}let l={};for(let e of s.rows)e.w!=null&&(l[e.k]=Math.max(0,Math.min(1,e.w))*100+"%");r.dataset.prev=JSON.stringify(l),p&&(p.textContent=s.foot||"")}function i(){n.forEach((t,s)=>{t.classList.toggle("done",s<o),t.classList.toggle("next",s===o)}),g&&(g.textContent=o<n.length?"Step "+(o+1)+" of "+n.length+" is next.":"All "+n.length+" steps replayed.")}n.forEach((t,s)=>{t.querySelector(".run-btn").addEventListener("click",()=>{if(s!==o)return;o=s+1,d(o),i(),t.classList.contains("refused")&&c&&(t.classList.add("flash"),t.addEventListener("animationend",()=>t.classList.remove("flash"),{once:!0}));let e=n[o]&&n[o].querySelector(".run-btn"),a=t.querySelector(".result");a&&(a.setAttribute("tabindex","-1"),a.focus({preventScroll:!0})),e&&e.setAttribute("aria-describedby","run-status")})}),y&&y.addEventListener("click",()=>{o=0,r.dataset.prev="",d(0),i(),n[0].querySelector(".run-btn").focus()}),d(0),i(),document.querySelectorAll(".copy").forEach(t=>{t.addEventListener("click",async()=>{let s=document.getElementById(t.dataset.copy);try{await navigator.clipboard.writeText(s.value)}catch{s.select(),document.execCommand("copy")}let l=t.textContent;t.textContent="Copied",setTimeout(()=>{t.textContent=l},1400)})})})();
+</script></body></html>

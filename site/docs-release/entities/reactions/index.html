@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reactions · @ghostpaw/telegram docs</title>
+<meta name="description" content="reactions tracks emoji reactions on messages across three tables: the current per-user state, aggregate counts, and an immutable event log.">
+<link rel="canonical" href="https://telegram.ghostpaw.dev/docs/entities/reactions/">
+<link rel="icon" href="../../../favicon.png" type="image/png">
+<link rel="preload" href="../../tektur-var.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="GhostPaw">
+<meta property="og:title" content="Reactions · @ghostpaw/telegram docs">
+<meta property="og:description" content="reactions tracks emoji reactions on messages across three tables: the current per-user state, aggregate counts, and an immutable event log.">
+<meta property="og:url" content="https://telegram.ghostpaw.dev/docs/entities/reactions/">
+<meta property="og:image" content="https://telegram.ghostpaw.dev/docs/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#04070b">
+<style>@font-face{font-family:"Tektur";src:url("../../tektur-var.woff2") format("woff2");font-weight:500 900;font-stretch:75% 100%;font-display:swap}
+:root{color-scheme:dark;--void:#04070b;--panel:#0a1119;--rule:#1d2c3c;--ghost:#e3edf5;--haze:#93a5b9;--spectral:#62e6f2;--wraith:#b39dff;--display:"Tektur",Bahnschrift,"Arial Narrow",sans-serif;--body:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--void);color:var(--ghost);font:400 1rem/1.65 var(--body)}
+a{color:var(--spectral);text-underline-offset:.18em}a:focus-visible{outline:2px solid var(--spectral);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--panel);padding:.5rem 1rem;z-index:9}
+header{border-bottom:1px solid var(--rule)}.bar{max-width:76rem;margin:0 auto;padding:1rem 1.25rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap}
+.brand{font:700 1.05rem var(--display);color:var(--ghost);text-decoration:none}.brand span{color:var(--spectral)}
+.bar nav{margin-left:auto;display:flex;gap:1.1rem;flex-wrap:wrap}.bar nav a{color:var(--haze);text-decoration:none}.bar nav a:hover{color:var(--ghost)}
+.wrap{max-width:76rem;margin:0 auto;padding:2rem 1.25rem 4rem;display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.wrap{grid-template-columns:14rem minmax(0,1fr)}}
+.side .h{font:600 .8rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--haze);margin:1.25rem 0 .4rem}.side .h:first-child{margin-top:0}
+.side ul{list-style:none;margin:0;padding:0}.side li{margin:.15rem 0}.side a{color:var(--haze);text-decoration:none}.side a[aria-current]{color:var(--spectral)}.side a:hover{color:var(--ghost)}
+.ver{display:inline-block;font:500 .85rem var(--mono);color:var(--haze);margin-bottom:.75rem}
+article{min-width:0;max-width:48rem}article h1,article h2,article h3{font-family:var(--display);line-height:1.2;font-weight:700}
+article h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 1rem}article h2{font-size:1.45rem;margin:2.4rem 0 .75rem;padding-top:1.2rem;border-top:1px solid var(--rule)}article h3{font-size:1.12rem;margin:1.8rem 0 .5rem}
+article code{font:400 .9em var(--mono);color:var(--spectral);overflow-wrap:anywhere}article pre{background:var(--panel);border:1px solid var(--rule);border-left:2px solid var(--wraith);padding:1rem;overflow-x:auto;line-height:1.5}article pre code{color:var(--ghost);overflow-wrap:normal}
+article table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.95rem}article th,article td{border:1px solid var(--rule);padding:.45rem .6rem;text-align:left;vertical-align:top}article th{background:var(--panel)}
+article blockquote{margin:1rem 0;padding:.25rem 1rem;border-left:2px solid var(--spectral);color:var(--haze)}
+footer{border-top:1px solid var(--rule)}footer .bar{color:var(--haze);font-size:.9rem}footer .bar nav a{color:var(--haze)}</style>
+</head>
+<body>
+<a class="skip" href="#doc">Skip to the documentation</a>
+<header><div class="bar"><a class="brand" href="https://ghostpaw.dev/">GhostPaw<span>/</span>telegram</a><nav aria-label="Site"><a href="https://telegram.ghostpaw.dev/">telegram</a><a href="../../">Docs</a><a href="https://github.com/GhostPawJS/telegram">GitHub</a><a href="https://www.npmjs.com/package/@ghostpaw/telegram">npm</a></nav></div></header>
+<div class="wrap">
+<nav class="side" aria-label="Documentation"><p class="h">Guides</p><ul><li><a href="../../">Overview</a></li><li><a href="../../human/">Using the API</a></li><li><a href="../../llm/">Agent tools and skills</a></li><li><a href="../../recipes/">Recipes</a></li><li><a href="../../architecture/">Architecture</a></li></ul><p class="h">Concepts</p><ul><li><a href="../../entities/calculations/">Calculations</a></li><li><a href="../../entities/callbacks/">Callbacks</a></li><li><a href="../../entities/chats/">Chats</a></li><li><a href="../../entities/files/">Files</a></li><li><a href="../../entities/members/">Members</a></li><li><a href="../../entities/messages/">Messages</a></li><li><a href="../../entities/reactions/" aria-current="page">Reactions</a></li><li><a href="../../entities/users/">Users</a></li></ul><p class="h">Source</p><ul><li><a href="https://github.com/GhostPawJS/telegram/blob/main/docs/CONCEPT.md">Design concept</a></li><li><a href="https://github.com/GhostPawJS/telegram#readme">README</a></li><li><a href="https://github.com/GhostPawJS/telegram/blob/main/CHANGELOG.md">Changelog</a></li></ul></nav>
+<main id="doc"><article><span class="ver">@ghostpaw/telegram 0.6.0</span>
+<h1 id="reactions">Reactions</h1>
+<h2 id="what-it-is">What It Is</h2>
+<p><code>reactions</code> tracks emoji reactions on messages across three tables: the
+current per-user state, aggregate counts, and an immutable event log.</p>
+<h2 id="why-it-exists">Why It Exists</h2>
+<p>Telegram delivers reactions as a full replacement snapshot, not a delta. The
+package needs to diff old vs. new state, derive the add/remove events, keep
+running totals, and retain a history, none of which Telegram provides
+natively.</p>
+<h2 id="schema">Schema</h2>
+<h3 id="reactions-per-user-current-state"><code>reactions</code>, per-user current state</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>chatId</code></td>
+<td>INTEGER</td>
+<td>FK → <code>chats.chatId</code></td>
+</tr>
+<tr>
+<td><code>messageId</code></td>
+<td>INTEGER</td>
+<td>FK → <code>messages.messageId</code></td>
+</tr>
+<tr>
+<td><code>userId</code></td>
+<td>INTEGER</td>
+<td>FK → <code>users.userId</code></td>
+</tr>
+<tr>
+<td><code>emoji</code></td>
+<td>TEXT</td>
+<td>The reaction emoji string</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>INTEGER</td>
+<td>Timestamp (ms) when first added</td>
+</tr>
+</tbody></table>
+<p><strong>Primary key:</strong> <code>(chatId, messageId, userId, emoji)</code></p>
+<h3 id="reaction-counts-aggregate-totals-per-emoji"><code>reaction_counts</code>, aggregate totals per emoji</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>chatId</code></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td><code>messageId</code></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td><code>emoji</code></td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td>INTEGER</td>
+<td>Running total</td>
+</tr>
+</tbody></table>
+<p><strong>Primary key:</strong> <code>(chatId, messageId, emoji)</code></p>
+<h3 id="reaction-events-immutable-event-log"><code>reaction_events</code>, immutable event log</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>eventId</code></td>
+<td>INTEGER</td>
+<td>Auto-increment PK</td>
+</tr>
+<tr>
+<td><code>chatId</code></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td><code>messageId</code></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td><code>userId</code></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td><code>displayName</code></td>
+<td>TEXT</td>
+<td>Denormalized at event time</td>
+</tr>
+<tr>
+<td><code>emoji</code></td>
+<td>TEXT</td>
+<td></td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td>TEXT</td>
+<td><code>&#39;add&#39;</code> or <code>&#39;remove&#39;</code></td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>INTEGER</td>
+<td>Timestamp (ms)</td>
+</tr>
+</tbody></table>
+<h2 id="applyreactionupdate-behavior"><code>applyReactionUpdate</code> Behavior</h2>
+<p><code>applyReactionUpdate(db, chatId, messageId, userId, displayName, oldReactions, newReactions)</code></p>
+<ol>
+<li>Diffs <code>oldReactions</code> against <code>newReactions</code> to find added and removed emoji.</li>
+<li>Inserts new rows into <code>reactions</code>; deletes removed rows.</li>
+<li>Appends one <code>reaction_events</code> row per added/removed emoji.</li>
+<li>The operation is <strong>idempotent</strong>: re-applying the same update produces no
+duplicate events.</li>
+</ol>
+<h2 id="public-api">Public API</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getReactions(db, chatId, messageId)</code></td>
+<td>All current per-user reactions for a message</td>
+</tr>
+<tr>
+<td><code>getReactionCounts(db, chatId, messageId)</code></td>
+<td>Aggregate emoji totals for a message</td>
+</tr>
+<tr>
+<td><code>userReactions(db, chatId, userId)</code></td>
+<td>All messages a user has reacted to in a chat</td>
+</tr>
+<tr>
+<td><code>applyReactionUpdate(db, chatId, messageId, userId, displayName, oldReactions, newReactions)</code></td>
+<td>Diff and persist a reaction snapshot</td>
+</tr>
+<tr>
+<td><code>applyReactionCounts(db, chatId, messageId, counts)</code></td>
+<td>Overwrite <code>reaction_counts</code> from a Telegram-supplied totals array</td>
+</tr>
+</tbody></table>
+<h2 id="good-uses">Good Uses</h2>
+<ul>
+<li>Displaying live reaction counts on messages</li>
+<li>Notifying when the bot&#39;s message receives a reaction</li>
+<li>Auditing reaction history via <code>reaction_events</code></li>
+</ul>
+<h2 id="do-not-use-it-for">Do Not Use It For</h2>
+<ul>
+<li>Storing inline keyboard button presses (see <a href="../../entities/callbacks/">CALLBACKS.md</a>)</li>
+<li>Vote tallying where ballot integrity matters (event log is append-only but
+not cryptographically signed)</li>
+</ul>
+</article></main>
+</div>
+<footer><div class="bar"><span>Rendered from <a href="https://github.com/GhostPawJS/telegram/tree/main/docs">docs/</a> in the repository, MIT licensed.</span><nav aria-label="Legal"><a href="https://ghostpaw.dev/">All GhostPaw libraries</a><a href="https://lab.anonyfox.com/impressum/">Impressum</a><a href="https://lab.anonyfox.com/datenschutz/">Datenschutz</a></nav></div></footer>
+</body>
+</html>

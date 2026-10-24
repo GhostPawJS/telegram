@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://telegram.ghostpaw.dev/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/human/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/llm/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/recipes/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/architecture/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/calculations/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/callbacks/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/chats/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/files/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/members/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/messages/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/reactions/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://telegram.ghostpaw.dev/docs/entities/users/</loc><lastmod>2026-10-24</lastmod></url>
+</urlset>

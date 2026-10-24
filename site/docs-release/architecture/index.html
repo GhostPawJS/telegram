@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Telegram, Code Architecture · @ghostpaw/telegram docs</title>
+<meta name="description" content="This document defines the final code structure for the @ghostpaw/telegram package. The normative spec lives in CONCEPT.md (currently README.md in this faculty folder). This document maps that spec to files and folders.">
+<link rel="canonical" href="https://telegram.ghostpaw.dev/docs/architecture/">
+<link rel="icon" href="../../favicon.png" type="image/png">
+<link rel="preload" href="../tektur-var.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="GhostPaw">
+<meta property="og:title" content="Telegram, Code Architecture · @ghostpaw/telegram docs">
+<meta property="og:description" content="This document defines the final code structure for the @ghostpaw/telegram package. The normative spec lives in CONCEPT.md (currently README.md in this faculty folder). This document maps that spec to files and folders.">
+<meta property="og:url" content="https://telegram.ghostpaw.dev/docs/architecture/">
+<meta property="og:image" content="https://telegram.ghostpaw.dev/docs/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#04070b">
+<style>@font-face{font-family:"Tektur";src:url("../tektur-var.woff2") format("woff2");font-weight:500 900;font-stretch:75% 100%;font-display:swap}
+:root{color-scheme:dark;--void:#04070b;--panel:#0a1119;--rule:#1d2c3c;--ghost:#e3edf5;--haze:#93a5b9;--spectral:#62e6f2;--wraith:#b39dff;--display:"Tektur",Bahnschrift,"Arial Narrow",sans-serif;--body:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--void);color:var(--ghost);font:400 1rem/1.65 var(--body)}
+a{color:var(--spectral);text-underline-offset:.18em}a:focus-visible{outline:2px solid var(--spectral);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--panel);padding:.5rem 1rem;z-index:9}
+header{border-bottom:1px solid var(--rule)}.bar{max-width:76rem;margin:0 auto;padding:1rem 1.25rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap}
+.brand{font:700 1.05rem var(--display);color:var(--ghost);text-decoration:none}.brand span{color:var(--spectral)}
+.bar nav{margin-left:auto;display:flex;gap:1.1rem;flex-wrap:wrap}.bar nav a{color:var(--haze);text-decoration:none}.bar nav a:hover{color:var(--ghost)}
+.wrap{max-width:76rem;margin:0 auto;padding:2rem 1.25rem 4rem;display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.wrap{grid-template-columns:14rem minmax(0,1fr)}}
+.side .h{font:600 .8rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--haze);margin:1.25rem 0 .4rem}.side .h:first-child{margin-top:0}
+.side ul{list-style:none;margin:0;padding:0}.side li{margin:.15rem 0}.side a{color:var(--haze);text-decoration:none}.side a[aria-current]{color:var(--spectral)}.side a:hover{color:var(--ghost)}
+.ver{display:inline-block;font:500 .85rem var(--mono);color:var(--haze);margin-bottom:.75rem}
+article{min-width:0;max-width:48rem}article h1,article h2,article h3{font-family:var(--display);line-height:1.2;font-weight:700}
+article h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 1rem}article h2{font-size:1.45rem;margin:2.4rem 0 .75rem;padding-top:1.2rem;border-top:1px solid var(--rule)}article h3{font-size:1.12rem;margin:1.8rem 0 .5rem}
+article code{font:400 .9em var(--mono);color:var(--spectral);overflow-wrap:anywhere}article pre{background:var(--panel);border:1px solid var(--rule);border-left:2px solid var(--wraith);padding:1rem;overflow-x:auto;line-height:1.5}article pre code{color:var(--ghost);overflow-wrap:normal}
+article table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.95rem}article th,article td{border:1px solid var(--rule);padding:.45rem .6rem;text-align:left;vertical-align:top}article th{background:var(--panel)}
+article blockquote{margin:1rem 0;padding:.25rem 1rem;border-left:2px solid var(--spectral);color:var(--haze)}
+footer{border-top:1px solid var(--rule)}footer .bar{color:var(--haze);font-size:.9rem}footer .bar nav a{color:var(--haze)}</style>
+</head>
+<body>
+<a class="skip" href="#doc">Skip to the documentation</a>
+<header><div class="bar"><a class="brand" href="https://ghostpaw.dev/">GhostPaw<span>/</span>telegram</a><nav aria-label="Site"><a href="https://telegram.ghostpaw.dev/">telegram</a><a href="../">Docs</a><a href="https://github.com/GhostPawJS/telegram">GitHub</a><a href="https://www.npmjs.com/package/@ghostpaw/telegram">npm</a></nav></div></header>
+<div class="wrap">
+<nav class="side" aria-label="Documentation"><p class="h">Guides</p><ul><li><a href="../">Overview</a></li><li><a href="../human/">Using the API</a></li><li><a href="../llm/">Agent tools and skills</a></li><li><a href="../recipes/">Recipes</a></li><li><a href="../architecture/" aria-current="page">Architecture</a></li></ul><p class="h">Concepts</p><ul><li><a href="../entities/calculations/">Calculations</a></li><li><a href="../entities/callbacks/">Callbacks</a></li><li><a href="../entities/chats/">Chats</a></li><li><a href="../entities/files/">Files</a></li><li><a href="../entities/members/">Members</a></li><li><a href="../entities/messages/">Messages</a></li><li><a href="../entities/reactions/">Reactions</a></li><li><a href="../entities/users/">Users</a></li></ul><p class="h">Source</p><ul><li><a href="https://github.com/GhostPawJS/telegram/blob/main/docs/CONCEPT.md">Design concept</a></li><li><a href="https://github.com/GhostPawJS/telegram#readme">README</a></li><li><a href="https://github.com/GhostPawJS/telegram/blob/main/CHANGELOG.md">Changelog</a></li></ul></nav>
+<main id="doc"><article><span class="ver">@ghostpaw/telegram 0.6.0</span>
+<h1 id="telegram-code-architecture">Telegram, Code Architecture</h1>
+<p>This document defines the final code structure for the <code>@ghostpaw/telegram</code>
+package. The normative spec lives in <code>CONCEPT.md</code> (currently <code>README.md</code> in
+this faculty folder). This document maps that spec to files and folders.</p>
+<p>The structure follows the exact patterns established by <code>@ghostpaw/grimoire</code>,
+<code>@ghostpaw/codex</code>, <code>@ghostpaw/souls</code>, <code>@ghostpaw/affinity</code>, and
+<code>@ghostpaw/questlog</code>. The only material difference is two runtime dependencies
+(<code>grammy</code>, <code>marked</code>) and five public surfaces instead of two or three.</p>
+<h2 id="package-root">Package Root</h2>
+<pre><code>@ghostpaw/telegram/
+  CONCEPT.md                  # normative spec (the current README.md)
+  README.md                   # short package overview and quick start
+  package.json                # @ghostpaw/telegram, tsup build, node:test
+  biome.json                  # shared lint config (2-space, double quotes, etc.)
+  tsconfig.json               # strict TS, ESM, verbatimModuleSyntax
+  tsconfig.demo.json          # demo-only overrides (JSX, browser target)
+  .github/workflows/
+    ci.yml                    # lint + typecheck + test
+    pages.yml                 # deploy demo to GitHub Pages
+    publish.yml               # publish to npm on tag
+  docs/                       # operator and implementer manual
+  scripts/                    # build_demo.mjs, serve_demo.mjs
+  src/                        # all source code
+</code></pre>
+<h2 id="docs">Docs</h2>
+<pre><code>docs/
+  README.md                   # doc index, core separations, storage topology
+  HUMAN.md                    # direct-code usage: init, read, write, network, render
+  LLM.md                      # soul + tools + skills for agent harness builders
+  PAGES.md                    # demo app documentation
+  entities/
+    USERS.md                  # user atom, identity resolution, upsert semantics
+    CHATS.md                  # chat atom, types, migration, linked channels
+    MEMBERS.md                # member states, permissions, admin rights
+    MESSAGES.md               # message atom, service kinds, edit tracking, FTS
+    FILES.md                  # file storage model, download/upload, photo sizes
+    REACTIONS.md              # three representations, event log, aggregate counts
+    CALLBACKS.md              # callback routing, persistence, expiry
+    TRANSPORT.md              # polling, webhook, connection states, update offset
+    STREAMING.md              # progressive edit, throttle, chain overflow
+    COMMANDS.md               # registry, parsing, middleware, menu sync
+</code></pre>
+<p>Each entity doc follows the established pattern:</p>
+<ul>
+<li>What It Is</li>
+<li>Why It Exists</li>
+<li>How To Use It</li>
+<li>Good Uses / Do Not Use It For</li>
+<li>Field table</li>
+<li>Public API at the bottom</li>
+</ul>
+<p><code>HUMAN.md</code> covers the direct package surface (<code>initTelegramTables</code>, <code>read</code>,
+<code>write</code>, <code>network</code>, <code>render</code>, <code>types</code>, <code>errors</code>, <code>createBot</code>).</p>
+<p><code>LLM.md</code> covers the additive agent runtime (<code>soul</code>, <code>tools</code>, <code>skills</code>).</p>
+<h2 id="source-layout">Source Layout</h2>
+<pre><code>src/
+  index.ts                    # barrel: namespaced re-exports
+  index.test.ts               # integration: surfaces exist, types resolve
+  database.ts                 # TelegramDb type (injected, never constructed)
+  types.ts                    # re-exports all public types from entity modules
+  errors.ts                   # TelegramError hierarchy + isTelegramError guard
+  errors.test.ts
+  defaults.ts                 # DEFAULTS constant (all config knobs from spec)
+  init_telegram_tables.ts     # one-shot DDL for all tables
+  init_telegram_tables.test.ts
+  read.ts                     # query surface: re-exports from entity modules
+  read.test.ts
+  write.ts                    # mutation surface: re-exports from executor/streaming
+  write.test.ts
+  network.ts                  # transport lifecycle + file transfer
+  network.test.ts
+  render.ts                   # pure transformation: markdown, splitting, escaping
+  render.test.ts
+  bot.ts                      # porcelain: createBot, TelegramBot composition
+  bot.test.ts
+  soul.ts                     # Herald soul: essence + traits + render
+  soul.test.ts
+  with_transaction.ts         # transaction helper
+  resolve_now.ts              # time resolution helper
+</code></pre>
+<h3 id="entity-modules">Entity Modules</h3>
+<p>Each entity module owns its SQLite tables, row mappers, and typed queries.</p>
+<pre><code>  users/
+    index.ts
+    types.ts
+    init_user_tables.ts
+    upsert_user.ts            + upsert_user.test.ts
+    get_user.ts               + get_user.test.ts
+    list_users.ts             + list_users.test.ts
+    user_chats.ts             + user_chats.test.ts
+    user_messages.ts          + user_messages.test.ts
+    map_user_row.ts           + map_user_row.test.ts
+
+  chats/
+    index.ts
+    types.ts
+    init_chat_tables.ts
+    upsert_chat.ts            + upsert_chat.test.ts
+    get_chat.ts               + get_chat.test.ts
+    list_chats.ts             + list_chats.test.ts
+    handle_migration.ts       + handle_migration.test.ts
+    map_chat_row.ts           + map_chat_row.test.ts
+
+  members/
+    index.ts
+    types.ts
+    init_member_tables.ts
+    upsert_member.ts          + upsert_member.test.ts
+    get_member.ts             + get_member.test.ts
+    list_members.ts           + list_members.test.ts
+    map_member_row.ts         + map_member_row.test.ts
+
+  messages/
+    index.ts
+    types.ts
+    init_message_tables.ts    # messages + messages_fts + message_edits + triggers
+    insert_message.ts         + insert_message.test.ts
+    update_message.ts         + update_message.test.ts
+    apply_edit.ts             + apply_edit.test.ts
+    soft_delete.ts            + soft_delete.test.ts
+    get_message.ts            + get_message.test.ts
+    list_messages.ts          + list_messages.test.ts
+    reply_chain.ts            + reply_chain.test.ts
+    album.ts                  + album.test.ts
+    thread_summary.ts         + thread_summary.test.ts
+    search_messages.ts        + search_messages.test.ts
+    map_message_row.ts        + map_message_row.test.ts
+
+  files/
+    index.ts
+    types.ts
+    init_file_tables.ts
+    upsert_file.ts            + upsert_file.test.ts
+    get_file.ts               + get_file.test.ts
+    list_files.ts             + list_files.test.ts
+    update_storage_status.ts  + update_storage_status.test.ts
+    download_file.ts          + download_file.test.ts
+    upload_file.ts            + upload_file.test.ts
+    map_file_row.ts           + map_file_row.test.ts
+
+  reactions/
+    index.ts
+    types.ts
+    init_reaction_tables.ts   # reactions + reaction_counts + reaction_events
+    apply_reaction_update.ts  + apply_reaction_update.test.ts
+    apply_reaction_counts.ts  + apply_reaction_counts.test.ts
+    get_reactions.ts          + get_reactions.test.ts
+    get_reaction_counts.ts    + get_reaction_counts.test.ts
+    user_reactions.ts         + user_reactions.test.ts
+    map_reaction_row.ts       + map_reaction_row.test.ts
+
+  callbacks/
+    index.ts
+    types.ts
+    init_callback_tables.ts
+    insert_callback.ts        + insert_callback.test.ts
+    mark_answered.ts          + mark_answered.test.ts
+    get_callbacks.ts          + get_callbacks.test.ts
+    map_callback_row.ts       + map_callback_row.test.ts
+
+  bot_state/
+    index.ts
+    types.ts
+    init_bot_state_tables.ts
+    get_state.ts              + get_state.test.ts
+    set_state.ts              + set_state.test.ts
+    get_stats.ts              + get_stats.test.ts
+</code></pre>
+<h3 id="behavioral-modules">Behavioral Modules</h3>
+<p>No tables of their own. Each owns one runtime concern.</p>
+<pre><code>  transport/
+    index.ts
+    types.ts
+    start_polling.ts          + start_polling.test.ts
+    start_webhook.ts          + start_webhook.test.ts
+    stop.ts                   + stop.test.ts
+    dispatch_update.ts        + dispatch_update.test.ts
+    connection_state.ts       + connection_state.test.ts
+
+  normalize/
+    index.ts
+    types.ts
+    normalize_message.ts      + normalize_message.test.ts
+    normalize_user.ts         + normalize_user.test.ts
+    normalize_chat.ts         + normalize_chat.test.ts
+    normalize_member.ts       + normalize_member.test.ts
+    resolve_sender.ts         + resolve_sender.test.ts
+    extract_media.ts          + extract_media.test.ts
+    classify_message_type.ts  + classify_message_type.test.ts
+    classify_service_kind.ts  + classify_service_kind.test.ts
+
+  executor/
+    index.ts
+    types.ts
+    send_message.ts           + send_message.test.ts
+    edit_message.ts           + edit_message.test.ts
+    delete_messages.ts        + delete_messages.test.ts
+    forward_message.ts        + forward_message.test.ts
+    copy_message.ts           + copy_message.test.ts
+    set_reaction.ts           + set_reaction.test.ts
+    send_album.ts             + send_album.test.ts
+    moderate.ts               + moderate.test.ts
+    manage_topic.ts           + manage_topic.test.ts
+    broadcast.ts              + broadcast.test.ts
+    answer_callback.ts        + answer_callback.test.ts
+    rate_limiter.ts           + rate_limiter.test.ts
+    outbound_queue.ts         + outbound_queue.test.ts
+
+  streaming/
+    index.ts
+    types.ts
+    create_stream.ts          + create_stream.test.ts
+    stream_buffer.ts          + stream_buffer.test.ts
+    adaptive_debounce.ts      + adaptive_debounce.test.ts
+    chain_overflow.ts         + chain_overflow.test.ts
+
+  commands/
+    index.ts
+    types.ts
+    command_registry.ts       + command_registry.test.ts
+    parse_command.ts          + parse_command.test.ts
+    command_middleware.ts      + command_middleware.test.ts
+    sync_menu.ts              + sync_menu.test.ts
+
+  keyboards/
+    index.ts
+    types.ts
+    inline_keyboard.ts        + inline_keyboard.test.ts
+    reply_keyboard.ts         + reply_keyboard.test.ts
+
+  render/
+    index.ts
+    types.ts
+    markdown_to_html.ts       + markdown_to_html.test.ts
+    markdown_to_markdown_v2.ts + markdown_to_markdown_v2.test.ts
+    split_text.ts             + split_text.test.ts
+    split_caption.ts          + split_caption.test.ts
+    escape_html.ts            + escape_html.test.ts
+    escape_markdown_v2.ts     + escape_markdown_v2.test.ts
+</code></pre>
+<h3 id="tools-skills-soul">Tools, Skills, Soul</h3>
+<pre><code>  tools/
+    index.ts
+    tool_metadata.ts          # defineTelegramTool, schema builders
+    tool_types.ts             # ToolResult, ToolSuccess, ToolFailure hierarchy
+    tool_names.ts             # tool name string constants
+    tool_registry.ts          # telegramTools, getTelegramToolByName, listTelegramToolDefinitions
+    tool_errors.ts            # translateToolError, withToolHandling
+    tool_ref.ts               # entity reference builders
+    tool_next.ts              # next-step hint builders
+    tg_read_tool.ts           + tg_read_tool.test.ts
+    tg_send_tool.ts           + tg_send_tool.test.ts
+    tg_manage_tool.ts         + tg_manage_tool.test.ts
+    tg_connect_tool.ts        + tg_connect_tool.test.ts
+
+  skills/
+    index.ts
+    skill_types.ts            # TelegramSkill interface + defineTelegramSkill
+    skill_registry.ts         # telegramSkills, getTelegramSkillByName, listTelegramSkills
+    manage-telegram-conversations.ts   + .test.ts
+    handle-group-administration.ts     + .test.ts
+    stream-progressive-responses.ts    + .test.ts
+    moderate-chat-effectively.ts       + .test.ts
+    search-and-retrieve-messages.ts    + .test.ts
+    broadcast-to-audience.ts           + .test.ts
+</code></pre>
+<h3 id="library-and-demo">Library and Demo</h3>
+<pre><code>  integration/                # cross-cutting tests (affinity pattern)
+    architecture.test.ts      # enforce structural invariants (layer imports, surface wiring)
+    intake_flow.test.ts       # full inbound update → normalize → persist → hook
+    outbound_flow.test.ts     # full send → rate limit → grammy → persist
+
+  lib/
+    open-test-database.ts     # opens in-memory SQLite for tests
+    test-db.ts                # shared test db factory
+    mock_grammy.ts            # grammy Bot mock for tests (no real network)
+
+  demo/
+    app.tsx                   # Preact SPA root
+    main.tsx                  # entry point
+    sidebar.tsx
+    router.ts
+    context.ts
+    browser_telegram_db.ts    # sql.js adapter for browser demo
+    load_sqljs.ts
+    sql_wasm_module.ts
+    empty_module.ts
+    demo_session.ts
+    result_toast.tsx
+    page_dashboard.tsx
+    page_chats.tsx
+    page_messages.tsx
+    page_files.tsx
+    page_search.tsx
+    page_settings.tsx
+    ui/
+      index.ts
+      badge.tsx
+      panel.tsx
+      message_card.tsx
+      chat_card.tsx
+      empty_state.tsx
+</code></pre>
+<h2 id="barrel-export">Barrel Export</h2>
+<p><code>index.ts</code> follows the exact pattern from codex/grimoire/souls:</p>
+<pre><code class="language-typescript">export type { TelegramDb } from &quot;./database.ts&quot;;
+export * from &quot;./errors.ts&quot;;
+export * as errors from &quot;./errors.ts&quot;;
+export { initTelegramTables } from &quot;./init_telegram_tables.ts&quot;;
+export { createBot } from &quot;./bot.ts&quot;;
+export { DEFAULTS } from &quot;./defaults.ts&quot;;
+export * as read from &quot;./read.ts&quot;;
+export * as write from &quot;./write.ts&quot;;
+export * as network from &quot;./network.ts&quot;;
+export * as render from &quot;./render.ts&quot;;
+export type * from &quot;./skills/index.ts&quot;;
+export * as skills from &quot;./skills/index.ts&quot;;
+export type * from &quot;./soul.ts&quot;;
+export * as soul from &quot;./soul.ts&quot;;
+export type * from &quot;./tools/index.ts&quot;;
+export * as tools from &quot;./tools/index.ts&quot;;
+export type * from &quot;./types.ts&quot;;
+export * as types from &quot;./types.ts&quot;;
+</code></pre>
+<p>Consumer usage:</p>
+<pre><code class="language-typescript">import {
+  createBot,
+  initTelegramTables,
+  read,
+  write,
+  network,
+  render,
+  types,
+  errors,
+  skills,
+  soul,
+  tools,
+} from &quot;@ghostpaw/telegram&quot;;
+</code></pre>
+<h2 id="surface-wiring">Surface Wiring</h2>
+<h3 id="read-ts"><code>read.ts</code></h3>
+<p>Pure SQLite queries. No network, no grammy. First argument is always <code>db</code>.</p>
+<pre><code class="language-typescript">export { getUser, listUsers, userChats, userMessages } from &quot;./users/index.ts&quot;;
+export { getChat, listChats } from &quot;./chats/index.ts&quot;;
+export { getMember, listMembers } from &quot;./members/index.ts&quot;;
+export {
+  getMessage,
+  listMessages,
+  replyChain,
+  album,
+  threadSummary,
+  searchMessages,
+  editHistory,
+} from &quot;./messages/index.ts&quot;;
+export { getFile, listFiles } from &quot;./files/index.ts&quot;;
+export { getReactions, getReactionCounts, userReactions } from &quot;./reactions/index.ts&quot;;
+export { getCallbacks } from &quot;./callbacks/index.ts&quot;;
+export { getStats } from &quot;./bot_state/index.ts&quot;;
+</code></pre>
+<h3 id="write-ts"><code>write.ts</code></h3>
+<p>Outbound actions. Each function calls grammy, then persists the result to
+the mirror. Requires both <code>db</code> and <code>bot</code> (grammy Bot instance).</p>
+<pre><code class="language-typescript">export {
+  sendMessage,
+  replyMessage,
+  editMessage,
+  deleteMessages,
+  forwardMessage,
+  copyMessage,
+  setReaction,
+  sendAlbum,
+  pinMessage,
+  unpinMessage,
+  unpinAllMessages,
+  answerCallback,
+  setChatTitle,
+  setChatDescription,
+  setChatPhoto,
+  deleteChatPhoto,
+  setChatPermissions,
+  banMember,
+  unbanMember,
+  restrictMember,
+  promoteMember,
+  createInviteLink,
+  editInviteLink,
+  revokeInviteLink,
+  approveJoinRequest,
+  declineJoinRequest,
+  leaveChat,
+  createTopic,
+  editTopic,
+  closeTopic,
+  reopenTopic,
+  deleteTopic,
+  hideGeneralTopic,
+  unhideGeneralTopic,
+  closeGeneralTopic,
+  reopenGeneralTopic,
+  unpinAllTopicMessages,
+  typing,
+} from &quot;./executor/index.ts&quot;;
+export { createStream } from &quot;./streaming/index.ts&quot;;
+export { broadcast } from &quot;./executor/index.ts&quot;;
+</code></pre>
+<h3 id="network-ts"><code>network.ts</code></h3>
+<p>Transport lifecycle and file I/O. Requires grammy Bot instance.</p>
+<pre><code class="language-typescript">export { startPolling, startWebhook, stop, isConnected } from &quot;./transport/index.ts&quot;;
+export { downloadFile, getFileUrl, uploadFile } from &quot;./files/index.ts&quot;;
+export { notify } from &quot;./executor/index.ts&quot;;
+</code></pre>
+<h3 id="render-ts"><code>render.ts</code></h3>
+<p>Pure transformation. No I/O, no db, no grammy. Stateless functions.</p>
+<pre><code class="language-typescript">export { markdownToHtml, markdownToMarkdownV2 } from &quot;./render/index.ts&quot;;
+export { splitText, splitCaption } from &quot;./render/index.ts&quot;;
+export { escapeHtml, escapeMarkdownV2 } from &quot;./render/index.ts&quot;;
+</code></pre>
+<h2 id="key-files">Key Files</h2>
+<h3 id="database-ts"><code>database.ts</code></h3>
+<p>Dependency-injected. The package never constructs a database.</p>
+<pre><code class="language-typescript">interface TelegramRunResult {
+  lastInsertRowid: number | bigint;
+  changes?: number | bigint | undefined;
+}
+
+interface TelegramStatement {
+  run(...params: unknown[]): TelegramRunResult;
+  get&lt;TRecord = Record&lt;string, unknown&gt;&gt;(...params: unknown[]): TRecord | undefined;
+  all&lt;TRecord = Record&lt;string, unknown&gt;&gt;(...params: unknown[]): TRecord[];
+}
+
+type TelegramDb = {
+  exec(sql: string): void;
+  prepare(sql: string): TelegramStatement;
+  close(): void;
+};
+</code></pre>
+<h3 id="errors-ts"><code>errors.ts</code></h3>
+<pre><code class="language-typescript">type TelegramErrorCode =
+  | &quot;TELEGRAM_NOT_FOUND&quot;
+  | &quot;TELEGRAM_TRANSPORT&quot;
+  | &quot;TELEGRAM_RATE_LIMIT&quot;
+  | &quot;TELEGRAM_API&quot;
+  | &quot;TELEGRAM_VALIDATION&quot;
+  | &quot;TELEGRAM_STATE&quot;
+  | &quot;TELEGRAM_FILE&quot;;
+
+class TelegramError extends Error { ... }
+class TelegramNotFoundError extends TelegramError { ... }
+class TelegramTransportError extends TelegramError { ... }
+class TelegramRateLimitError extends TelegramError { ... }
+class TelegramApiError extends TelegramError { ... }
+class TelegramValidationError extends TelegramError { ... }
+class TelegramStateError extends TelegramError { ... }
+class TelegramFileError extends TelegramError { ... }
+
+function isTelegramError(value: unknown): value is TelegramError;
+</code></pre>
+<h3 id="defaults-ts"><code>defaults.ts</code></h3>
+<pre><code class="language-typescript">const DEFAULTS = {
+  apiRoot: &quot;https://api.telegram.org&quot;,
+  parseMode: &quot;HTML&quot;,
+  pollingTimeout: 30_000,
+  connectionTimeout: 10_000,
+  conflictRetries: 3,
+  conflictRetryDelay: 5_000,
+  typingInterval: 4_000,
+  minEditInterval: 1_000,
+  maxEditInterval: 3_000,
+  minEditDelta: 20,
+  chainOnOverflow: true,
+  maxQueueDepth: 100,
+  autoDownload: false,
+  autoDownloadTypes: [],
+  autoDownloadMaxSize: 10_485_760,
+  fileRetentionMs: 2_592_000_000,
+  maxFileCacheBytes: 524_288_000,
+  statelessMode: false,
+  allowedChatIds: [],
+  allowedUpdates: [],
+} as const;
+</code></pre>
+<h3 id="bot-ts"><code>bot.ts</code></h3>
+<p>The porcelain. Composes all surfaces, event hooks, and the command registry
+into one object. Analogous to grimoire&#39;s <code>init.ts</code>.</p>
+<pre><code class="language-typescript">function createBot(config: BotConfig): TelegramBot;
+</code></pre>
+<p><code>createBot</code> wires:</p>
+<ul>
+<li>grammy <code>Bot</code> instance from <code>config.token</code></li>
+<li>all entity modules bound to <code>config.db</code></li>
+<li>transport (polling or webhook) from <code>config</code></li>
+<li>normalizer pipeline for inbound updates</li>
+<li>executor with rate limiter for outbound actions</li>
+<li>command registry</li>
+<li>event hook registration (<code>onMessage</code>, <code>onEditedMessage</code>, etc.)</li>
+<li>exposes <code>read</code>, <code>write</code>, <code>network</code>, <code>render</code>, <code>commands</code> as readonly properties</li>
+</ul>
+<h3 id="soul-ts"><code>soul.ts</code></h3>
+<pre><code class="language-typescript">interface TelegramSoulTrait {
+  principle: string;
+  provenance: string;
+}
+
+interface TelegramSoul {
+  slug: string;
+  name: string;
+  description: string;
+  essence: string;
+  traits: readonly TelegramSoulTrait[];
+}
+
+const telegramSoulEssence: string;
+const telegramSoulTraits: readonly TelegramSoulTrait[];
+const telegramSoul: TelegramSoul;
+function renderTelegramSoulPromptFoundation(soul?: TelegramSoul): string;
+</code></pre>
+<h2 id="type-re-export-strategy">Type Re-Export Strategy</h2>
+<p>Root <code>types.ts</code> re-exports all public types from entity modules, following the
+codex/affinity pattern. Entity-specific enums and row types live in each
+module&#39;s <code>types.ts</code>. Cross-cutting types (shared across multiple modules) live
+in the entity module that owns the concept.</p>
+<pre><code class="language-typescript">// types.ts (root)
+export type { User, UserFilter } from &quot;./users/types.ts&quot;;
+export type { Chat, ChatFilter, AvailableReactions } from &quot;./chats/types.ts&quot;;
+export type { Member } from &quot;./members/types.ts&quot;;
+export type {
+  StoredMessage, MessageQuery, MessageEdit, SearchResult, SearchOpts, ThreadSummary,
+} from &quot;./messages/types.ts&quot;;
+export type { FileEntry, FileQuery } from &quot;./files/types.ts&quot;;
+export type {
+  ReactionInput, UserReaction, ReactionCount, UserReactionSummary,
+} from &quot;./reactions/types.ts&quot;;
+export type { CallbackEntry } from &quot;./callbacks/types.ts&quot;;
+export type { BotStats } from &quot;./bot_state/types.ts&quot;;
+export type {
+  OutboundContent, EditContent, SendOpts, SentMessage, BroadcastOpts,
+  BroadcastHandle, BroadcastResult, ChatAction, BanOpts, InviteLinkOpts,
+  TopicOpts, AnswerCallbackOpts,
+} from &quot;./executor/types.ts&quot;;
+export type { StreamHandle, StreamOpts } from &quot;./streaming/types.ts&quot;;
+export type {
+  PollingOpts, WebhookOpts, StartOpts, BotInfo,
+} from &quot;./transport/types.ts&quot;;
+export type { NotifyOpts, UploadOpts } from &quot;./files/types.ts&quot;;
+export type { BotConfig } from &quot;./bot.ts&quot;;
+export type {
+  CommandRegistry, CommandDef, ArgDef, CommandContext, CommandResult,
+  CommandScope, CommandMiddleware, CommandAction,
+} from &quot;./commands/types.ts&quot;;
+export type {
+  ReplyMarkup, InlineButton, KeyboardButton, InputMedia, MediaType,
+  InputFile, ParseMode, ChatPermissions, AdminRights,
+} from &quot;./keyboards/types.ts&quot;;
+export type {
+  IncomingMessage, MessageHandler, EditedMessageHandler, CallbackHandler,
+  MemberUpdateHandler, ReactionHandler, PollAnswerHandler, JoinRequestHandler,
+  DeepLinkHandler, CallbackEvent, MemberUpdateEvent, ReactionUpdateEvent,
+  PollAnswerEvent, JoinRequestEvent,
+} from &quot;./normalize/types.ts&quot;;
+export type { TelegramSoul, TelegramSoulTrait } from &quot;./soul.ts&quot;;
+</code></pre>
+<h2 id="dependency-and-call-graph">Dependency and Call Graph</h2>
+<p>Strict layering. Higher layers depend on lower. Never reversed.</p>
+<pre><code>5. bot.ts           — porcelain composition, event dispatch
+4. write.ts         — outbound actions (executor + streaming)
+   network.ts       — transport lifecycle + file I/O
+3. normalize/       — raw grammy updates to canonical shapes
+   executor/        — outbound grammy calls + rate limiting + queue
+   streaming/       — progressive edit
+   transport/       — polling, webhook, connection state
+   commands/        — registry, parsing, middleware
+   keyboards/       — builder utilities
+2. users/ chats/ members/ messages/ files/ reactions/ callbacks/ bot_state/
+   render/          — pure markdown transformation
+1. database.ts      — injected db type
+   errors.ts        — error hierarchy
+   defaults.ts      — config constants
+   lib/             — pure utilities, test helpers
+</code></pre>
+<p>Entity modules at layer 2 do not import from each other. Cross-entity joins
+happen in <code>read.ts</code> functions or in <code>normalize/</code> during intake.</p>
+<p><code>render/</code> sits at layer 2 because it is pure transformation with no
+dependencies on entity modules, transport, or grammy. It depends only on
+<code>marked</code> and the <code>types</code> at layer 1.</p>
+<h2 id="tool-surface">Tool Surface</h2>
+<p>Four consolidated tools following the codex pattern of lean, action-oriented
+grouping:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Surface</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tg_read</code></td>
+<td><code>read</code></td>
+<td>search messages, list chats, get user, get message, thread summary, edit history, reactions, stats</td>
+</tr>
+<tr>
+<td><code>tg_send</code></td>
+<td><code>write</code></td>
+<td>send, reply, edit, delete, forward, copy, react, pin, stream, album, broadcast</td>
+</tr>
+<tr>
+<td><code>tg_manage</code></td>
+<td><code>write</code></td>
+<td>ban, restrict, promote, permissions, topics, invite links, chat settings</td>
+</tr>
+<tr>
+<td><code>tg_connect</code></td>
+<td><code>network</code></td>
+<td>start/stop transport, download/upload files, connection status</td>
+</tr>
+</tbody></table>
+<p>Each tool file exports:</p>
+<ul>
+<li>a tool definition (JSON Schema metadata via <code>defineTelegramTool</code>)</li>
+<li>a handler function (<code>(db, bot, input) =&gt; ToolResult</code>)</li>
+<li>input/result types</li>
+</ul>
+<p>Tools call through the <code>read</code>/<code>write</code>/<code>network</code> surfaces. They never reach
+into entity modules or grammy directly.</p>
+<h2 id="skill-surface">Skill Surface</h2>
+<p>Six procedural skills as TypeScript constants:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Tools Used</th>
+<th>When To Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>manage-telegram-conversations</code></td>
+<td><code>tg_read</code>, <code>tg_send</code></td>
+<td>monitor and respond to chat activity</td>
+</tr>
+<tr>
+<td><code>handle-group-administration</code></td>
+<td><code>tg_read</code>, <code>tg_manage</code></td>
+<td>member moderation and chat settings</td>
+</tr>
+<tr>
+<td><code>stream-progressive-responses</code></td>
+<td><code>tg_send</code></td>
+<td>LLM-backed incremental responses</td>
+</tr>
+<tr>
+<td><code>moderate-chat-effectively</code></td>
+<td><code>tg_read</code>, <code>tg_manage</code></td>
+<td>proactive moderation workflows</td>
+</tr>
+<tr>
+<td><code>search-and-retrieve-messages</code></td>
+<td><code>tg_read</code></td>
+<td>finding messages, threads, history</td>
+</tr>
+<tr>
+<td><code>broadcast-to-audience</code></td>
+<td><code>tg_read</code>, <code>tg_send</code></td>
+<td>sending to many chats safely</td>
+</tr>
+</tbody></table>
+<h2 id="testing-conventions">Testing Conventions</h2>
+<ul>
+<li><code>node:test</code> + <code>node:assert</code> exclusively</li>
+<li>In-memory SQLite for all persistence tests (via <code>lib/open-test-database.ts</code>)</li>
+<li>grammy mocked via <code>lib/mock_grammy.ts</code>: no real Telegram traffic in tests</li>
+<li>Every non-type <code>.ts</code> file has a colocated <code>.test.ts</code></li>
+<li>Integration tests at surface level (<code>read.test.ts</code>, <code>write.test.ts</code>, etc.)</li>
+</ul>
+<h2 id="build">Build</h2>
+<ul>
+<li><code>tsup</code> for dual CJS/ESM output</li>
+<li><code>esbuild</code> for the demo SPA</li>
+<li><code>biome</code> for lint and format</li>
+<li><code>tsc --noEmit</code> for type checking</li>
+<li>Single entry: <code>src/index.ts</code></li>
+<li>Output: <code>dist/index.js</code>, <code>dist/index.cjs</code>, <code>dist/index.d.ts</code>, <code>dist/index.d.cts</code></li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<pre><code>runtime:
+  grammy           — Bot API transport, update types, method surface
+  marked           — markdown lexer for rendering
+
+dev only:
+  @biomejs/biome   — lint and format
+  @types/node      — Node.js type declarations
+  esbuild          — demo SPA bundler
+  preact           — demo SPA framework
+  sql.js-fts5      — browser-side SQLite for demo
+  tsup             — library bundler
+  typescript       — type checking
+</code></pre>
+</article></main>
+</div>
+<footer><div class="bar"><span>Rendered from <a href="https://github.com/GhostPawJS/telegram/tree/main/docs">docs/</a> in the repository, MIT licensed.</span><nav aria-label="Legal"><a href="https://ghostpaw.dev/">All GhostPaw libraries</a><a href="https://lab.anonyfox.com/impressum/">Impressum</a><a href="https://lab.anonyfox.com/datenschutz/">Datenschutz</a></nav></div></footer>
+</body>
+</html>

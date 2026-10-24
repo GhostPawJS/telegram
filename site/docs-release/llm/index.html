@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Usage · @ghostpaw/telegram docs</title>
+<meta name="description" content="Agent builder guide for @ghostpaw/telegram.">
+<link rel="canonical" href="https://telegram.ghostpaw.dev/docs/llm/">
+<link rel="icon" href="../../favicon.png" type="image/png">
+<link rel="preload" href="../tektur-var.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="GhostPaw">
+<meta property="og:title" content="LLM Usage · @ghostpaw/telegram docs">
+<meta property="og:description" content="Agent builder guide for @ghostpaw/telegram.">
+<meta property="og:url" content="https://telegram.ghostpaw.dev/docs/llm/">
+<meta property="og:image" content="https://telegram.ghostpaw.dev/docs/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#04070b">
+<style>@font-face{font-family:"Tektur";src:url("../tektur-var.woff2") format("woff2");font-weight:500 900;font-stretch:75% 100%;font-display:swap}
+:root{color-scheme:dark;--void:#04070b;--panel:#0a1119;--rule:#1d2c3c;--ghost:#e3edf5;--haze:#93a5b9;--spectral:#62e6f2;--wraith:#b39dff;--display:"Tektur",Bahnschrift,"Arial Narrow",sans-serif;--body:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--void);color:var(--ghost);font:400 1rem/1.65 var(--body)}
+a{color:var(--spectral);text-underline-offset:.18em}a:focus-visible{outline:2px solid var(--spectral);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--panel);padding:.5rem 1rem;z-index:9}
+header{border-bottom:1px solid var(--rule)}.bar{max-width:76rem;margin:0 auto;padding:1rem 1.25rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap}
+.brand{font:700 1.05rem var(--display);color:var(--ghost);text-decoration:none}.brand span{color:var(--spectral)}
+.bar nav{margin-left:auto;display:flex;gap:1.1rem;flex-wrap:wrap}.bar nav a{color:var(--haze);text-decoration:none}.bar nav a:hover{color:var(--ghost)}
+.wrap{max-width:76rem;margin:0 auto;padding:2rem 1.25rem 4rem;display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.wrap{grid-template-columns:14rem minmax(0,1fr)}}
+.side .h{font:600 .8rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--haze);margin:1.25rem 0 .4rem}.side .h:first-child{margin-top:0}
+.side ul{list-style:none;margin:0;padding:0}.side li{margin:.15rem 0}.side a{color:var(--haze);text-decoration:none}.side a[aria-current]{color:var(--spectral)}.side a:hover{color:var(--ghost)}
+.ver{display:inline-block;font:500 .85rem var(--mono);color:var(--haze);margin-bottom:.75rem}
+article{min-width:0;max-width:48rem}article h1,article h2,article h3{font-family:var(--display);line-height:1.2;font-weight:700}
+article h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 1rem}article h2{font-size:1.45rem;margin:2.4rem 0 .75rem;padding-top:1.2rem;border-top:1px solid var(--rule)}article h3{font-size:1.12rem;margin:1.8rem 0 .5rem}
+article code{font:400 .9em var(--mono);color:var(--spectral);overflow-wrap:anywhere}article pre{background:var(--panel);border:1px solid var(--rule);border-left:2px solid var(--wraith);padding:1rem;overflow-x:auto;line-height:1.5}article pre code{color:var(--ghost);overflow-wrap:normal}
+article table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.95rem}article th,article td{border:1px solid var(--rule);padding:.45rem .6rem;text-align:left;vertical-align:top}article th{background:var(--panel)}
+article blockquote{margin:1rem 0;padding:.25rem 1rem;border-left:2px solid var(--spectral);color:var(--haze)}
+footer{border-top:1px solid var(--rule)}footer .bar{color:var(--haze);font-size:.9rem}footer .bar nav a{color:var(--haze)}</style>
+</head>
+<body>
+<a class="skip" href="#doc">Skip to the documentation</a>
+<header><div class="bar"><a class="brand" href="https://ghostpaw.dev/">GhostPaw<span>/</span>telegram</a><nav aria-label="Site"><a href="https://telegram.ghostpaw.dev/">telegram</a><a href="../">Docs</a><a href="https://github.com/GhostPawJS/telegram">GitHub</a><a href="https://www.npmjs.com/package/@ghostpaw/telegram">npm</a></nav></div></header>
+<div class="wrap">
+<nav class="side" aria-label="Documentation"><p class="h">Guides</p><ul><li><a href="../">Overview</a></li><li><a href="../human/">Using the API</a></li><li><a href="../llm/" aria-current="page">Agent tools and skills</a></li><li><a href="../recipes/">Recipes</a></li><li><a href="../architecture/">Architecture</a></li></ul><p class="h">Concepts</p><ul><li><a href="../entities/calculations/">Calculations</a></li><li><a href="../entities/callbacks/">Callbacks</a></li><li><a href="../entities/chats/">Chats</a></li><li><a href="../entities/files/">Files</a></li><li><a href="../entities/members/">Members</a></li><li><a href="../entities/messages/">Messages</a></li><li><a href="../entities/reactions/">Reactions</a></li><li><a href="../entities/users/">Users</a></li></ul><p class="h">Source</p><ul><li><a href="https://github.com/GhostPawJS/telegram/blob/main/docs/CONCEPT.md">Design concept</a></li><li><a href="https://github.com/GhostPawJS/telegram#readme">README</a></li><li><a href="https://github.com/GhostPawJS/telegram/blob/main/CHANGELOG.md">Changelog</a></li></ul></nav>
+<main id="doc"><article><span class="ver">@ghostpaw/telegram 0.6.0</span>
+<h1 id="llm-usage">LLM Usage</h1>
+<p>Agent builder guide for <code>@ghostpaw/telegram</code>.</p>
+<p>For direct-code usage, read <a href="../human/">HUMAN.md</a> instead.</p>
+<h2 id="runtime-stack">Runtime Stack</h2>
+<pre><code>soul     →  thinking foundation for the system prompt
+tools    →  intent-shaped actions with JSON Schema
+skills   →  reusable workflow playbooks as markdown
+</code></pre>
+<p>The layers are additive and independent. Use any subset.</p>
+<p><strong><code>soul</code></strong> establishes the Herald posture: read from the mirror, fetch from the network, one canonical graph, Telegram is the live authority, render before sending. Inject it into the system prompt before task instructions.</p>
+<p><strong><code>tools</code></strong> exposes 4 JSON-schema tool definitions that the LLM calls by name. Each tool has a <code>handler(db, input)</code> that executes synchronously against SQLite or returns an action descriptor. Every result is a discriminated <code>ToolResult</code> with <code>ok</code>, <code>outcome</code>, <code>data</code>, and <code>next</code> (next-step hints).</p>
+<p><strong><code>skills</code></strong> provides 6 markdown workflow playbooks. Inject <code>skill.content</code> into the system prompt or tool-use loop as a reasoning scaffold for specific task types.</p>
+<h2 id="tools">Tools</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th><code>sideEffects</code></th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tg_read</code></td>
+<td><code>none</code></td>
+<td>Query messages, chats, users, and reactions from the local SQLite mirror. Subcommands: <code>get_message</code>, <code>list_messages</code>, <code>search_messages</code>, <code>get_chat</code>, <code>list_chats</code>, <code>get_user</code>, <code>list_users</code>, <code>get_reactions</code>, <code>reply_chain</code>, <code>edit_history</code>.</td>
+</tr>
+<tr>
+<td><code>tg_send</code></td>
+<td><code>writes_state</code></td>
+<td>Outbound actions: send, edit, delete, pin, unpin messages; send typing indicator; forward messages. Subcommands: <code>send_message</code>, <code>edit_message</code>, <code>delete_message</code>, <code>pin_message</code>, <code>unpin_message</code>, <code>send_typing</code>, <code>forward_message</code>.</td>
+</tr>
+<tr>
+<td><code>tg_manage</code></td>
+<td><code>writes_state</code></td>
+<td>Moderation and chat administration: ban, unban, restrict, promote, kick users; query member status. Subcommands: <code>ban_user</code>, <code>unban_user</code>, <code>restrict_user</code>, <code>promote_user</code>, <code>kick_user</code>, <code>get_member</code>, <code>list_members</code>.</td>
+</tr>
+<tr>
+<td><code>tg_connect</code></td>
+<td><code>none</code></td>
+<td>Query bot stats, stored state, and chat list. Subcommands: <code>get_stats</code>, <code>get_state</code>, <code>list_chats</code>.</td>
+</tr>
+</tbody></table>
+<p><code>tg_send</code> and <code>tg_manage</code> return action descriptors, the bot harness is responsible for executing the Telegram API call. <code>tg_read</code> and <code>tg_connect</code> return data directly from SQLite.</p>
+<h2 id="skills">Skills</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>manage-telegram-conversations</code></td>
+<td>Retrieve, search, and navigate conversation history across chats and threads.</td>
+</tr>
+<tr>
+<td><code>handle-group-administration</code></td>
+<td>Inspect and update chat membership, admin rights, and chat metadata.</td>
+</tr>
+<tr>
+<td><code>stream-progressive-responses</code></td>
+<td>Send long responses progressively by editing a message in place as content is generated.</td>
+</tr>
+<tr>
+<td><code>moderate-chat-effectively</code></td>
+<td>Detect and respond to rule violations, spam, and unwanted content in group chats.</td>
+</tr>
+<tr>
+<td><code>search-and-retrieve-messages</code></td>
+<td>Find specific messages using full-text search, filters, and reply-chain traversal.</td>
+</tr>
+<tr>
+<td><code>broadcast-to-audience</code></td>
+<td>Send a message to many chats or users with rate limiting and error tracking.</td>
+</tr>
+</tbody></table>
+<h2 id="wiring-example">Wiring Example</h2>
+<pre><code class="language-ts">import { DatabaseSync } from &#39;node:sqlite&#39;;
+import { tools } from &#39;@ghostpaw/telegram&#39;;
+
+const db = new DatabaseSync(&#39;bot.db&#39;);
+
+// Build tool list for the model
+const toolDefs = tools.listTelegramToolDefinitions().map((t) =&gt; ({
+  name: t.name,
+  description: t.description,
+  inputSchema: t.inputSchema,
+}));
+
+// After the model selects a tool:
+async function dispatchTool(name: string, input: unknown) {
+  const tool = tools.getTelegramToolByName(name);
+  if (!tool) throw new Error(`Unknown tool: ${name}`);
+  return tool.handler(db, input as never);
+}
+
+// Check the result
+const result = await dispatchTool(&#39;tg_read&#39;, {
+  subcommand: &#39;search_messages&#39;,
+  chatId: -100123456,
+  query: &#39;budget proposal&#39;,
+  limit: 5,
+});
+
+if (result.ok) {
+  console.log(result.data);  // typed payload
+} else {
+  console.error(result.error?.message, result.error?.recovery);
+}
+</code></pre>
+<p><code>listTelegramToolDefinitions()</code> returns all 4 definitions. <code>getTelegramToolByName(name)</code> returns the matching definition or <code>null</code>. The <code>handler</code> signature is <code>(db: TelegramDb, input: TInput) =&gt; ToolResult</code>.</p>
+<h2 id="soul">Soul</h2>
+<pre><code class="language-ts">import { soul } from &#39;@ghostpaw/telegram&#39;;
+
+// soul.telegramSoul exposes:
+// .slug        → &#39;herald&#39;
+// .name        → &#39;Herald&#39;
+// .description → one-line summary
+// .essence     → extended thinking foundation
+// .traits      → Array&lt;{ principle, provenance }&gt;
+
+const foundation = soul.renderTelegramSoulPromptFoundation();
+// Inject before your task instructions in the system prompt.
+</code></pre>
+<p><code>telegramSoul.slug === &#39;herald&#39;</code>. The four principles encoded in the soul: read from the mirror / fetch from the network, one canonical graph for all entities, Telegram is the authority for live state, render before you send.</p>
+</article></main>
+</div>
+<footer><div class="bar"><span>Rendered from <a href="https://github.com/GhostPawJS/telegram/tree/main/docs">docs/</a> in the repository, MIT licensed.</span><nav aria-label="Legal"><a href="https://ghostpaw.dev/">All GhostPaw libraries</a><a href="https://lab.anonyfox.com/impressum/">Impressum</a><a href="https://lab.anonyfox.com/datenschutz/">Datenschutz</a></nav></div></footer>
+</body>
+</html>

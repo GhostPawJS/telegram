@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Telegram UI/UX Recipes · @ghostpaw/telegram docs</title>
+<meta name="description" content="Practical patterns for building polished Telegram bots. Each recipe is self-contained, mix and match freely.">
+<link rel="canonical" href="https://telegram.ghostpaw.dev/docs/recipes/">
+<link rel="icon" href="../../favicon.png" type="image/png">
+<link rel="preload" href="../tektur-var.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="GhostPaw">
+<meta property="og:title" content="Telegram UI/UX Recipes · @ghostpaw/telegram docs">
+<meta property="og:description" content="Practical patterns for building polished Telegram bots. Each recipe is self-contained, mix and match freely.">
+<meta property="og:url" content="https://telegram.ghostpaw.dev/docs/recipes/">
+<meta property="og:image" content="https://telegram.ghostpaw.dev/docs/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#04070b">
+<style>@font-face{font-family:"Tektur";src:url("../tektur-var.woff2") format("woff2");font-weight:500 900;font-stretch:75% 100%;font-display:swap}
+:root{color-scheme:dark;--void:#04070b;--panel:#0a1119;--rule:#1d2c3c;--ghost:#e3edf5;--haze:#93a5b9;--spectral:#62e6f2;--wraith:#b39dff;--display:"Tektur",Bahnschrift,"Arial Narrow",sans-serif;--body:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--void);color:var(--ghost);font:400 1rem/1.65 var(--body)}
+a{color:var(--spectral);text-underline-offset:.18em}a:focus-visible{outline:2px solid var(--spectral);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--panel);padding:.5rem 1rem;z-index:9}
+header{border-bottom:1px solid var(--rule)}.bar{max-width:76rem;margin:0 auto;padding:1rem 1.25rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap}
+.brand{font:700 1.05rem var(--display);color:var(--ghost);text-decoration:none}.brand span{color:var(--spectral)}
+.bar nav{margin-left:auto;display:flex;gap:1.1rem;flex-wrap:wrap}.bar nav a{color:var(--haze);text-decoration:none}.bar nav a:hover{color:var(--ghost)}
+.wrap{max-width:76rem;margin:0 auto;padding:2rem 1.25rem 4rem;display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.wrap{grid-template-columns:14rem minmax(0,1fr)}}
+.side .h{font:600 .8rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--haze);margin:1.25rem 0 .4rem}.side .h:first-child{margin-top:0}
+.side ul{list-style:none;margin:0;padding:0}.side li{margin:.15rem 0}.side a{color:var(--haze);text-decoration:none}.side a[aria-current]{color:var(--spectral)}.side a:hover{color:var(--ghost)}
+.ver{display:inline-block;font:500 .85rem var(--mono);color:var(--haze);margin-bottom:.75rem}
+article{min-width:0;max-width:48rem}article h1,article h2,article h3{font-family:var(--display);line-height:1.2;font-weight:700}
+article h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 1rem}article h2{font-size:1.45rem;margin:2.4rem 0 .75rem;padding-top:1.2rem;border-top:1px solid var(--rule)}article h3{font-size:1.12rem;margin:1.8rem 0 .5rem}
+article code{font:400 .9em var(--mono);color:var(--spectral);overflow-wrap:anywhere}article pre{background:var(--panel);border:1px solid var(--rule);border-left:2px solid var(--wraith);padding:1rem;overflow-x:auto;line-height:1.5}article pre code{color:var(--ghost);overflow-wrap:normal}
+article table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.95rem}article th,article td{border:1px solid var(--rule);padding:.45rem .6rem;text-align:left;vertical-align:top}article th{background:var(--panel)}
+article blockquote{margin:1rem 0;padding:.25rem 1rem;border-left:2px solid var(--spectral);color:var(--haze)}
+footer{border-top:1px solid var(--rule)}footer .bar{color:var(--haze);font-size:.9rem}footer .bar nav a{color:var(--haze)}</style>
+</head>
+<body>
+<a class="skip" href="#doc">Skip to the documentation</a>
+<header><div class="bar"><a class="brand" href="https://ghostpaw.dev/">GhostPaw<span>/</span>telegram</a><nav aria-label="Site"><a href="https://telegram.ghostpaw.dev/">telegram</a><a href="../">Docs</a><a href="https://github.com/GhostPawJS/telegram">GitHub</a><a href="https://www.npmjs.com/package/@ghostpaw/telegram">npm</a></nav></div></header>
+<div class="wrap">
+<nav class="side" aria-label="Documentation"><p class="h">Guides</p><ul><li><a href="../">Overview</a></li><li><a href="../human/">Using the API</a></li><li><a href="../llm/">Agent tools and skills</a></li><li><a href="../recipes/" aria-current="page">Recipes</a></li><li><a href="../architecture/">Architecture</a></li></ul><p class="h">Concepts</p><ul><li><a href="../entities/calculations/">Calculations</a></li><li><a href="../entities/callbacks/">Callbacks</a></li><li><a href="../entities/chats/">Chats</a></li><li><a href="../entities/files/">Files</a></li><li><a href="../entities/members/">Members</a></li><li><a href="../entities/messages/">Messages</a></li><li><a href="../entities/reactions/">Reactions</a></li><li><a href="../entities/users/">Users</a></li></ul><p class="h">Source</p><ul><li><a href="https://github.com/GhostPawJS/telegram/blob/main/docs/CONCEPT.md">Design concept</a></li><li><a href="https://github.com/GhostPawJS/telegram#readme">README</a></li><li><a href="https://github.com/GhostPawJS/telegram/blob/main/CHANGELOG.md">Changelog</a></li></ul></nav>
+<main id="doc"><article><span class="ver">@ghostpaw/telegram 0.6.0</span>
+<h1 id="telegram-ui-ux-recipes">Telegram UI/UX Recipes</h1>
+<p>Practical patterns for building polished Telegram bots. Each recipe is self-contained, mix and match freely.</p>
+<hr>
+<h2 id="1-acknowledge-think-respond">1. Acknowledge → Think → Respond</h2>
+<p>Show the user their message was received before doing any async work.</p>
+<pre><code class="language-js">// On every incoming message:
+await write.setReaction(client, chatId, messageId, [{ type: &#39;emoji&#39;, emoji: &#39;👀&#39; }]);
+await write.sendChatAction(client, chatId, &#39;typing&#39;);
+
+// ... do your work ...
+
+await write.setReaction(client, chatId, messageId, [{ type: &#39;emoji&#39;, emoji: &#39;👍&#39; }]);
+</code></pre>
+<p><strong>Good for:</strong> Any handler that touches a DB, calls an API, or runs LLM inference. Users get instant visual confirmation that the bot is alive.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li><code>sendChatAction</code> auto-expires after ~5 seconds. For long tasks, call it repeatedly in a loop.</li>
+<li>Reactions only work on messages in chats where the bot is a member. Fails silently in channels.</li>
+<li>Only one reaction per user per message: setting <code>👍</code> replaces <code>👀</code>.</li>
+</ul>
+<hr>
+<h2 id="2-progressive-streaming">2. Progressive Streaming</h2>
+<p>Send a placeholder message and edit it in-place as content arrives. The user sees the text grow rather than waiting for a complete response.</p>
+<pre><code class="language-js">const stream = write.createStream(client, { chatId });
+
+// write() is fire-and-forget with debounce — good for high-frequency token streams
+stream.write(&#39;The &#39;);
+stream.write(&#39;quick &#39;);
+stream.write(&#39;brown &#39;);
+await stream.end(); // flushes final state
+
+// append() flushes immediately — good for step-by-step progress
+await stream.append(&#39;Step 1 done\n&#39;);
+await stream.append(&#39;Step 2 done\n&#39;);
+
+// replace() resets the whole buffer and flushes — good for animated states
+await stream.replace(&#39;Thinking.&#39;);
+await stream.replace(&#39;Thinking..&#39;);
+await stream.replace(&#39;Thinking...&#39;);
+await stream.replace(&#39;Done!&#39;);
+</code></pre>
+<p><strong>Good for:</strong> LLM token streaming, progress indicators, animated status messages.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Telegram rate-limits edits to ~1 per second per message. The debounce (default 300ms) handles this automatically for <code>write()</code>.</li>
+<li>Messages over 4096 characters automatically overflow into a second message.</li>
+<li>You cannot stream into a message you didn&#39;t send (no <code>messageId</code> from a user message).</li>
+</ul>
+<hr>
+<h2 id="3-reply-to-in-dms-plain-send-in-groups">3. Reply-to in DMs, Plain Send in Groups</h2>
+<p>In a private chat, threading your response to the user&#39;s message keeps the conversation readable. In groups, it&#39;s noise.</p>
+<pre><code class="language-js">const isDm = chat?.type === &#39;private&#39;;
+const replyOpts = isDm ? { replyToMessageId: messageId } : {};
+
+await write.sendMessage(client, chatId, &#39;Hello!&#39;, { parseMode: &#39;HTML&#39;, ...replyOpts });
+</code></pre>
+<p><strong>Good for:</strong> Any message handler that should behave differently in private vs. group context.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>If the original message was deleted before your reply sends, Telegram silently drops the <code>reply_to</code> and sends a plain message: no error thrown.</li>
+</ul>
+<hr>
+<h2 id="4-inline-keyboard-routing-via-callback-data">4. Inline Keyboard, Routing via <code>callback_data</code></h2>
+<p>Attach tappable buttons to any message. When tapped, Telegram fires a <code>callback_query</code> event (not a chat message). You must call <code>answer()</code> to clear the loading spinner on the button.</p>
+<pre><code class="language-js">const markup = keyboards.inlineKeyboard([
+  [
+    keyboards.callbackButton(&#39;✅ Confirm&#39;, &#39;action:confirm&#39;),
+    keyboards.callbackButton(&#39;❌ Cancel&#39;, &#39;action:cancel&#39;),
+  ],
+  [keyboards.urlButton(&#39;Docs →&#39;, &#39;https://example.com&#39;)],
+]);
+
+await write.sendMessage(client, chatId, &#39;Proceed?&#39;, { replyMarkup: markup });
+
+// In onCallback:
+async onCallback({ callback, answer }) {
+  const [prefix, choice] = (callback.data ?? &#39;&#39;).split(&#39;:&#39;);
+  if (prefix === &#39;action&#39;) {
+    await answer(choice === &#39;confirm&#39; ? &#39;Confirmed!&#39; : &#39;Cancelled.&#39;);
+    await write.editMessage(client, callback.chatId, callback.messageId,
+      `You chose: &lt;b&gt;${choice}&lt;/b&gt;`, { parseMode: &#39;HTML&#39; });
+  }
+}
+</code></pre>
+<p><strong>Good for:</strong> Confirmations, polls, menus, multi-step forms, any choice that shouldn&#39;t pollute the chat with text messages.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li><code>callback_data</code> max <strong>64 bytes</strong> (UTF-8). Encode a short ID and look up state in your DB: don&#39;t try to stuff full payloads in.</li>
+<li>Buttons only work on messages sent by your bot. You cannot add buttons to user messages.</li>
+<li><code>answer()</code> toast text max <strong>200 characters</strong>, displayed for ~5 seconds.</li>
+<li>After you edit the message to remove <code>reply_markup</code>, the buttons are gone permanently.</li>
+<li>Telegram will keep showing a spinner until <code>answer()</code> is called (~30s timeout). Always call it, even on error.</li>
+</ul>
+<hr>
+<h2 id="5-llm-agent-approval-gate">5. LLM Agent Approval Gate</h2>
+<p>Pause an agent mid-execution and require human sign-off before a risky action. The approval card stays as a permanent audit trail in the chat.</p>
+<pre><code class="language-js">// 1. Agent reaches a risky step — store pending state, send approval card
+const id = Math.random().toString(36).slice(2, 10); // 8-char ID fits in callback_data
+pendingApprovals.set(id, { action, chatId });
+setTimeout(() =&gt; pendingApprovals.delete(id), 5 * 60 * 1000); // auto-expire
+
+const markup = keyboards.inlineKeyboard([[
+  keyboards.callbackButton(&#39;✅ Allow&#39;, `approve:${id}:allow`),
+  keyboards.callbackButton(&#39;❌ Deny&#39;,  `approve:${id}:deny`),
+]]);
+await write.sendMessage(client, chatId, formatApprovalCard(action), {
+  parseMode: &#39;HTML&#39;, replyMarkup: markup,
+});
+
+// 2. In onCallback — handle the decision
+const [, id, decision] = (callback.data ?? &#39;&#39;).split(&#39;:&#39;);
+const pending = pendingApprovals.get(id);
+if (!pending) { await answer(&#39;Request expired.&#39;); return; }
+pendingApprovals.delete(id);
+
+if (decision === &#39;deny&#39;) {
+  await answer(&#39;Cancelled.&#39;);
+  // Edit card to show denied (removes buttons, creates audit record)
+  await write.editMessage(client, callback.chatId, callback.messageId,
+    formatApprovalCard(pending.action) + &#39;\n\n&lt;b&gt;❌ Denied.&lt;/b&gt;&#39;, { parseMode: &#39;HTML&#39; });
+} else {
+  await answer(&#39;Approved — executing.&#39;);
+  await write.editMessage(client, callback.chatId, callback.messageId,
+    formatApprovalCard(pending.action) + &#39;\n\n&lt;b&gt;✅ Approved.&lt;/b&gt;&#39;, { parseMode: &#39;HTML&#39; });
+
+  // Stream the execution log into a new message
+  const stream = write.createStream(client, { chatId, parseMode: &#39;HTML&#39; });
+  for (const step of pending.action.steps) {
+    await stream.append(`&lt;code&gt;  › ${step}&lt;/code&gt;\n`);
+    await new Promise(r =&gt; setTimeout(r, 800));
+  }
+}
+</code></pre>
+<p><strong>Good for:</strong> Destructive operations (deletes, sends, deployments), LLM tool-call confirmation, human-in-the-loop pipelines.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>The approval is in-memory: a bot restart loses all pending approvals. For production, persist them in SQLite with an <code>expires_at</code> column.</li>
+<li>Buttons on the original card remain clickable until edited: a second tap after the first resolves will hit the &quot;expired&quot; path, which is correct behavior.</li>
+<li>The pattern is one-shot (first tap wins). For multi-voter consensus, track individual votes in the DB and only execute when a threshold is reached.</li>
+</ul>
+<hr>
+<h2 id="6-multi-step-form-via-button-flow">6. Multi-step Form via Button Flow</h2>
+<p>Chain multiple approval/choice screens by editing the same message each step, carrying state through a short DB-backed session ID.</p>
+<pre><code class="language-js">// Step 1 — send first question
+const sessionId = shortId();
+sessions.set(sessionId, { step: 1, answers: {} });
+
+await write.sendMessage(client, chatId, &#39;&lt;b&gt;Q1:&lt;/b&gt; How urgent is this?&#39;, {
+  parseMode: &#39;HTML&#39;,
+  replyMarkup: keyboards.inlineKeyboard([[
+    keyboards.callbackButton(&#39;🔴 High&#39;,   `form:${sessionId}:urgency:high`),
+    keyboards.callbackButton(&#39;🟡 Medium&#39;, `form:${sessionId}:urgency:medium`),
+    keyboards.callbackButton(&#39;🟢 Low&#39;,    `form:${sessionId}:urgency:low`),
+  ]]),
+});
+
+// In onCallback — advance to next step
+const [, sid, field, value] = callback.data.split(&#39;:&#39;);
+const session = sessions.get(sid);
+session.answers[field] = value;
+session.step++;
+
+if (session.step === 2) {
+  await write.editMessage(client, callback.chatId, callback.messageId,
+    `&lt;b&gt;Q2:&lt;/b&gt; Assign to whom?`, {
+      parseMode: &#39;HTML&#39;,
+      replyMarkup: keyboards.inlineKeyboard([[
+        keyboards.callbackButton(&#39;Alice&#39;, `form:${sid}:assignee:alice`),
+        keyboards.callbackButton(&#39;Bob&#39;,   `form:${sid}:assignee:bob`),
+      ]]),
+    });
+} else {
+  // Final step — show summary, no more buttons
+  await write.editMessage(client, callback.chatId, callback.messageId,
+    `&lt;b&gt;Submitted&lt;/b&gt;\nUrgency: ${session.answers.urgency}\nAssignee: ${session.answers.assignee}`,
+    { parseMode: &#39;HTML&#39; });
+  sessions.delete(sid);
+}
+</code></pre>
+<p><strong>Good for:</strong> Ticket creation, survey flows, configuration wizards: anywhere you want to collect structured input without asking users to type.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Each step encodes the session ID in <code>callback_data</code>, so keep the session ID short (8 chars = safe).</li>
+<li>If the user never completes the form, the session leaks. Always set an expiry timeout.</li>
+<li>Telegram does not prevent a user from tapping old steps after advancing: guard by checking <code>session.step</code> before acting.</li>
+</ul>
+<hr>
+<h2 id="7-paginated-list">7. Paginated List</h2>
+<p>Show a long list in pages by editing the message and updating the navigation buttons.</p>
+<pre><code class="language-js">function pageMessage(items, page, pageSize) {
+  const total = Math.ceil(items.length / pageSize);
+  const slice = items.slice(page * pageSize, (page + 1) * pageSize);
+  const text = slice.map((item, i) =&gt; `${page * pageSize + i + 1}. ${item}`).join(&#39;\n&#39;);
+  const nav = [];
+  if (page &gt; 0)          nav.push(keyboards.callbackButton(&#39;← Prev&#39;, `page:${page - 1}`));
+  if (page &lt; total - 1)  nav.push(keyboards.callbackButton(&#39;Next →&#39;, `page:${page + 1}`));
+  return {
+    text: `&lt;b&gt;Results&lt;/b&gt; (page ${page + 1}/${total})\n\n${text}`,
+    markup: nav.length ? keyboards.inlineKeyboard([nav]) : undefined,
+  };
+}
+
+// Send first page
+const { text, markup } = pageMessage(results, 0, 10);
+await write.sendMessage(client, chatId, text, { parseMode: &#39;HTML&#39;, replyMarkup: markup });
+
+// In onCallback for &#39;page:N&#39;
+const page = parseInt(callback.data.split(&#39;:&#39;)[1]);
+const { text, markup } = pageMessage(results, page, 10);
+await write.editMessage(client, callback.chatId, callback.messageId, text,
+  { parseMode: &#39;HTML&#39;, replyMarkup: markup });
+await answer();
+</code></pre>
+<p><strong>Good for:</strong> Search results, history lists, leaderboards, any collection too long for one message.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>The <code>results</code> array needs to be re-fetched or stored. Don&#39;t embed data in <code>callback_data</code>: you&#39;ll hit the 64-byte limit immediately.</li>
+<li>A message with no <code>reply_markup</code> shows no buttons. Pass <code>undefined</code> for the last page&#39;s <code>replyMarkup</code> to cleanly remove navigation.</li>
+</ul>
+<hr>
+<h2 id="8-broadcast-with-back-pressure">8. Broadcast with Back-pressure</h2>
+<p>Send a message to many chats without getting rate-limited.</p>
+<pre><code class="language-js">const result = await write.broadcast(client, chatIds, &#39;&lt;b&gt;Important update&lt;/b&gt;&#39;, {
+  parseMode: &#39;HTML&#39;,
+});
+console.log(`sent: ${result.sent}, failed: ${result.failed}`);
+</code></pre>
+<p><strong>Good for:</strong> Announcements, alerts, digest newsletters to all known chats.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Telegram allows ~30 messages/second globally and ~1 message/second per chat. The built-in <code>broadcast</code> applies back-pressure automatically.</li>
+<li>Failed sends (bot blocked, chat deleted) are counted in <code>result.failed</code> and do not throw.</li>
+<li>Do not use broadcast for personalized messages: send them individually.</li>
+</ul>
+<hr>
+<h2 id="9-html-formatting-reference">9. HTML Formatting Reference</h2>
+<p>Telegram supports a safe HTML subset. Use <code>render.escapeHtml()</code> on any user-supplied content before embedding it.</p>
+<pre><code class="language-js">const msg =
+  `&lt;b&gt;bold&lt;/b&gt;  &lt;i&gt;italic&lt;/i&gt;  &lt;u&gt;underline&lt;/u&gt;  &lt;s&gt;strikethrough&lt;/s&gt;\n` +
+  `&lt;code&gt;inline code&lt;/code&gt;\n` +
+  `&lt;pre&gt;code block&lt;/pre&gt;\n` +
+  `&lt;pre&gt;&lt;code class=&quot;language-js&quot;&gt;const x = 1;&lt;/code&gt;&lt;/pre&gt;\n` +
+  `&lt;a href=&quot;https://example.com&quot;&gt;link text&lt;/a&gt;\n` +
+  `&lt;blockquote&gt;quoted text&lt;/blockquote&gt;\n` +
+  `&lt;tg-spoiler&gt;hidden until tapped&lt;/tg-spoiler&gt;`;
+
+await write.sendMessage(client, chatId, msg, { parseMode: &#39;HTML&#39; });
+</code></pre>
+<p><strong>Good for:</strong> Any response that benefits from structure: error messages, summaries, code output, approval cards.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Only the tags above are supported. Unknown tags are stripped. <code>&lt;br&gt;</code> is not supported: use <code>\n</code>.</li>
+<li><code>&lt;pre&gt;</code> with a language class enables syntax highlighting in supported clients (desktop/iOS/Android).</li>
+<li>URLs in <code>&lt;a href&gt;</code> must be <code>http://</code> or <code>https://</code>. <code>tg://</code> deep links also work.</li>
+<li>Always escape user input: <code>render.escapeHtml(userText)</code> converts <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code> to safe entities.</li>
+</ul>
+<hr>
+<h2 id="10-full-text-search-with-snippets">10. Full-Text Search with Snippets</h2>
+<p>Search stored messages using SQLite FTS5, with highlighted match context.</p>
+<pre><code class="language-js">const results = read.searchMessages(db, chatId, &#39;deployment failed&#39;, { limit: 5 });
+// results: [{ chatId, messageId, date, snippet }]
+// snippet has **match** markers by default
+
+const lines = results.map(r =&gt;
+  `• &lt;code&gt;[${r.messageId}]&lt;/code&gt; ${r.snippet}`
+);
+await write.sendMessage(client, chatId, lines.join(&#39;\n&#39;), { parseMode: &#39;HTML&#39; });
+</code></pre>
+<p><strong>Good for:</strong> Chat history search, finding past decisions, audit log queries.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>FTS5 index is updated via triggers on insert/update/delete: always in sync, zero extra code needed.</li>
+<li>Minimum token length is 3 characters (SQLite FTS5 default). Very short queries return no results.</li>
+<li>Search is per-chat. Cross-chat search requires dropping the <code>chatId</code> constraint in the query.</li>
+<li>Deleted messages (<code>isDeleted: true</code>) are excluded from search results.</li>
+</ul>
+<hr>
+<h2 id="11-reply-chain-traversal">11. Reply Chain Traversal</h2>
+<p>Reconstruct a conversation thread by walking <code>reply_to_message_id</code> back to the root.</p>
+<pre><code class="language-js">// User replies to a message and sends /chain
+const chain = read.replyChain(db, chatId, replyToMessageId);
+// chain: StoredMessage[], root-first, up to 50 deep by default
+
+const lines = chain.map((m, i) =&gt;
+  `${i + 1}. &lt;b&gt;${render.escapeHtml(m.fromDisplayName)}&lt;/b&gt;: ` +
+  render.escapeHtml(m.text?.slice(0, 80) ?? `(${m.type})`)
+);
+await write.sendMessage(client, chatId,
+  `&lt;b&gt;Thread (${chain.length} messages)&lt;/b&gt;\n${lines.join(&#39;\n&#39;)}`,
+  { parseMode: &#39;HTML&#39; });
+</code></pre>
+<p><strong>Good for:</strong> Summarising a discussion thread, feeding conversation context to an LLM, moderation tools.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Only messages your bot has seen are stored. If the bot joined mid-conversation, earlier messages are absent.</li>
+<li>Max depth defaults to 50. Circular references (impossible in Telegram but theoretically injectable) are safe: the CTE depth limit stops them.</li>
+<li>Returns an empty array for messages with no reply chain: always check <code>chain.length</code>.</li>
+</ul>
+</article></main>
+</div>
+<footer><div class="bar"><span>Rendered from <a href="https://github.com/GhostPawJS/telegram/tree/main/docs">docs/</a> in the repository, MIT licensed.</span><nav aria-label="Legal"><a href="https://ghostpaw.dev/">All GhostPaw libraries</a><a href="https://lab.anonyfox.com/impressum/">Impressum</a><a href="https://lab.anonyfox.com/datenschutz/">Datenschutz</a></nav></div></footer>
+</body>
+</html>

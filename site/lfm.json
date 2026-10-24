@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "url": "https://telegram.ghostpaw.dev/",
+  "language": "en",
+  "title": "telegram: a Telegram bot engine for Node.js that mirrors every chat into SQLite",
+  "description": "@ghostpaw/telegram mirrors every Telegram update into SQLite before your handler runs, with edit history, reply chains and FTS5 search, and gives agents four tools that return plans unless you switch execution on. Node.js 24, zero dependencies, MIT.",
+  "socialImage": {
+    "src": "assets/images/share.png",
+    "alt": "A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited."
+  },
+  "urls": {
+    "home": "https://ghostpaw.dev/",
+    "github": "https://github.com/GhostPawJS/telegram",
+    "readme": "https://github.com/GhostPawJS/telegram#readme",
+    "npm": "https://www.npmjs.com/package/@ghostpaw/telegram",
+    "impressum": "https://lab.anonyfox.com/impressum/",
+    "privacy": "https://lab.anonyfox.com/datenschutz/",
+    "mit": "https://opensource.org/license/mit",
+    "orgId": "https://ghostpaw.dev/#org",
+    "agentMemory": "https://codex.ghostpaw.dev/",
+    "agentTasks": "https://questlog.ghostpaw.dev/",
+    "agentContacts": "https://affinity.ghostpaw.dev/",
+    "agentIdentity": "https://souls.ghostpaw.dev/",
+    "agentSkills": "https://grimoire.ghostpaw.dev/",
+    "agentEmail": "https://email.ghostpaw.dev/"
+  },
+  "jsonld": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareSourceCode",
+        "name": "@ghostpaw/telegram",
+        "description": "{{.description}}",
+        "codeRepository": "{{.urls.github}}",
+        "programmingLanguage": "TypeScript",
+        "runtimePlatform": "Node.js 24",
+        "version": "0.6.0",
+        "license": "{{.urls.mit}}",
+        "author": {
+          "@type": "Organization",
+          "@id": "{{.urls.orgId}}",
+          "name": "GhostPaw"
+        }
+      }
+    ]
+  }
+}

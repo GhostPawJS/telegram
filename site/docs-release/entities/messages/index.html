@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messages · @ghostpaw/telegram docs</title>
+<meta name="description" content="messages is the canonical record of every Telegram message this package has observed, inbound and outbound, text and media, service events and normal conversation.">
+<link rel="canonical" href="https://telegram.ghostpaw.dev/docs/entities/messages/">
+<link rel="icon" href="../../../favicon.png" type="image/png">
+<link rel="preload" href="../../tektur-var.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="GhostPaw">
+<meta property="og:title" content="Messages · @ghostpaw/telegram docs">
+<meta property="og:description" content="messages is the canonical record of every Telegram message this package has observed, inbound and outbound, text and media, service events and normal conversation.">
+<meta property="og:url" content="https://telegram.ghostpaw.dev/docs/entities/messages/">
+<meta property="og:image" content="https://telegram.ghostpaw.dev/docs/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#04070b">
+<style>@font-face{font-family:"Tektur";src:url("../../tektur-var.woff2") format("woff2");font-weight:500 900;font-stretch:75% 100%;font-display:swap}
+:root{color-scheme:dark;--void:#04070b;--panel:#0a1119;--rule:#1d2c3c;--ghost:#e3edf5;--haze:#93a5b9;--spectral:#62e6f2;--wraith:#b39dff;--display:"Tektur",Bahnschrift,"Arial Narrow",sans-serif;--body:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--void);color:var(--ghost);font:400 1rem/1.65 var(--body)}
+a{color:var(--spectral);text-underline-offset:.18em}a:focus-visible{outline:2px solid var(--spectral);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--panel);padding:.5rem 1rem;z-index:9}
+header{border-bottom:1px solid var(--rule)}.bar{max-width:76rem;margin:0 auto;padding:1rem 1.25rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap}
+.brand{font:700 1.05rem var(--display);color:var(--ghost);text-decoration:none}.brand span{color:var(--spectral)}
+.bar nav{margin-left:auto;display:flex;gap:1.1rem;flex-wrap:wrap}.bar nav a{color:var(--haze);text-decoration:none}.bar nav a:hover{color:var(--ghost)}
+.wrap{max-width:76rem;margin:0 auto;padding:2rem 1.25rem 4rem;display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.wrap{grid-template-columns:14rem minmax(0,1fr)}}
+.side .h{font:600 .8rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--haze);margin:1.25rem 0 .4rem}.side .h:first-child{margin-top:0}
+.side ul{list-style:none;margin:0;padding:0}.side li{margin:.15rem 0}.side a{color:var(--haze);text-decoration:none}.side a[aria-current]{color:var(--spectral)}.side a:hover{color:var(--ghost)}
+.ver{display:inline-block;font:500 .85rem var(--mono);color:var(--haze);margin-bottom:.75rem}
+article{min-width:0;max-width:48rem}article h1,article h2,article h3{font-family:var(--display);line-height:1.2;font-weight:700}
+article h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 1rem}article h2{font-size:1.45rem;margin:2.4rem 0 .75rem;padding-top:1.2rem;border-top:1px solid var(--rule)}article h3{font-size:1.12rem;margin:1.8rem 0 .5rem}
+article code{font:400 .9em var(--mono);color:var(--spectral);overflow-wrap:anywhere}article pre{background:var(--panel);border:1px solid var(--rule);border-left:2px solid var(--wraith);padding:1rem;overflow-x:auto;line-height:1.5}article pre code{color:var(--ghost);overflow-wrap:normal}
+article table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.95rem}article th,article td{border:1px solid var(--rule);padding:.45rem .6rem;text-align:left;vertical-align:top}article th{background:var(--panel)}
+article blockquote{margin:1rem 0;padding:.25rem 1rem;border-left:2px solid var(--spectral);color:var(--haze)}
+footer{border-top:1px solid var(--rule)}footer .bar{color:var(--haze);font-size:.9rem}footer .bar nav a{color:var(--haze)}</style>
+</head>
+<body>
+<a class="skip" href="#doc">Skip to the documentation</a>
+<header><div class="bar"><a class="brand" href="https://ghostpaw.dev/">GhostPaw<span>/</span>telegram</a><nav aria-label="Site"><a href="https://telegram.ghostpaw.dev/">telegram</a><a href="../../">Docs</a><a href="https://github.com/GhostPawJS/telegram">GitHub</a><a href="https://www.npmjs.com/package/@ghostpaw/telegram">npm</a></nav></div></header>
+<div class="wrap">
+<nav class="side" aria-label="Documentation"><p class="h">Guides</p><ul><li><a href="../../">Overview</a></li><li><a href="../../human/">Using the API</a></li><li><a href="../../llm/">Agent tools and skills</a></li><li><a href="../../recipes/">Recipes</a></li><li><a href="../../architecture/">Architecture</a></li></ul><p class="h">Concepts</p><ul><li><a href="../../entities/calculations/">Calculations</a></li><li><a href="../../entities/callbacks/">Callbacks</a></li><li><a href="../../entities/chats/">Chats</a></li><li><a href="../../entities/files/">Files</a></li><li><a href="../../entities/members/">Members</a></li><li><a href="../../entities/messages/" aria-current="page">Messages</a></li><li><a href="../../entities/reactions/">Reactions</a></li><li><a href="../../entities/users/">Users</a></li></ul><p class="h">Source</p><ul><li><a href="https://github.com/GhostPawJS/telegram/blob/main/docs/CONCEPT.md">Design concept</a></li><li><a href="https://github.com/GhostPawJS/telegram#readme">README</a></li><li><a href="https://github.com/GhostPawJS/telegram/blob/main/CHANGELOG.md">Changelog</a></li></ul></nav>
+<main id="doc"><article><span class="ver">@ghostpaw/telegram 0.6.0</span>
+<h1 id="messages">Messages</h1>
+<h2 id="what-it-is">What It Is</h2>
+<p><code>messages</code> is the canonical record of every Telegram message this package has
+observed, inbound and outbound, text and media, service events and normal
+conversation.</p>
+<p>A message is one discrete unit of chat history: who sent it, in which chat, at
+what time, with what content, and whether it has since been edited or deleted.</p>
+<h2 id="why-it-exists">Why It Exists</h2>
+<p>Every meaningful event in a Telegram conversation is anchored to a message. The
+package needs a single table that answers: what was said, by whom, in which
+chat, in what order, and how has it changed since?</p>
+<h2 id="schema">Schema</h2>
+<h3 id="messages-2"><code>messages</code></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>chatId</code></td>
+<td>INTEGER</td>
+<td>Telegram chat identifier</td>
+</tr>
+<tr>
+<td><code>messageId</code></td>
+<td>INTEGER</td>
+<td>Telegram message identifier (unique within chat)</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td>TEXT</td>
+<td><code>&#39;in&#39;</code> or <code>&#39;out&#39;</code></td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>INTEGER</td>
+<td>Unix timestamp in <strong>milliseconds</strong></td>
+</tr>
+<tr>
+<td><code>fromUserId</code></td>
+<td>INTEGER</td>
+<td>Sender&#39;s user ID; NULL for anonymous/channel posts</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>TEXT</td>
+<td><code>text</code>, <code>photo</code>, <code>document</code>, <code>voice</code>, <code>sticker</code>, etc.</td>
+</tr>
+<tr>
+<td><code>serviceKind</code></td>
+<td>TEXT</td>
+<td>Non-NULL for service messages (e.g. <code>pinned_message</code>, <code>new_chat_members</code>)</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>TEXT</td>
+<td>Raw text with HTML/Markdown entities intact</td>
+</tr>
+<tr>
+<td><code>textPlain</code></td>
+<td>TEXT</td>
+<td>Stripped plain-text used for FTS</td>
+</tr>
+<tr>
+<td><code>entities</code></td>
+<td>TEXT</td>
+<td>JSON array of Telegram <code>MessageEntity</code> objects</td>
+</tr>
+<tr>
+<td><code>mentions</code></td>
+<td>TEXT</td>
+<td>JSON array of usernames/IDs extracted from entities</td>
+</tr>
+<tr>
+<td><code>mentionsBot</code></td>
+<td>INTEGER</td>
+<td><code>1</code> if the bot is mentioned</td>
+</tr>
+<tr>
+<td><code>isReplyToBot</code></td>
+<td>INTEGER</td>
+<td><code>1</code> if this is a direct reply to the bot</td>
+</tr>
+<tr>
+<td><code>replyToMessageId</code></td>
+<td>INTEGER</td>
+<td><code>messageId</code> of the parent, if any</td>
+</tr>
+<tr>
+<td><code>threadId</code></td>
+<td>INTEGER</td>
+<td>Forum thread (message_thread_id)</td>
+</tr>
+<tr>
+<td><code>mediaGroupId</code></td>
+<td>TEXT</td>
+<td>Groups album frames together</td>
+</tr>
+<tr>
+<td><code>hasMedia</code></td>
+<td>INTEGER</td>
+<td><code>1</code> if any media is attached</td>
+</tr>
+<tr>
+<td><code>media</code></td>
+<td>TEXT</td>
+<td>JSON blob: file references, caption, etc.</td>
+</tr>
+<tr>
+<td><code>isDeleted</code></td>
+<td>INTEGER</td>
+<td><code>1</code> after soft-delete</td>
+</tr>
+<tr>
+<td><code>isPinned</code></td>
+<td>INTEGER</td>
+<td><code>1</code> while pinned</td>
+</tr>
+<tr>
+<td><code>editDate</code></td>
+<td>INTEGER</td>
+<td>Timestamp (ms) of last edit; NULL if never edited</td>
+</tr>
+<tr>
+<td><code>raw</code></td>
+<td>TEXT</td>
+<td>Full Telegram <code>Message</code> JSON for forward compatibility</td>
+</tr>
+</tbody></table>
+<h3 id="messages-fts"><code>messages_fts</code></h3>
+<p>FTS5 virtual table over <code>textPlain</code>. Three triggers keep it in sync:</p>
+<ul>
+<li><code>messages_ai</code>: after insert</li>
+<li><code>messages_au</code>: after update of <code>textPlain</code></li>
+<li><code>messages_ad</code>: after delete</li>
+</ul>
+<h3 id="message-edits"><code>message_edits</code></h3>
+<p>Captures a snapshot of <code>text</code>, <code>textPlain</code>, <code>entities</code>, and <code>editDate</code>
+<strong>before</strong> each edit is applied. Rows are append-only.</p>
+<h2 id="public-api">Public API</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getMessage(db, chatId, messageId)</code></td>
+<td>Fetch one message by PK</td>
+</tr>
+<tr>
+<td><code>listMessages(db, chatId, options?)</code></td>
+<td>Paginated list for a chat</td>
+</tr>
+<tr>
+<td><code>insertMessage(db, msg)</code></td>
+<td>Insert a new message</td>
+</tr>
+<tr>
+<td><code>updateMessage(db, chatId, messageId, patch)</code></td>
+<td>Patch fields on an existing message</td>
+</tr>
+<tr>
+<td><code>applyEdit(db, chatId, messageId, newText, editDate)</code></td>
+<td>Snapshot to <code>message_edits</code>, then update</td>
+</tr>
+<tr>
+<td><code>softDelete(db, chatId, messageId)</code></td>
+<td>Set <code>isDeleted=1</code>; row is retained</td>
+</tr>
+<tr>
+<td><code>replyChain(db, chatId, messageId)</code></td>
+<td>Walk <code>replyToMessageId</code> links upward</td>
+</tr>
+<tr>
+<td><code>album(db, chatId, mediaGroupId)</code></td>
+<td>All frames of a media group</td>
+</tr>
+<tr>
+<td><code>threadSummary(db, chatId, threadId)</code></td>
+<td>Metadata for a forum thread</td>
+</tr>
+<tr>
+<td><code>searchMessages(db, chatId, query, options?)</code></td>
+<td>FTS5 full-text search</td>
+</tr>
+<tr>
+<td><code>editHistory(db, chatId, messageId)</code></td>
+<td>Ordered snapshots from <code>message_edits</code></td>
+</tr>
+</tbody></table>
+<h2 id="good-uses">Good Uses</h2>
+<ul>
+<li>Conversation retrieval and context assembly for bot responses</li>
+<li>Full-text search across a chat archive</li>
+<li>Edit/deletion audit trail</li>
+<li>Album and thread reconstruction</li>
+</ul>
+<h2 id="do-not-use-it-for">Do Not Use It For</h2>
+<ul>
+<li>Storing sending state or outbox queues (that belongs in a jobs/queue layer)</li>
+<li>Aggregating reaction counts (see <a href="../../entities/reactions/">REACTIONS.md</a>)</li>
+<li>Storing file binaries or download state (see <a href="../../entities/files/">FILES.md</a>)</li>
+</ul>
+</article></main>
+</div>
+<footer><div class="bar"><span>Rendered from <a href="https://github.com/GhostPawJS/telegram/tree/main/docs">docs/</a> in the repository, MIT licensed.</span><nav aria-label="Legal"><a href="https://ghostpaw.dev/">All GhostPaw libraries</a><a href="https://lab.anonyfox.com/impressum/">Impressum</a><a href="https://lab.anonyfox.com/datenschutz/">Datenschutz</a></nav></div></footer>
+</body>
+</html>

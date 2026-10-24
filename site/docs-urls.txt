@@ -1,0 +1,13 @@
+https://telegram.ghostpaw.dev/docs/
+https://telegram.ghostpaw.dev/docs/human/
+https://telegram.ghostpaw.dev/docs/llm/
+https://telegram.ghostpaw.dev/docs/recipes/
+https://telegram.ghostpaw.dev/docs/architecture/
+https://telegram.ghostpaw.dev/docs/entities/calculations/
+https://telegram.ghostpaw.dev/docs/entities/callbacks/
+https://telegram.ghostpaw.dev/docs/entities/chats/
+https://telegram.ghostpaw.dev/docs/entities/files/
+https://telegram.ghostpaw.dev/docs/entities/members/
+https://telegram.ghostpaw.dev/docs/entities/messages/
+https://telegram.ghostpaw.dev/docs/entities/reactions/
+https://telegram.ghostpaw.dev/docs/entities/users/

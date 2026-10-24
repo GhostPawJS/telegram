@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Human Usage · @ghostpaw/telegram docs</title>
+<meta name="description" content="Direct-code usage guide for @ghostpaw/telegram.">
+<link rel="canonical" href="https://telegram.ghostpaw.dev/docs/human/">
+<link rel="icon" href="../../favicon.png" type="image/png">
+<link rel="preload" href="../tektur-var.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="GhostPaw">
+<meta property="og:title" content="Human Usage · @ghostpaw/telegram docs">
+<meta property="og:description" content="Direct-code usage guide for @ghostpaw/telegram.">
+<meta property="og:url" content="https://telegram.ghostpaw.dev/docs/human/">
+<meta property="og:image" content="https://telegram.ghostpaw.dev/docs/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A paper plane drawn in cyan light looping into a database cylinder with a glowing paw on its lid, beside the line: Your bot remembers the chat, including what was edited.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#04070b">
+<style>@font-face{font-family:"Tektur";src:url("../tektur-var.woff2") format("woff2");font-weight:500 900;font-stretch:75% 100%;font-display:swap}
+:root{color-scheme:dark;--void:#04070b;--panel:#0a1119;--rule:#1d2c3c;--ghost:#e3edf5;--haze:#93a5b9;--spectral:#62e6f2;--wraith:#b39dff;--display:"Tektur",Bahnschrift,"Arial Narrow",sans-serif;--body:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--void);color:var(--ghost);font:400 1rem/1.65 var(--body)}
+a{color:var(--spectral);text-underline-offset:.18em}a:focus-visible{outline:2px solid var(--spectral);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--panel);padding:.5rem 1rem;z-index:9}
+header{border-bottom:1px solid var(--rule)}.bar{max-width:76rem;margin:0 auto;padding:1rem 1.25rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap}
+.brand{font:700 1.05rem var(--display);color:var(--ghost);text-decoration:none}.brand span{color:var(--spectral)}
+.bar nav{margin-left:auto;display:flex;gap:1.1rem;flex-wrap:wrap}.bar nav a{color:var(--haze);text-decoration:none}.bar nav a:hover{color:var(--ghost)}
+.wrap{max-width:76rem;margin:0 auto;padding:2rem 1.25rem 4rem;display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:60rem){.wrap{grid-template-columns:14rem minmax(0,1fr)}}
+.side .h{font:600 .8rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--haze);margin:1.25rem 0 .4rem}.side .h:first-child{margin-top:0}
+.side ul{list-style:none;margin:0;padding:0}.side li{margin:.15rem 0}.side a{color:var(--haze);text-decoration:none}.side a[aria-current]{color:var(--spectral)}.side a:hover{color:var(--ghost)}
+.ver{display:inline-block;font:500 .85rem var(--mono);color:var(--haze);margin-bottom:.75rem}
+article{min-width:0;max-width:48rem}article h1,article h2,article h3{font-family:var(--display);line-height:1.2;font-weight:700}
+article h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 1rem}article h2{font-size:1.45rem;margin:2.4rem 0 .75rem;padding-top:1.2rem;border-top:1px solid var(--rule)}article h3{font-size:1.12rem;margin:1.8rem 0 .5rem}
+article code{font:400 .9em var(--mono);color:var(--spectral);overflow-wrap:anywhere}article pre{background:var(--panel);border:1px solid var(--rule);border-left:2px solid var(--wraith);padding:1rem;overflow-x:auto;line-height:1.5}article pre code{color:var(--ghost);overflow-wrap:normal}
+article table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.95rem}article th,article td{border:1px solid var(--rule);padding:.45rem .6rem;text-align:left;vertical-align:top}article th{background:var(--panel)}
+article blockquote{margin:1rem 0;padding:.25rem 1rem;border-left:2px solid var(--spectral);color:var(--haze)}
+footer{border-top:1px solid var(--rule)}footer .bar{color:var(--haze);font-size:.9rem}footer .bar nav a{color:var(--haze)}</style>
+</head>
+<body>
+<a class="skip" href="#doc">Skip to the documentation</a>
+<header><div class="bar"><a class="brand" href="https://ghostpaw.dev/">GhostPaw<span>/</span>telegram</a><nav aria-label="Site"><a href="https://telegram.ghostpaw.dev/">telegram</a><a href="../">Docs</a><a href="https://github.com/GhostPawJS/telegram">GitHub</a><a href="https://www.npmjs.com/package/@ghostpaw/telegram">npm</a></nav></div></header>
+<div class="wrap">
+<nav class="side" aria-label="Documentation"><p class="h">Guides</p><ul><li><a href="../">Overview</a></li><li><a href="../human/" aria-current="page">Using the API</a></li><li><a href="../llm/">Agent tools and skills</a></li><li><a href="../recipes/">Recipes</a></li><li><a href="../architecture/">Architecture</a></li></ul><p class="h">Concepts</p><ul><li><a href="../entities/calculations/">Calculations</a></li><li><a href="../entities/callbacks/">Callbacks</a></li><li><a href="../entities/chats/">Chats</a></li><li><a href="../entities/files/">Files</a></li><li><a href="../entities/members/">Members</a></li><li><a href="../entities/messages/">Messages</a></li><li><a href="../entities/reactions/">Reactions</a></li><li><a href="../entities/users/">Users</a></li></ul><p class="h">Source</p><ul><li><a href="https://github.com/GhostPawJS/telegram/blob/main/docs/CONCEPT.md">Design concept</a></li><li><a href="https://github.com/GhostPawJS/telegram#readme">README</a></li><li><a href="https://github.com/GhostPawJS/telegram/blob/main/CHANGELOG.md">Changelog</a></li></ul></nav>
+<main id="doc"><article><span class="ver">@ghostpaw/telegram 0.6.0</span>
+<h1 id="human-usage">Human Usage</h1>
+<p>Direct-code usage guide for <code>@ghostpaw/telegram</code>.</p>
+<p>For agent builders wiring this into an LLM harness, read <a href="../llm/">LLM.md</a> instead.</p>
+<h2 id="setup">Setup</h2>
+<pre><code class="language-ts">import { DatabaseSync } from &#39;node:sqlite&#39;;
+import { createBot, initTelegramTables } from &#39;@ghostpaw/telegram&#39;;
+
+const db = new DatabaseSync(&#39;bot.db&#39;);
+initTelegramTables(db); // idempotent — safe to call on every restart
+
+const bot = createBot({
+  token: process.env.TELEGRAM_TOKEN!,
+  db,
+  onMessage:        async ({ message, user, chat, reply }) =&gt; { /* ... */ },
+  onEditedMessage:  async ({ message, user }) =&gt; { /* ... */ },
+  onCallback:       async ({ callback, user, chat, answer }) =&gt; { /* ... */ },
+  onMemberUpdate:   async ({ chatId, member, oldMember }) =&gt; { /* ... */ },
+  onReaction:       async ({ chatId, messageId, userId, oldReactions, newReactions }) =&gt; { /* ... */ },
+  onPollAnswer:     async (ctx) =&gt; { /* ... */ },
+  onJoinRequest:    async (ctx) =&gt; { /* ... */ },
+});
+
+await bot.start(); // begins long-polling
+bot.stop();        // graceful shutdown
+</code></pre>
+<p>Webhook mode, pass <code>webhook</code> instead:</p>
+<pre><code class="language-ts">const bot = createBot({
+  token: process.env.TELEGRAM_TOKEN!,
+  db,
+  webhook: { path: &#39;/webhook&#39;, port: 8443, secretToken: process.env.TG_SECRET },
+  onMessage: async ({ message, user }) =&gt; { /* ... */ },
+});
+
+await bot.start(); // HTTP server on port 8443; stop() closes it cleanly
+</code></pre>
+<p><code>initTelegramTables</code> initialises all tables in dependency order (users → chats → members → messages → files → reactions → callbacks → bot_state). <code>TelegramDb</code> is satisfied directly by <code>DatabaseSync</code>.</p>
+<p>Every incoming message with media (photo, document, voice, video, audio, animation, sticker, video_note) is eagerly downloaded and stored as a BLOB in SQLite before your handler is called.</p>
+<h2 id="reading-data-read">Reading Data (<code>read</code>)</h2>
+<p>All <code>read</code> functions take <code>db</code> as the first argument and never call the Telegram API.</p>
+<h3 id="users">Users</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>read.getUser(db, userId)</code></td>
+<td>User row or <code>null</code></td>
+</tr>
+<tr>
+<td><code>read.listUsers(db, opts?)</code></td>
+<td>User rows, <code>limit</code> (default 50)</td>
+</tr>
+<tr>
+<td><code>read.userChats(db, userId)</code></td>
+<td>Chats the user has appeared in</td>
+</tr>
+<tr>
+<td><code>read.userMessages(db, userId, opts?)</code></td>
+<td>Messages sent by the user</td>
+</tr>
+</tbody></table>
+<h3 id="chats">Chats</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>read.getChat(db, chatId)</code></td>
+<td>Chat row or <code>null</code></td>
+</tr>
+<tr>
+<td><code>read.listChats(db, opts?)</code></td>
+<td>Chat rows, <code>limit</code> (default 50)</td>
+</tr>
+</tbody></table>
+<h3 id="members">Members</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>read.getMember(db, chatId, userId)</code></td>
+<td>Member row or <code>null</code></td>
+</tr>
+<tr>
+<td><code>read.listMembers(db, chatId, opts?)</code></td>
+<td>Member rows; filter by <code>status</code></td>
+</tr>
+</tbody></table>
+<h3 id="messages">Messages</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>read.getMessage(db, chatId, messageId)</code></td>
+<td>Message row or <code>null</code></td>
+</tr>
+<tr>
+<td><code>read.listMessages(db, opts)</code></td>
+<td>Messages; filter by <code>chatId</code>, <code>before</code>/<code>after</code> (ms), <code>threadId</code>, <code>limit</code></td>
+</tr>
+<tr>
+<td><code>read.searchMessages(db, chatId, query, opts?)</code></td>
+<td>FTS5 full-text results with snippets; Unicode diacritic folding: &quot;cafe&quot; matches &quot;café&quot;</td>
+</tr>
+<tr>
+<td><code>read.replyChain(db, chatId, messageId)</code></td>
+<td>Reply-to ancestors root-first, up to <code>maxDepth</code> (default 50)</td>
+</tr>
+<tr>
+<td><code>read.album(db, chatId, mediaGroupId)</code></td>
+<td>All messages in a media album</td>
+</tr>
+<tr>
+<td><code>read.threadSummary(db, chatId, threadId)</code></td>
+<td>Aggregate stats for a forum topic thread</td>
+</tr>
+<tr>
+<td><code>read.editHistory(db, chatId, messageId)</code></td>
+<td>All captured edits in chronological order</td>
+</tr>
+</tbody></table>
+<p><code>searchMessages</code> uses FTS5 on <code>text_plain</code>. Cross-chat search is not supported, always supply <code>chatId</code>.</p>
+<h3 id="reactions-files-callbacks-state">Reactions, Files, Callbacks, State</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>read.getReactions(db, chatId, messageId)</code></td>
+<td>All reaction rows for a message</td>
+</tr>
+<tr>
+<td><code>read.getReactionCounts(db, chatId, messageId)</code></td>
+<td>Emoji → count map</td>
+</tr>
+<tr>
+<td><code>read.userReactions(db, userId)</code></td>
+<td>All reactions left by a user</td>
+</tr>
+<tr>
+<td><code>read.getFile(db, fileId)</code></td>
+<td>File metadata row or <code>null</code></td>
+</tr>
+<tr>
+<td><code>read.listFiles(db, opts?)</code></td>
+<td>File rows; filter by <code>type</code>, <code>chatId</code>, <code>hasBlob</code> (true = downloaded, false = pending)</td>
+</tr>
+<tr>
+<td><code>read.getCallbacks(db, opts?)</code></td>
+<td>Callback rows</td>
+</tr>
+<tr>
+<td><code>read.getStats(db)</code></td>
+<td>Aggregate counts (messages, users, chats, etc.)</td>
+</tr>
+<tr>
+<td><code>read.getState(db, key)</code></td>
+<td>Stored bot state value or <code>null</code></td>
+</tr>
+</tbody></table>
+<p>Files store the largest photo resolution, main media file, and thumbnails for video/audio/document. Retrieve the raw bytes with <code>write.getFileBlob(db, fileId)</code> → <code>Buffer | null</code>. Any file where the background download failed has <code>checksum: null</code> and can be retried with <code>write.downloadFile(bot, db, fileId)</code>.</p>
+<h2 id="sending-messages-and-media-write">Sending Messages and Media (<code>write</code>)</h2>
+<p>All <code>write</code> functions take a <code>MockBot</code> (or grammy <code>Bot</code> via <code>adaptBot</code>) as the first argument and return a <code>Promise</code>.</p>
+<h3 id="text">Text</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>write.sendMessage(bot, chatId, text, opts?)</code></td>
+<td>Send a text message; returns <code>SentMessage</code></td>
+</tr>
+<tr>
+<td><code>write.editMessage(bot, chatId, messageId, text, opts?)</code></td>
+<td>Edit an existing message</td>
+</tr>
+<tr>
+<td><code>write.deleteMessage(bot, chatId, messageId)</code></td>
+<td>Delete a message</td>
+</tr>
+<tr>
+<td><code>write.forwardMessage(bot, toChatId, fromChatId, messageId)</code></td>
+<td>Forward a message</td>
+</tr>
+<tr>
+<td><code>write.broadcast(bot, chatIds, text, opts?)</code></td>
+<td>Send the same message to many chats with back-pressure</td>
+</tr>
+</tbody></table>
+<h3 id="media">Media</h3>
+<p>Each media send accepts <code>MediaInput</code>: a <code>string</code> (file_id), <code>Buffer</code>, or <code>{ url: string }</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>write.sendPhoto(bot, chatId, photo, opts?)</code></td>
+<td>Send a photo</td>
+</tr>
+<tr>
+<td><code>write.sendDocument(bot, chatId, document, opts?)</code></td>
+<td>Send a document</td>
+</tr>
+<tr>
+<td><code>write.sendVoice(bot, chatId, voice, opts?)</code></td>
+<td>Send a voice message</td>
+</tr>
+<tr>
+<td><code>write.sendAudio(bot, chatId, audio, opts?)</code></td>
+<td>Send an audio file</td>
+</tr>
+<tr>
+<td><code>write.sendVideo(bot, chatId, video, opts?)</code></td>
+<td>Send a video</td>
+</tr>
+</tbody></table>
+<p><code>SendMediaOpts</code>: <code>caption?</code>, <code>parseMode?</code>, <code>replyToMessageId?</code>, <code>replyMarkup?</code>.</p>
+<h3 id="file-blobs">File BLOBs</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>write.downloadFile(bot, db, fileId)</code></td>
+<td>Download a file from Telegram into SQLite BLOB; returns updated <code>FileEntry</code></td>
+</tr>
+<tr>
+<td><code>write.storeFileBlob(db, fileId, buffer)</code></td>
+<td>Store raw bytes into SQLite; SHA-256 deduplication; returns updated <code>FileEntry</code></td>
+</tr>
+<tr>
+<td><code>write.getFileBlob(db, fileId)</code></td>
+<td>Retrieve stored bytes; returns <code>Buffer | null</code></td>
+</tr>
+</tbody></table>
+<h3 id="actions-and-keyboards">Actions and Keyboards</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>write.answerCallback(bot, callbackId, opts?)</code></td>
+<td>Answer an inline button press</td>
+</tr>
+<tr>
+<td><code>write.setReaction(bot, chatId, messageId, emoji)</code></td>
+<td>Set a reaction on a message</td>
+</tr>
+<tr>
+<td><code>write.sendChatAction(bot, chatId, action)</code></td>
+<td>Send a typing/upload indicator (<code>ChatAction</code>)</td>
+</tr>
+<tr>
+<td><code>write.pinMessage(bot, chatId, messageId)</code></td>
+<td>Pin a message</td>
+</tr>
+<tr>
+<td><code>write.unpinMessage(bot, chatId, messageId)</code></td>
+<td>Unpin a message</td>
+</tr>
+</tbody></table>
+<p>Build inline keyboards with the <code>keyboards</code> namespace:</p>
+<pre><code class="language-ts">import { keyboards, write } from &#39;@ghostpaw/telegram&#39;;
+
+const markup = keyboards.inlineKeyboard([
+  [keyboards.callbackButton(&#39;✅ Yes&#39;, &#39;confirm:yes&#39;), keyboards.callbackButton(&#39;❌ No&#39;, &#39;confirm:no&#39;)],
+  [keyboards.urlButton(&#39;Docs&#39;, &#39;https://github.com/GhostPawJS/telegram&#39;)],
+]);
+
+await write.sendMessage(bot, chatId, &#39;Proceed?&#39;, { replyMarkup: markup });
+</code></pre>
+<h3 id="streaming">Streaming</h3>
+<p><code>write.createStream(bot, opts)</code> returns a <code>StreamHandle</code> for progressive in-place edits:</p>
+<pre><code class="language-ts">const stream = write.createStream(bot, { chatId, parseMode: &#39;HTML&#39; });
+
+// fire-and-forget with debounce (good for token-by-token LLM output)
+stream.write(&#39;&lt;b&gt;chunk&lt;/b&gt; &#39;);
+
+// immediate flush — good for explicit progress steps
+await stream.append(&#39;Step 1 done\n&#39;);
+await stream.append(&#39;Step 2 done\n&#39;);
+
+// replace entire buffer and flush immediately
+await stream.replace(&#39;Final answer.&#39;);
+
+await stream.end(); // flush and mark done
+stream.text;        // accumulated text so far
+stream.done;        // true after end() resolves
+</code></pre>
+<p><code>StreamOpts</code>: <code>chatId</code>, <code>messageId?</code>, <code>parseMode?</code>, <code>debounceMs?</code> (default 300), <code>maxLength?</code> (default 4096), <code>onError?</code>. Omit <code>messageId</code> to send a new message and edit in-place; provide it to start editing an existing one.</p>
+<p><code>broadcast</code> returns <code>BroadcastResult: { sent: number; failed: number; errors: Array&lt;{ chatId, error }&gt; }</code>.</p>
+<h2 id="network-network">Network (<code>network</code>)</h2>
+<p>Low-level transport layer for custom polling loops.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>network.startPolling(ctx, opts?)</code></td>
+<td>Starts the update loop; fire-and-forget, driven by <code>ctx.signal</code></td>
+</tr>
+<tr>
+<td><code>network.dispatchUpdate(update, handlers)</code></td>
+<td>Route a single grammy <code>Update</code> to an <code>UpdateHandlerMap</code></td>
+</tr>
+<tr>
+<td><code>network.createConnectionState()</code></td>
+<td>Create a fresh <code>ConnectionState</code> (status <code>&#39;disconnected&#39;</code>)</td>
+</tr>
+<tr>
+<td><code>network.transitionState(state, event)</code></td>
+<td>Pure transition: returns new <code>ConnectionState</code></td>
+</tr>
+</tbody></table>
+<p><code>PollingContext</code> requires: <code>getUpdates</code>, <code>getMe</code>, <code>onUpdate</code>, <code>onError</code>, <code>signal</code> (AbortSignal).</p>
+<h2 id="rendering-render">Rendering (<code>render</code>)</h2>
+<p>Pure functions, no I/O, no grammy dependency.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>render.markdownToHtml(md)</code></td>
+<td>Convert CommonMark markdown to Telegram HTML</td>
+</tr>
+<tr>
+<td><code>render.markdownToMarkdownV2(md)</code></td>
+<td>Convert CommonMark markdown to Telegram MarkdownV2</td>
+</tr>
+<tr>
+<td><code>render.escapeHtml(s)</code></td>
+<td>Escape <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code> for safe Telegram HTML</td>
+</tr>
+<tr>
+<td><code>render.escapeMarkdownV2(s)</code></td>
+<td>Escape all MarkdownV2 reserved characters</td>
+</tr>
+<tr>
+<td><code>render.splitText(text, maxLength?)</code></td>
+<td>Split text into chunks at <code>maxLength</code> (default 4096) on word boundaries</td>
+</tr>
+<tr>
+<td><code>render.splitCaption(text)</code></td>
+<td>Split text at the caption limit (1024)</td>
+</tr>
+</tbody></table>
+<p>Always render before sending, Telegram&#39;s parse modes are strict. Use <code>markdownToHtml</code> + <code>parseMode: &#39;HTML&#39;</code> for most cases.</p>
+<h2 id="error-handling">Error Handling</h2>
+<pre><code class="language-ts">import { isTelegramError, TelegramNotFoundError, TelegramValidationError } from &#39;@ghostpaw/telegram&#39;;
+
+try {
+  await write.sendMessage(bot, chatId, text);
+} catch (err) {
+  if (err instanceof TelegramNotFoundError) {
+    // chat not found or bot was removed
+  } else if (isTelegramError(err)) {
+    console.error(err.code, err.message);
+  }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Code</th>
+<th>When thrown</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TelegramNotFoundError</code></td>
+<td><code>TELEGRAM_NOT_FOUND</code></td>
+<td>Chat or message does not exist</td>
+</tr>
+<tr>
+<td><code>TelegramValidationError</code></td>
+<td><code>TELEGRAM_VALIDATION</code></td>
+<td>Invalid input (empty text, bad parse mode, etc.)</td>
+</tr>
+<tr>
+<td><code>TelegramStateError</code></td>
+<td><code>TELEGRAM_STATE</code></td>
+<td>Bot is in an invalid state for the requested action</td>
+</tr>
+<tr>
+<td><code>TelegramRateLimitError</code></td>
+<td><code>TELEGRAM_RATE_LIMIT</code></td>
+<td>Telegram 429 response</td>
+</tr>
+<tr>
+<td><code>TelegramTransportError</code></td>
+<td><code>TELEGRAM_TRANSPORT</code></td>
+<td>Network-level failure</td>
+</tr>
+<tr>
+<td><code>TelegramApiError</code></td>
+<td><code>TELEGRAM_API</code></td>
+<td>Other Telegram API error</td>
+</tr>
+<tr>
+<td><code>TelegramFileError</code></td>
+<td><code>TELEGRAM_FILE</code></td>
+<td>File download or upload failure</td>
+</tr>
+</tbody></table>
+<p><code>isTelegramError(e)</code> narrows any <code>unknown</code> to <code>TelegramError</code>.</p>
+</article></main>
+</div>
+<footer><div class="bar"><span>Rendered from <a href="https://github.com/GhostPawJS/telegram/tree/main/docs">docs/</a> in the repository, MIT licensed.</span><nav aria-label="Legal"><a href="https://ghostpaw.dev/">All GhostPaw libraries</a><a href="https://lab.anonyfox.com/impressum/">Impressum</a><a href="https://lab.anonyfox.com/datenschutz/">Datenschutz</a></nav></div></footer>
+</body>
+</html>
