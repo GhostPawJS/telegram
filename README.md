@@ -10,7 +10,7 @@
 
 Telegram bot channel engine — fetch transport with zero runtime dependencies, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
 
-Every incoming update is mirrored into a local SQLite database before your handler runs, giving you a persistent, queryable record of everything the bot sees — including the raw bytes of every photo, document, voice message, and video, which are downloaded in the background after the update is stored and kept once per SHA-256 hash. A failed download leaves the file row without a checksum, so you can retry it with `downloadFile`. It ships as a single prebundled blob designed for two audiences at once: human developers building bot backends in code, and LLM agents operating through a structured tool facade.
+Every incoming update is mirrored into a local SQLite database before your handler runs, giving you a persistent, queryable record of everything the bot sees — including the raw bytes of every photo, document, voice message, and video, which are downloaded in the background after the update is stored and kept once per SHA-256 hash. A failed download leaves the file row without a checksum, so you can retry it with `write.downloadFile`. It ships as a single prebundled blob designed for two audiences at once: human developers building bot backends in code, and LLM agents operating through a structured tool facade.
 
 ## MCP server
 
