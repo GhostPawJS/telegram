@@ -4,6 +4,15 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Added
+
+- MCP stdio server and public MCP entry with protocol negotiation and registry tool schemas.
+- CLI for tool discovery, calls, and skill output, with configurable SQLite paths.
+- Generated Agent Skill, workflow references, plugin and registry manifests, and secret token configuration.
+- Dockerfile and MCP Bundle staging and packaging support.
+- Size, API, consumer, startup, and ratchet guards with benchmarks and publishing workflows.
+
+
 ## [0.5.0] - 2026-10-24
 
 ### Added

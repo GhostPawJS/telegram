@@ -1,0 +1,50 @@
+{
+  "name": "ghostpaw-telegram",
+  "version": "0.5.0",
+  "description": "Telegram message mirror, search, sending, and moderation tools.",
+  "author": {
+    "name": "Anonyfox",
+    "email": "max@anonyfox.com",
+    "url": "https://anonyfox.com"
+  },
+  "homepage": "https://github.com/GhostPawJS/telegram",
+  "repository": "https://github.com/GhostPawJS/telegram.git",
+  "license": "MIT",
+  "keywords": [
+    "telegram",
+    "telegram-bot",
+    "telegrambot",
+    "bot",
+    "chatbot",
+    "bot-framework",
+    "messaging",
+    "webhook",
+    "sqlite",
+    "node-sqlite",
+    "local-first",
+    "llm",
+    "llm-tools",
+    "ai",
+    "ai-agent",
+    "agent",
+    "multi-agent",
+    "mcp",
+    "tools",
+    "ghostpaw",
+    "typescript",
+    "mcp-server",
+    "model-context-protocol",
+    "agent-skills",
+    "cli"
+  ],
+  "mcpServers": {
+    "ghostpaw-telegram": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@ghostpaw/telegram@0.5.0",
+        "mcp"
+      ]
+    }
+  }
+}

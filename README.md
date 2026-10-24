@@ -1,6 +1,7 @@
 # @ghostpaw/telegram
 
 [![npm](https://img.shields.io/npm/v/@ghostpaw/telegram)](https://www.npmjs.com/package/@ghostpaw/telegram)
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.GhostPawJS%2Ftelegram-06d6a0)](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.GhostPawJS%2Ftelegram/versions/latest)
 [![node](https://img.shields.io/node/v/@ghostpaw/telegram)](https://nodejs.org)
 [![license](https://img.shields.io/npm/l/@ghostpaw/telegram)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -8,6 +9,75 @@
 Telegram bot channel engine — fetch transport with zero runtime dependencies, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
 
 Every incoming update is mirrored into a local SQLite database before your handler runs, giving you a persistent, queryable record of everything the bot sees — including the raw bytes of every photo, document, voice message, and video, downloaded and stored immediately on receipt. It ships as a single prebundled blob designed for two audiences at once: human developers building bot backends in code, and LLM agents operating through a structured tool facade.
+
+## MCP server
+
+Every client below starts the same stdio server: `npx -y @ghostpaw/telegram mcp`.
+Messages live in `~/.ghostpaw/telegram.db` unless the `GHOSTPAW_TELEGRAM_DB`
+environment variable (absolute path) or `--db <path>` says otherwise.
+
+**Claude Code**
+
+```bash
+claude mcp add ghostpaw-telegram -- npx -y @ghostpaw/telegram mcp
+```
+
+or as a plugin, which also installs the skill:
+
+```bash
+/plugin marketplace add GhostPawJS/telegram
+/plugin install ghostpaw-telegram@ghostpaw-telegram
+```
+
+**Codex CLI** (`~/.telegram/config.toml`)
+
+```toml
+[mcp_servers.ghostpaw-telegram]
+command = "npx"
+args = ["-y", "@ghostpaw/telegram", "mcp"]
+```
+
+**Cursor** (`.cursor/mcp.json`), **Claude Desktop** (`claude_desktop_config.json`)
+or a project `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "ghostpaw-telegram": {
+      "command": "npx",
+      "args": ["-y", "@ghostpaw/telegram", "mcp"]
+    }
+  }
+}
+```
+
+Claude Desktop users can also install `server.mcpb` from the
+[latest GitHub release](https://github.com/GhostPawJS/telegram/releases/latest).
+A Dockerfile is included for container hosts:
+`docker build -t ghostpaw-telegram . && docker run -i --rm -v telegram:/data ghostpaw-telegram`.
+
+The server speaks MCP 2026-07-28 (stateless, `server/discover`) and the
+initialize-based revisions 2025-11-25, 2025-06-18, 2025-03-26 and 2024-11-05.
+
+Set `TELEGRAM_BOT_TOKEN` in the server environment to execute send and moderation actions.
+Without a token, these tools return plans; local reads and tool discovery work offline.
+The `.mcp.json` token placeholder must be supplied by the client environment.
+The server reads the mirror populated by your library transport; it does not poll for updates.
+
+## CLI
+
+```bash
+npx -y @ghostpaw/telegram tools
+npx -y @ghostpaw/telegram call tg_read '{"subcommand":"list_chats"}'
+npx -y @ghostpaw/telegram --db :memory: call tg_send '{"subcommand":"send_message","chatId":123,"text":"Hello"}'
+```
+
+The send example returns a plan unless `TELEGRAM_BOT_TOKEN` is set.
+
+## Agent Skill
+
+`SKILL.md` and `skills/telegram/` ship in the package. Print the skill with
+`npx -y @ghostpaw/telegram skill` or copy `skills/telegram/` into your skills folder.
 
 ## Install
 

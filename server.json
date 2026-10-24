@@ -1,0 +1,42 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.GhostPawJS/telegram",
+  "description": "Telegram message mirror, search, sending, and moderation tools.",
+  "title": "GhostPaw Telegram",
+  "version": "0.5.0",
+  "repository": {
+    "url": "https://github.com/GhostPawJS/telegram.git",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/GhostPawJS/telegram",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@ghostpaw/telegram",
+      "version": "0.5.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "TELEGRAM_BOT_TOKEN",
+          "description": "Telegram Bot API token; enables send and moderation execution",
+          "isSecret": true,
+          "isRequired": false
+        },
+        {
+          "name": "GHOSTPAW_TELEGRAM_DB",
+          "description": "SQLite database path (default: ~/.ghostpaw/telegram.db)",
+          "isRequired": false
+        }
+      ]
+    }
+  ]
+}

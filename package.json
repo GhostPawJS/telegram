@@ -1,7 +1,7 @@
 {
 	"name": "@ghostpaw/telegram",
 	"version": "0.5.0",
-	"description": "Telegram bot channel engine — zero runtime dependencies, Telegram transport, SQLite message mirror, FTS5 full-text search, markdown rendering, and a structured LLM tool facade. Node 24+, built-in node:sqlite.",
+	"description": "Telegram bot channel engine \u2014 zero runtime dependencies, Telegram transport, SQLite message mirror, FTS5 full-text search, markdown rendering, and a structured LLM tool facade. Node 24+, built-in node:sqlite.",
 	"type": "module",
 	"exports": {
 		".": {
@@ -13,13 +13,26 @@
 				"types": "./dist/index.d.cts",
 				"default": "./dist/index.cjs"
 			}
-		}
+		},
+		"./mcp": {
+			"import": {
+				"types": "./dist/mcp.d.ts",
+				"default": "./dist/mcp.js"
+			},
+			"require": {
+				"types": "./dist/mcp.d.cts",
+				"default": "./dist/mcp.cjs"
+			}
+		},
+		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"files": [
-		"dist"
+		"dist",
+		"skills",
+		"SKILL.md"
 	],
 	"sideEffects": false,
 	"scripts": {
@@ -30,15 +43,27 @@
 		"lint:fix": "biome check --fix",
 		"format": "biome format --write",
 		"typecheck": "tsc --noEmit",
-		"check": "biome check && tsc --noEmit",
+		"check": "npm run check:types && npm run check:lint && npm test && npm run build && npm run check:deps && npm run check:surfaces && npm run check:size && npm run check:api && npm run check:consumer && npm run check:startup && npm run check:ratchet",
 		"check:deps": "node scripts/check-zero-deps.mjs",
 		"clean": "rm -rf dist",
-		"version": "biome format --write package.json package-lock.json && git add package.json package-lock.json",
-		"prepublishOnly": "npm run check && npm run build",
+		"version": "node scripts/sync_version.mjs && npm run surfaces && git add src/version.ts SKILL.md skills plugin.json mcp.json server.json .claude-plugin mcpb && biome format --write package.json package-lock.json && git add package.json package-lock.json",
+		"prepublishOnly": "npm run check",
 		"release:patch": "npm version patch && git push && git push --tags",
 		"release:minor": "npm version minor && git push && git push --tags",
 		"release:major": "npm version major && git push && git push --tags",
-		"test:dist": "node --experimental-strip-types --test --test-reporter=dot 'tests/*.test.ts'"
+		"test:dist": "node --experimental-strip-types --test --test-reporter=dot 'tests/*.test.ts'",
+		"surfaces": "node --experimental-strip-types scripts/surfaces/generate.mjs",
+		"check:surfaces": "node --experimental-strip-types scripts/surfaces/generate.mjs --check",
+		"check:types": "tsc --noEmit",
+		"check:lint": "biome check",
+		"check:ratchet": "node --test scripts/guard/*.test.mjs && node scripts/guard/ratchet.mjs",
+		"budgets:update": "npm run build && node scripts/guard/size.mjs --update && node scripts/guard/api.mjs --update && node scripts/guard/startup.mjs --update",
+		"bench": "npm run build && node scripts/bench/bench.mjs",
+		"check:size": "node scripts/guard/size.mjs",
+		"check:api": "node scripts/guard/api.mjs",
+		"check:consumer": "node scripts/guard/consumer.mjs",
+		"check:startup": "node scripts/guard/startup.mjs",
+		"mcpb": "node scripts/mcpb/build.mjs"
 	},
 	"engines": {
 		"node": ">=24"
@@ -67,7 +92,11 @@
 		"mcp",
 		"tools",
 		"ghostpaw",
-		"typescript"
+		"typescript",
+		"mcp-server",
+		"model-context-protocol",
+		"agent-skills",
+		"cli"
 	],
 	"license": "MIT",
 	"repository": {
@@ -99,5 +128,9 @@
 		"marked": "^15",
 		"tsup": "^8.4.0",
 		"typescript": "^5.9.3"
-	}
+	},
+	"bin": {
+		"ghostpaw-telegram": "./dist/cli.js"
+	},
+	"mcpName": "io.github.GhostPawJS/telegram"
 }

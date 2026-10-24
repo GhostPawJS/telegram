@@ -38,12 +38,17 @@ globalPerSecond, maxRetries, now, and sleep at construction.
 - `src/render/`, `src/normalize/`: rendering and incoming data conversion.
 - `src/tools/`, `src/skills/`: structured tool definitions and workflows.
 - `tests/`: built ESM/CommonJS integration checks (build before testing).
+- `src/surfaces/`: shared MCP, stdio, CLI, skill and manifest renderers.
+- `src/surface/`: Telegram bindings; `src/mcp.ts`, `src/cli.ts`, `src/mcp_server_bin.ts` are entries.
+- `scripts/surfaces/`: generates `SKILL.md`, `skills/telegram/`, `plugin.json`, `mcp.json`, `.claude-plugin/`, `server.json`, `glama.json`, and `mcpb/manifest.json`. Run `npm run surfaces`; do not edit generated outputs.
+- `scripts/guard/`: size, API, consumer, startup and ratchet guards; `scripts/bench/`: benchmarks.
 - `docs/`: detailed usage documentation.
 
 ## Contribute
 
-Use Node 24. Run `npm run lint`, `npm run typecheck`, `npm test`, and
-`npm run build`, `npm run test:dist`, and `npm run check:deps`.
+Use Node 24. `npm run check` is the single gate: types, lint, tests, build,
+zero runtime dependencies, generated surfaces, size budgets, API snapshot,
+packed consumer, startup budgets, and ratchet. Also run `npm run test:dist`.
 Use node:test and node:assert, with *.test.ts next to source for unit tests.
 Built artifact integration tests live in tests/; run npm run test:dist after building.
 Assert real behavior; preserve existing assertions and coverage.
@@ -53,6 +58,9 @@ The package has zero runtime dependencies. Do not add runtime dependencies.
 grammy and marked are development dependencies for compatibility tests only.
 Keep exported APIs, tool names and fields, CLI flags, database schemas, and
 synchronous behavior compatible. Make additive changes only.
+Budget increases require `[budget-increase-approved]`, API snapshot changes
+require `[api-change-approved]`, and guard, workflow or lint changes require
+`[guardrails-change-approved]` in the reviewed commit message.
 Record changes under Unreleased in CHANGELOG.md in neutral maintainer prose.
 Leave `.github/workflows/disabled` intact.
 

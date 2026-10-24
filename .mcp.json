@@ -1,0 +1,1 @@
+{"mcpServers":{"ghostpaw-telegram":{"command":"npx","args":["-y","@ghostpaw/telegram","mcp"],"env":{"TELEGRAM_BOT_TOKEN":"${TELEGRAM_BOT_TOKEN}"}}}}

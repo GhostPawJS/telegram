@@ -1,0 +1,13 @@
+{
+  "name": "ghostpaw-telegram",
+  "owner": {
+    "name": "Anonyfox"
+  },
+  "plugins": [
+    {
+      "name": "ghostpaw-telegram",
+      "source": "./",
+      "description": "Telegram message mirror, search, sending, and moderation tools."
+    }
+  ]
+}

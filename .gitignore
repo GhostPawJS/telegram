@@ -8,3 +8,7 @@ coverage/
 .env
 .env.*
 playground/
+
+.mcpb-build/
+server.mcpb
+bench-results.json

@@ -1,0 +1,107 @@
+{
+  "manifest_version": "0.3",
+  "name": "ghostpaw-telegram",
+  "display_name": "GhostPaw Telegram",
+  "version": "0.5.0",
+  "description": "Telegram message mirror, search, sending, and moderation tools.",
+  "long_description": "Read and search a local Telegram mirror, send messages, and moderate chats through the Telegram Bot API.",
+  "author": {
+    "name": "Anonyfox",
+    "email": "max@anonyfox.com",
+    "url": "https://anonyfox.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GhostPawJS/telegram.git"
+  },
+  "homepage": "https://github.com/GhostPawJS/telegram",
+  "documentation": "https://github.com/GhostPawJS/telegram/blob/main/README.md",
+  "support": "https://github.com/GhostPawJS/telegram/issues",
+  "license": "MIT",
+  "keywords": [
+    "telegram",
+    "telegram-bot",
+    "telegrambot",
+    "bot",
+    "chatbot",
+    "bot-framework",
+    "messaging",
+    "webhook",
+    "sqlite",
+    "node-sqlite",
+    "local-first",
+    "llm",
+    "llm-tools",
+    "ai",
+    "ai-agent",
+    "agent",
+    "multi-agent",
+    "mcp",
+    "tools",
+    "ghostpaw",
+    "typescript",
+    "mcp-server",
+    "model-context-protocol",
+    "agent-skills",
+    "cli"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "server/mcp-server.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/mcp-server.js"
+      ],
+      "env": {
+        "TELEGRAM_BOT_TOKEN": "${user_config.bot_token}",
+        "GHOSTPAW_TELEGRAM_DB": "${user_config.db_path}"
+      }
+    }
+  },
+  "user_config": {
+    "bot_token": {
+      "type": "string",
+      "title": "Telegram token",
+      "description": "Bot API token for send and moderation execution.",
+      "required": false,
+      "default": "",
+      "sensitive": true
+    },
+    "db_path": {
+      "type": "string",
+      "title": "Database path",
+      "description": "Path to the local SQLite database.",
+      "required": false,
+      "default": "${HOME}/.ghostpaw/telegram.db"
+    }
+  },
+  "tools": [
+    {
+      "name": "tg_read",
+      "description": "Read and query the Telegram database: messages, chats, users, reactions, and more."
+    },
+    {
+      "name": "tg_send",
+      "description": "Outbound actions: send, edit, delete, pin/unpin messages, send typing indicator, and forward messages."
+    },
+    {
+      "name": "tg_manage",
+      "description": "Moderation and chat administration: ban, unban, restrict, promote, kick users, and query member info."
+    },
+    {
+      "name": "tg_connect",
+      "description": "Query bot connection status, configuration, and chat list."
+    }
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=24.0.0"
+    }
+  }
+}
