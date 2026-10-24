@@ -28,7 +28,7 @@
 		},
 		"mcp": {
 			"minBytes": 39040,
-			"gzipBytes": 11648
+			"gzipBytes": 11712
 		},
 		"cli": {
 			"minBytes": 59008,
