@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-24
+
 ### Added
 
 - MCP stdio server and public MCP entry with protocol negotiation and registry tool schemas.
@@ -100,7 +102,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/GhostPawJS/telegram/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/GhostPawJS/telegram/compare/v0.4.0...v0.5.0
 [0.1.1]: https://github.com/GhostPawJS/telegram/compare/v0.1.0...v0.1.1
 [0.1.2]: https://github.com/GhostPawJS/telegram/compare/v0.1.1...v0.1.2
