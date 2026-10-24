@@ -1,5 +1,5 @@
-import type { Message } from 'grammy/types';
 import type { FileInput, FileType } from '../files/types.ts';
+import type { Message } from '../telegram_types.ts';
 
 type FileBase = Omit<FileInput, 'chatId' | 'messageId' | 'checksum'>;
 

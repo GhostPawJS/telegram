@@ -1,6 +1,5 @@
-import type { Message as GrammyMessage, MessageEntity } from 'grammy/types';
-
 import type { MessageInput } from '../messages/types.ts';
+import type { Message as GrammyMessage, MessageEntity } from '../telegram_types.ts';
 import { classifyMessageType } from './classify_message_type.ts';
 import { classifyServiceKind } from './classify_service_kind.ts';
 import { extractMedia } from './extract_media.ts';

@@ -1,4 +1,4 @@
-import type { Message } from 'grammy/types';
+import type { Message } from '../telegram_types.ts';
 
 export interface ExtractedMedia {
 	media: Record<string, unknown> | null;

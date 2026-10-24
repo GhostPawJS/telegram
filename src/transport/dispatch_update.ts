@@ -1,4 +1,4 @@
-import type { Update } from 'grammy/types';
+import type { Update } from '../telegram_types.ts';
 
 export type UpdateHandler = (update: Update) => Promise<void> | void;
 

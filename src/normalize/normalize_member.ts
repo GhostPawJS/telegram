@@ -1,6 +1,5 @@
-import type { ChatMemberRestricted, ChatMember as GrammyChatMember } from 'grammy/types';
-
 import type { Member, MemberStatus } from '../members/types.ts';
+import type { ChatMemberRestricted, ChatMember as GrammyChatMember } from '../telegram_types.ts';
 
 export function normalizeMember(chatId: number, member: GrammyChatMember, now?: number): Member {
 	let permissions: Record<string, unknown> | null = null;

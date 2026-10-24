@@ -1,4 +1,5 @@
-import type { WebhookOptions } from 'grammy';
+import { Bot, webhookCallback } from './bot_api/bot.ts';
+import type { ClientOptions } from './bot_api/client.ts';
 import { incrementStat } from './bot_state/index.ts';
 import { insertCallback } from './callbacks/index.ts';
 import { getChat, upsertChat } from './chats/index.ts';
@@ -6,7 +7,7 @@ import type { TelegramDb } from './database.ts';
 import { downloadFile } from './executor/download_file.ts';
 import { upsertFile } from './files/index.ts';
 import { adaptBot } from './lib/adapt_bot.ts';
-import { loadGrammy, loadHttp } from './lib/lazy_dependencies.ts';
+import { loadHttp } from './lib/lazy_dependencies.ts';
 import type { MockBot } from './lib/mock_grammy.ts';
 import { upsertMember } from './members/index.ts';
 import { applyEdit, insertMessage } from './messages/index.ts';
@@ -35,6 +36,7 @@ export interface WebhookConfig {
 }
 
 export interface BotConfig {
+	api?: ClientOptions;
 	token: string;
 	db: TelegramDb;
 	webhook?: WebhookConfig;
@@ -58,9 +60,8 @@ export interface TelegramBot {
 
 export function createBot(config: BotConfig): TelegramBot {
 	const { db } = config;
-	const { Bot, webhookCallback } = loadGrammy();
-	const grammy = new Bot(config.token);
-	const client = adaptBot(grammy);
+	const grammy = new Bot(config.token, config.api);
+	const client = adaptBot(grammy, config.api);
 
 	grammy.on('message', async (ctx) => {
 		const msg = ctx.message;
@@ -151,7 +152,11 @@ export function createBot(config: BotConfig): TelegramBot {
 
 	grammy.on('message_reaction', async (ctx) => {
 		const reaction = ctx.messageReaction;
-		const toEmoji = (r: { type: string; emoji?: string; custom_emoji_id?: string }) =>
+		const toEmoji = (r: {
+			type: string;
+			emoji?: string | undefined;
+			custom_emoji_id?: string | undefined;
+		}) =>
 			r.type === 'emoji'
 				? (r.emoji ?? '')
 				: r.type === 'custom_emoji'
@@ -182,7 +187,11 @@ export function createBot(config: BotConfig): TelegramBot {
 
 	grammy.on('message_reaction_count', (ctx) => {
 		const update = ctx.messageReactionCount;
-		const toEmoji = (r: { type: string; emoji?: string; custom_emoji_id?: string }) =>
+		const toEmoji = (r: {
+			type: string;
+			emoji?: string | undefined;
+			custom_emoji_id?: string | undefined;
+		}) =>
 			r.type === 'emoji'
 				? (r.emoji ?? '')
 				: r.type === 'custom_emoji'
@@ -198,7 +207,7 @@ export function createBot(config: BotConfig): TelegramBot {
 
 	if (config.webhook) {
 		const webhookCfg = config.webhook;
-		const webhookOpts: WebhookOptions = {};
+		const webhookOpts: { secretToken?: string } = {};
 		if (webhookCfg.secretToken !== undefined) {
 			webhookOpts.secretToken = webhookCfg.secretToken;
 		}

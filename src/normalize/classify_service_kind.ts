@@ -1,4 +1,4 @@
-import type { Message } from 'grammy/types';
+import type { Message } from '../telegram_types.ts';
 
 export function classifyServiceKind(msg: Message): string | null {
 	if (msg.new_chat_members) return 'new_chat_members';

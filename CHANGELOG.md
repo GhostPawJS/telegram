@@ -6,15 +6,22 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ### Added
 
+- Built-in fetch Bot API client with multipart uploads, polling, webhook secret checks, and token-masked errors.
+- Markdown renderer parity tests against marked and transport tests using injected fetch.
+- Separate `test:dist` checks after the build in CI and release workflows.
 - Opt-in execution facade with configurable rate limits, bounded retry_after handling, and token masking.
 - Contributor guidance and tests for built ESM/CommonJS lazy dependency paths and incoming updates.
 
 ### Changed
 
-- Load grammy, marked, and HTTP server support synchronously on first use to reduce import cost.
+- Removed runtime dependencies grammy and marked.
+- Use structural in-repo Bot API types in normalization, update dispatch, command middleware, menu synchronization, and bot adaptation signatures. TypeScript users can continue passing grammy values; signatures no longer reference grammy types.
+- Uploads made through `adaptBot` with a grammy Bot now go directly through the built-in Bot API client, so grammy API transformers do not apply to file uploads.
+- Use a synchronous in-repo Markdown parser and retain grammy and marked only for development compatibility tests.
+- Require zero runtime dependencies in the package check.
+- Load HTTP server support synchronously on first use to reduce import cost.
 - Document plan-only and execute modes, database pragmas, and runtime dependency policy.
 - Clarify use of bot.client with outbound executors and streams.
-- Check the allowed runtime dependencies in CI.
 
 ## [0.4.0] - 2026-04-06
 

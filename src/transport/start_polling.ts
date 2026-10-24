@@ -1,4 +1,4 @@
-import type { Update } from 'grammy/types';
+import type { Update } from '../telegram_types.ts';
 import type { BotInfo, PollingOpts } from './types.ts';
 
 export interface PollingContext {

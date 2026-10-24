@@ -1,4 +1,4 @@
-import type { Bot } from 'grammy';
+import type { MenuBot } from '../telegram_types.ts';
 import type { CommandDef, CommandRegistry, CommandScope } from './types.ts';
 
 /**
@@ -6,7 +6,7 @@ import type { CommandDef, CommandRegistry, CommandScope } from './types.ts';
  * Groups commands by scope and calls setMyCommands for each scope.
  */
 export async function syncMenu(
-	bot: Bot,
+	bot: MenuBot,
 	registry: CommandRegistry,
 	defaultScope?: CommandScope,
 ): Promise<void> {

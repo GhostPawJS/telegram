@@ -1,6 +1,5 @@
-import type { Message } from 'grammy/types';
-
 import type { MessageType } from '../messages/types.ts';
+import type { Message } from '../telegram_types.ts';
 
 export function classifyMessageType(msg: Message): MessageType {
 	if (msg.text) return 'text';

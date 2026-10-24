@@ -36,6 +36,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Test built artifacts
+        run: npm run test:dist
+
       - name: Verify package contents
         run: npm pack --dry-run
 

@@ -1,4 +1,4 @@
-import type { User as GrammyUser } from 'grammy/types';
+import type { User as GrammyUser } from '../telegram_types.ts';
 
 import type { UserInput } from '../users/types.ts';
 

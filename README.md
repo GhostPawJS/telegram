@@ -5,7 +5,7 @@
 [![license](https://img.shields.io/npm/l/@ghostpaw/telegram)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 
-Telegram bot channel engine — grammy transport, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
+Telegram bot channel engine — fetch transport with zero runtime dependencies, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
 
 Every incoming update is mirrored into a local SQLite database before your handler runs, giving you a persistent, queryable record of everything the bot sees — including the raw bytes of every photo, document, voice message, and video, downloaded and stored immediately on receipt. It ships as a single prebundled blob designed for two audiences at once: human developers building bot backends in code, and LLM agents operating through a structured tool facade.
 
@@ -125,7 +125,7 @@ See [docs/LLM.md](docs/LLM.md) for the full AI-facing guide covering soul, tools
 | Export | Role |
 |---|---|
 | `initTelegramTables(db)` | One-shot DDL — call once at startup |
-| `createBot(config)` | Full bot composition over grammy; polling or webhook |
+| `createBot(config)` | Full bot composition with built-in fetch transport; polling or webhook |
 | `adaptBot(grammy)` | Bridge a raw grammy `Bot` to the `MockBot` executor interface |
 | `read` | Query the local SQLite mirror (no network) |
 | `write` | Send messages, media, and actions; manage file BLOBs |
@@ -197,6 +197,18 @@ Six workflow playbooks as markdown strings:
 | [docs/README.md](docs/README.md) | Architecture overview: storage model, surfaces, invariants |
 | [docs/entities/](docs/entities/) | Per-entity manuals with exact public API listings |
 
+The package has zero runtime dependencies. It uses Node 24 global fetch for
+Bot API requests and an in-repo synchronous Markdown parser. grammy and marked
+are development dependencies used for compatibility tests.
+
+`createBot` accepts optional `api: { fetch, apiRoot }` settings for an injected
+fetch implementation or a custom Bot API endpoint. The default endpoint is
+`https://api.telegram.org`.
+
+`adaptBot` continues to accept grammy Bot instances. Calls without uploads use
+`api.raw`; file uploads use the built-in client, so grammy API transformers do
+not apply to uploads. Its optional second argument accepts `{ fetch, apiRoot }`.
+
 ## Development
 
 ```bash
@@ -205,6 +217,8 @@ npm test            # node:test runner
 npm run typecheck   # tsc --noEmit
 npm run lint        # biome check
 npm run build       # ESM + CJS + declarations via tsup
+npm run test:dist   # built artifact checks (after build)
+npm run check:deps  # verify zero runtime dependencies
 ```
 
 The repo is pinned to **Node 24.14.0** via Volta. Use whichever version manager you prefer.

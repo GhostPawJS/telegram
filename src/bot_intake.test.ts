@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { it } from 'node:test';
-import { Bot } from 'grammy';
 import type { Update } from 'grammy/types';
 import { createBot } from './bot.ts';
+import { Bot } from './bot_api/bot.ts';
 import { initTelegramTables } from './init_telegram_tables.ts';
 import { openTestDatabase } from './lib/open-test-database.ts';
 import { getMessage } from './messages/index.ts';

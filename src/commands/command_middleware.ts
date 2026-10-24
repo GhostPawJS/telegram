@@ -1,4 +1,4 @@
-import type { Context } from 'grammy';
+import type { Context } from '../telegram_types.ts';
 import { parseCommand } from './parse_command.ts';
 import type { CommandMiddleware, CommandRegistry } from './types.ts';
 

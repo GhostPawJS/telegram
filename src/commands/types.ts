@@ -1,4 +1,4 @@
-import type { Context } from 'grammy';
+import type { Context } from '../telegram_types.ts';
 
 export type CommandScope =
 	| 'default'

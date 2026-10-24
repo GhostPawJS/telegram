@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { InputFile } from 'grammy';
+import { InputFile } from '../bot_api/input_file.ts';
 import { createMockGrammy } from '../lib/mock_grammy.ts';
 import { sendAudio } from './send_audio.ts';
 

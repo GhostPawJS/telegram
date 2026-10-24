@@ -1,9 +1,7 @@
-import type { Tokens } from 'marked';
-import { loadMarked } from '../lib/lazy_dependencies.ts';
 import { escapeHtml } from './escape_html.ts';
+import { Marked, Renderer, type Tokens } from './markdown_parser.ts';
 
 function createParser() {
-	const { Marked, Renderer } = loadMarked();
 	const renderer = new Renderer();
 
 	renderer.strong = function (token: Tokens.Strong): string {

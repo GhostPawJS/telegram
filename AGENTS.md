@@ -32,6 +32,7 @@ globalPerSecond, maxRetries, now, and sleep at construction.
 ## Layout
 
 - `src/bot.ts`: bot lifecycle and incoming updates.
+- `src/bot_api/`, `src/telegram_types.ts`: fetch client, uploads, and structural Bot API types.
 - `src/executor/`: outbound actions; `src/streaming/`: progressive messages.
 - `src/messages/`, `src/chats/`, `src/users/`, `src/members/`: SQLite storage.
 - `src/render/`, `src/normalize/`: rendering and incoming data conversion.
@@ -42,14 +43,14 @@ globalPerSecond, maxRetries, now, and sleep at construction.
 ## Contribute
 
 Use Node 24. Run `npm run lint`, `npm run typecheck`, `npm test`, and
-`npm run build`. Build first when testing from a clean checkout.
+`npm run build`, `npm run test:dist`, and `npm run check:deps`.
 Use node:test and node:assert, with *.test.ts next to source for unit tests.
-Built artifact integration tests live in tests/ and run through npm test.
+Built artifact integration tests live in tests/; run npm run test:dist after building.
 Assert real behavior; preserve existing assertions and coverage.
 
-Runtime dependencies are grammy and marked. `npm run check:deps` allows
-exactly those two. Adding any other runtime dependency is not allowed.
-Load these dependencies synchronously on first use, keeping ESM and CJS working.
+The package has zero runtime dependencies. Do not add runtime dependencies.
+`npm run check:deps` checks the manifest and built package.
+grammy and marked are development dependencies for compatibility tests only.
 Keep exported APIs, tool names and fields, CLI flags, database schemas, and
 synchronous behavior compatible. Make additive changes only.
 Record changes under Unreleased in CHANGELOG.md in neutral maintainer prose.

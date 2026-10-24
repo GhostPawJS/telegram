@@ -1,6 +1,5 @@
-import type { Chat as GrammyChat } from 'grammy/types';
-
 import type { ChatInput } from '../chats/types.ts';
+import type { Chat as GrammyChat } from '../telegram_types.ts';
 
 export function normalizeChat(chat: GrammyChat): ChatInput {
 	return {
