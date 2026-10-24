@@ -5,6 +5,8 @@
 [![license](https://img.shields.io/npm/l/@ghostpaw/telegram)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.GhostPawJS%2Ftelegram-06d6a0)](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.GhostPawJS%2Ftelegram/versions/latest)
+[![Site](https://img.shields.io/badge/site-telegram.ghostpaw.dev-62e6f2)](https://telegram.ghostpaw.dev/)
+[![Docs](https://img.shields.io/badge/docs-telegram.ghostpaw.dev%2Fdocs-62e6f2)](https://telegram.ghostpaw.dev/docs/)
 
 Telegram bot channel engine — fetch transport with zero runtime dependencies, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
 
