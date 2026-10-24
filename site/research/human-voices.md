@@ -453,3 +453,115 @@ Observer note: 1 likes at fetch
 ### V061 · Bluesky (post) · creator · posted 2026-10-13 · fetched 2026-10-24 · via fetch
 > I went on a bit of a side quest and built an API for my telegram channel manager bot.
 <https://bsky.app/profile/henrick.thebull.app/post/3mxqmoe3dmc26>
+
+## Batch 2026-10-24 · ongoing: depth pass for the subdomain move · queries: "telegram bot LLM agent", "telegram bot message history", "telegram bot api edits", "openclaw telegram", "telegram bot ai agent", "telegram bot llm", "telegram bot message history sqlite" · unreachable: YouTube (429), Reddit (challenge page)
+
+### V062 · GitHub (openclaw/openclaw issue #151924) · creator · posted 2026-09-18 · fetched 2026-10-24 · via fetch
+> Related: #79077, #110160
+>
+> ## What Problem This Solves
+>
+> Fixes: two Telegram bots that can see each other's messages reply to each other with no platform bound, because Telegram never hands bot-pair facts to the shared bot-loop guard that Discord, Slack, Matrix, Google Chat, Feishu and the others already feed.
+>
+> Telegram opened this path in Bot API 10.0 (May 8, 2026): "Added the ability to send messages to other bots via username if both bots enabled bot-to-bot communication." and "Added the ability to see certain messages sent by other bots in groups." The FAQ line "bots will not be able to see messages from other bots regardless of mode" predates that release. …
+<https://github.com/openclaw/openclaw/pull/151924>
+Observer note: issue title: fix(telegram): bot-to-bot replies are not bounded by bot-loop protection
+
+### V063 · GitHub (NousResearch/hermes-agent issue #133418) · creator · posted 2026-10-05 · fetched 2026-10-24 · via fetch
+> ## Summary
+>
+> Ports Telegram's `observe_unmentioned_group_messages` to the WhatsApp bridge, so a `require_mention` bot can **follow** a group conversation without answering every message.
+>
+> **The problem this solves:** with `require_mention: true` (the recommended WhatsApp bot posture), any group message that does not @mention the bot (or match a wake-word pattern) is dropped at the adapter with no trace. The bot then literally has no context of the conversation it is supposedly part of — when finally mentioned, it has to ask "what are we talking about?". …
+<https://github.com/NousResearch/hermes-agent/pull/133418>
+Observer note: issue title: feat(whatsapp): observe-unmentioned group context (Telegram observe-mode parity)
+
+### V064 · GitHub (kar1n1911/qq-inner-agent issue #1) · creator · posted 2026-10-09 · fetched 2026-10-24 · via fetch
+> ## Summary
+>
+> Adds a Telegram Bot gateway to the `qq-inner-agent` Rust core as a **peer transport** to the existing OneBot v11 (QQ) bridge. Both gateways share one engine, one SQLite store, and all conversation policies (observation period, proactive participation, sending policy, persona/memory, activity rhythm). They can run together or independently. …
+<https://github.com/kar1n1911/qq-inner-agent/pull/1>
+Observer note: issue title: Feature/telegram support
+
+### V065 · GitHub (openclaw/openclaw issue #162565) · creator · posted 2026-10-01 · fetched 2026-10-24 · via fetch
+> ## What Problem This Solves
+>
+> A replay of one Telegram source message can send its automatic transcript echo again. This PR carries the source message ID through audio preflight and keys the existing durable outbound queue by account, canonical chat and source message.
+>
+> Different source messages with identical audio/text still echo independently. Group and direct-topic aliases share the canonical chat identity. Pending delivery stays with existing recovery; no second deduplication store or database schema migration is introduced. Transcription and agent replies continue if echo delivery fails. …
+<https://github.com/openclaw/openclaw/pull/162565>
+Observer note: issue title: fix(telegram): prevent duplicate transcript echoes on message replay
+
+### V066 · Hacker News ([dead]) · creator · posted 2026-02-25 · fetched 2026-10-24 · via fetch
+> Hi HN,
+>
+> I built CCBot (Command & Control Bot) — a Telegram bot that gives you remote control over AI coding agents (Claude Code, OpenAI Codex CLI, Gemini CLI) running in tmux on your machine.
+>
+> The problem: AI coding agents run in your terminal. When you step away — commuting, on the couch, at dinner — the session keeps working, but you lose visibility and control. Permission prompts pile up. You miss when the agent finishes or gets stuck.
+>
+> =The approach: CCBot doesn't wrap agent SDKs or create isolated API sessions. It sits on top of tmux. Your agent process stays exactly where it is, in a terminal window. …
+<https://news.ycombinator.com/item?id=47151158>
+
+### V067 · GitHub (rayhan-nurdjaman/RotBot issue #49) · buyer · posted 2026-10-12 · fetched 2026-10-24 · via fetch
+> ## Problem
+>
+> Found while checking whether it is safe to send bank statements to the bot.
+>
+> 1. **Bot token in the log.** `httpx` logs every request URL at INFO level. Telegram URLs contain the token (`https://api.telegram.org/bot<TOKEN>/sendChatAction`), so `app.log` holds the token in plain text. Anyone who can read the file can control the bot.
+> 2. **All content in plain text.** `app.log` records every message and reply, with no rotation or retention (already in `docs/known-issues.md`). Financial or personal data sent to the bot is stored there.
+> 3. **Third parties.** Message and image content goes to Telegram (no end-to-end encryption for bots), OpenRouter and the model provider. …
+<https://github.com/rayhan-nurdjaman/RotBot/issues/49>
+Observer note: issue title: Security: app.log leaks the bot token and stores all chat content in plain text
+
+### V068 · Hacker News (Clawdbot - open source personal AI assistant) · buyer · posted 2026-01-26 · fetched 2026-10-24 · via fetch
+> I tried it out. I have NO idea why I thought it would be fine to try it out. Here's an excerpt if you're thinking about trying it out too:
+>
+> I asked "clawdbot" to tell me where it stored its tokens. It said:
+>
+> ---
+>
+> Your config is:
+>
+> ```                                                                                                                               
+>    ~/.clawdbot/clawdbot.json                                                                                                       
+>  ```
+>
+> The Telegram bot token would be at:
+>
+> ```json                                                                                                                           
+>    { …
+<https://news.ycombinator.com/item?id=46761147>
+
+### V069 · Hacker News (Autoproto – minimal C++ MTProto client library stripped from TDLib) · creator · posted 2026-03-18 · fetched 2026-10-24 · via fetch
+> I built Telegram crawlers that need to monitor thousands of channels
+> simultaneously. TDLib works great for interactive clients, but when you
+> run it as a crawler it develops a memory problem: after a week or two of
+> watching 2000+ channels, it quietly fills up RAM and needs a restart.
+>
+> The root cause is that TDLib caches everything — messages, users, dialogs,
+> stickers, animations — because it was designed for a UI client that needs
+> instant access to recent history. MessagesManager, ContactsManager,
+> DialogsManager and ~150 other managers accumulate state indefinitely.
+> There's no eviction because a chat app doesn't want to evict.
+>
+> My use case is different: I don't need any of that. …
+<https://news.ycombinator.com/item?id=47426526>
+
+### V070 · Hacker News (Show HN: CCBot – Control Claude Code from Telegram via tmux) · creator · posted 2026-02-07 · fetched 2026-10-24 · via fetch
+> I built a Telegram bot that lets you monitor and interact with Claude Code sessions running in tmux on your machine.
+>
+> The problem: Claude Code runs in the terminal. When you step away from your computer, the session keeps working but you lose visibility and control.
+>
+> CCBot connects Telegram to your tmux session — it reads Claude's output and sends keystrokes back. This means you can switch from desktop to phone mid-conversation, then tmux attach when you're back with full
+> context intact. No separate API session, no lost state. …
+<https://news.ycombinator.com/item?id=46923707>
+
+### V071 · Hacker News (Show HN: MicroClaw – Agentic AI Assistant for Telegram, Built in Rust) · creator · posted 2026-02-07 · fetched 2026-10-24 · via fetch
+> Hi HN,
+>
+> I mostly vibe-built MicroClaw — a Telegram bot that turns a chat into an agent-style AI assistant.
+>
+> The idea came from nanoclaw, a TypeScript/WhatsApp agentic assistant. I liked the concept but wanted something small, hackable, and easy to self-host, so I rewrote it in Rust and used Telegram as the interface.
+>
+> At its core, it runs a full agent loop: Claude can call tools (bash, file ops, web search, etc.), inspect results, and keep iterating until the task is done (up to 25 tool calls per message). …
+<https://news.ycombinator.com/item?id=46922690>

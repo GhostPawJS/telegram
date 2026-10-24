@@ -167,18 +167,28 @@ read.replyChain(db, -1001234, 11);</code></pre>
     </div>
   </section>
 
+  <section class="sec field" aria-labelledby="field-title">
+    <h2 id="field-title">Where agent bots lose track</h2>
+    <p class="intro">Bots that front an agent tend to fail in the same places. These are the ones telegram is built around.</p>
+    <div class="field-rows">
+      <article class="field-row"><h3>Group messages the bot saw but did not answer</h3><p class="gap">Most handlers drop them, so when the bot is finally mentioned it has no idea what came before.</p><p class="here">Every update Telegram delivers is stored in SQLite before your handler runs. In groups, privacy mode still limits what Telegram delivers.</p></article>
+      <article class="field-row"><h3>Tools that act the moment they are called</h3><p class="gap">A wrong send or a wrong ban cannot be taken back.</p><p class="here">Send and moderation tools return a plan. They only act when <code>TELEGRAM_BOT_TOKEN</code> is set in the server environment.</p></article>
+      <article class="field-row"><h3>Chat history held in a client's memory</h3><p class="gap">Long-running clients cache everything and have to be restarted when memory fills up.</p><p class="here">History lives on disk in SQLite, with edit history and reply chains, and files are stored once per SHA-256 hash.</p></article>
+    </div>
+  </section>
+
   <section class="sec numbers" aria-labelledby="numbers-title">
     <h2 id="numbers-title">What it costs to add</h2>
     <dl class="ledger">
       <div><dt>Runtime dependencies</dt><dd>0</dd></div>
       <div><dt>Node.js</dt><dd>24 or newer (node:sqlite)</dd></div>
       <div><dt>Size of dist/index.js, gzip</dt><dd>33.7 KB</dd></div>
-      <div><dt>Import time</dt><dd>about 11.8 ms</dd></div>
+      <div><dt>Import time</dt><dd>about 9.1 ms</dd></div>
       <div><dt>Tests</dt><dd>883 passing</dd></div>
       <div><dt>Line coverage</dt><dd>97.9%</dd></div>
       <div><dt>Agent tools</dt><dd>4</dd></div>
     </dl>
-    <p class="note">Measured 2026-10-24 on the maintainer's machine with Node.js 24.14.0 against telegram 0.6.0: size of the published dist/index.js at gzip -9, median of 11 cold imports, tests and coverage from the v0.6.0 tag.</p>
+    <p class="note">Measured 2026-10-24 on the maintainer's machine with Node.js 24.14.0 against telegram 0.6.0: size of the published dist/index.js at gzip -9, median of 11 cold imports, tests and coverage from the v0.6.0 tag. The replay above was re-run against the same release on that day and gave the same output.</p>
   </section>
 
   <section class="sec start" aria-labelledby="start-title">

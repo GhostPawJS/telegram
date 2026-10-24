@@ -1,5 +1,8 @@
 # Concept: GhostPaw Telegram
 
+## Diagnosis
+Depth pass on 2026-10-24 for the subdomain move. What stays strong: the replayed run, re-run against telegram 0.6.0 with identical output. What was thin: the page did not name the failures bot builders report. Added: group context lost when a bot only keeps what it answers, tools that act at once, and chat history held in memory. The privacy-mode limit is stated beside the first one.
+
 ## Voices
 - Telegram is where people talk to their own agents: from a phone, on a plane, in one group per agent. V003 V013 V015 V016 V012
 - The bot API is the reason: easy to use, long polling, no permission dance. V046 V047 V048 V049
@@ -9,6 +12,11 @@
 - Rate limits, backoff and Retry-After are missing in many bot MCP servers. V033 V036
 - Telegram search is a reason people stay. V045
 - Privacy doubts about Telegram itself are loud. V041 V044 V050
+- A bot that only answers mentions drops the rest of the group conversation and has no context when mentioned. V063
+- Bot builders worry about tokens and chat content leaking into logs and config files. V067 V068
+- Telegram is a common remote control for coding agents running in a terminal. V066 V070 V071
+- Long-running Telegram clients that cache everything need restarts as memory fills. V069
+- Replays and bot-to-bot loops cause duplicate or runaway replies. V062 V065
 
 ## Buyer
 A Node.js developer building an agent that lives in Telegram chats, who has used grammY or Telegraf (P001 P002) or a Telegram bot MCP server (P003 P004) and now wants the bot to remember what was said, with edits, replies and files, without running a separate database service (V059 V035). They arrive from a thread about OpenClaw or Hermes on Telegram (V013 V026) and need to see that every update lands in SQLite before their handler runs, that the agent tools plan by default, and that sending needs an explicit switch (V030 V021). The hesitation most likely to stop them: an agent posting into a group on its own.
@@ -42,7 +50,7 @@ Delivery: `npm install @ghostpaw/telegram` into a Node.js 24+ project, or `npx -
 - In the recorded run the handler found each message already stored, editHistory kept the pre-edit text, replyChain returned messages 10 and 11, a search for "cafe" found "café", and tg_send returned "Message ready to send". https://github.com/GhostPawJS/telegram#quick-start
 - In the recorded run the search index still held the pre-edit text after the edit, and DEFAULTS.autoDownload was false. https://github.com/GhostPawJS/telegram
 - 883 tests with 97.92% line, 90.27% branch and 97.41% function coverage, measured 2026-10-24. https://github.com/GhostPawJS/telegram
-- dist is 33.7 KB gzip and imports in about 11.8 ms on the maintainer box, measured 2026-10-24. https://github.com/GhostPawJS/telegram
+- dist is 33.7 KB gzip and imports in about 9.1 ms on the maintainer box, measured 2026-10-24. https://github.com/GhostPawJS/telegram
 - People log agent actions to a Telegram bot as an audit trail. V021 V030
 
 ## Axes
@@ -87,7 +95,7 @@ Mirror first. The page leads with what the voices build by hand (V059 V035): a r
 2. The run: one group, three updates, six replayed steps. V030 V021
 3. Explainer: what the mirror keeps and the four tools. V056 V046
 4. Worry: what needs a token, rate limits, what is stored. V026 V033
-5. Numbers: 0 deps, Node 24+, 883 tests, 97.9% lines, 33.7 KB gzip, about 11.8 ms import, 4 tools.
+5. Numbers: 0 deps, Node 24+, 883 tests, 97.9% lines, 33.7 KB gzip, about 9.1 ms import, 4 tools.
 6. Start: install, quick start, GitHub, README, home and siblings.
 7. Footer: Impressum, Datenschutz.
 
@@ -136,3 +144,4 @@ Reduced motion: no sweep or flash.
 
 ## Changelog
 - 2026-10-24: first concept from the 2026-10-24 research batch (61 voices, 12 peers); mirror first chosen; replay of a real telegram 0.6.0 run against a local Bot API stand-in. Eager file download and search after edits left off the page: in the run DEFAULTS.autoDownload was false and the search index kept the pre-edit text.
+- 2026-10-24: depth pass (10 more voices, now 71); replay re-run against the current release; import time re-measured; comparison section added; page moved to https://telegram.ghostpaw.dev/.
