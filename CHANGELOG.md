@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-24
+
 ### Added
 
 - Built-in fetch Bot API client with multipart uploads, polling, webhook secret checks, and token-masked errors.
@@ -89,7 +91,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/GhostPawJS/telegram/compare/v0.4.0...v0.5.0
 [0.1.1]: https://github.com/GhostPawJS/telegram/compare/v0.1.0...v0.1.1
 [0.1.2]: https://github.com/GhostPawJS/telegram/compare/v0.1.1...v0.1.2
 [0.1.3]: https://github.com/GhostPawJS/telegram/compare/v0.1.2...v0.1.3
