@@ -129,7 +129,7 @@ Every update is mirrored into SQLite before your handler runs:
 - **Chats** — title, type, member count, forum flag
 - **Members** — status, permissions, admin title per chat
 - **Reactions** — emoji per user per message, with per-emoji counts and event log
-- **Files** — metadata + raw bytes stored as BLOB, SHA-256 deduplicated; downloaded eagerly on receipt
+- **Files** — metadata + raw bytes stored as BLOB, SHA-256 deduplicated; downloaded eagerly on receipt (`DEFAULTS.autoDownload` is deprecated and unused; it does not change this behaviour)
 - **Callbacks** — inline button presses with data and answered state
 - **Bot state** — arbitrary key/value store and running statistics
 

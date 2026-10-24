@@ -11,6 +11,10 @@ export const DEFAULTS = {
 	minEditDelta: 20,
 	chainOnOverflow: true,
 	maxQueueDepth: 100,
+	/**
+	 * @deprecated Unused: `createBot` always downloads incoming files eagerly and never
+	 * reads this value. Kept for compatibility.
+	 */
 	autoDownload: false,
 	autoDownloadTypes: [] as readonly string[],
 	autoDownloadMaxSize: 10_485_760,

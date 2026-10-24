@@ -4,7 +4,11 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
-## [0.6.1] - 2026-10-24
+## [0.6.2] - 2026-10-24
+
+### Deprecated
+
+- `DEFAULTS.autoDownload` is unused; `createBot` keeps downloading incoming files eagerly. The value stays for compatibility.
 
 ### Changed
 
@@ -15,6 +19,10 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 - Refresh searchable text when stored messages are edited.
 - Filter incoming chat updates by `allowedChatIds`, configurable on `createBot`; an empty list, the default, allows all chats.
 - Mirror messages sent through the bot client and count them in `getStats().messagesOut`.
+
+## [0.6.1] - 2026-10-24
+
+Tagged but never published; the release check failed on a size budget. Its changes ship in 0.6.2.
 
 ## [0.6.0] - 2026-10-24
 
@@ -114,7 +122,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/GhostPawJS/telegram/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/GhostPawJS/telegram/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/GhostPawJS/telegram/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/GhostPawJS/telegram/compare/v0.4.0...v0.5.0
