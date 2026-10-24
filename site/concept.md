@@ -29,7 +29,7 @@ A Node.js developer building an agent that lives in Telegram chats, who has used
 5. How do I start? → install line, MCP line, quick start, GitHub, README.
 
 ## Mechanism
-Chosen: a replayed real run against telegram 0.6.0 on 2026-10-24. createBot runs with long polling against a local stand-in for the Bot API passed through the documented api.fetch option, so three updates arrive in a group called Renewal desk; the handler finds each message already in SQLite and sends one reply; an edit is kept in edit history; a reply builds a chain; search for "cafe" finds "café"; tg_send returns a plan. Speed: on screen at load; proof: real rows and tool results; effort: six presses; honesty: labelled as a replay with the Telegram servers replaced by a stand-in; share value: the edit history.
+Chosen: a replayed real run against telegram 0.6.2 on 2026-10-24. createBot runs with long polling against a local stand-in for the Bot API passed through the documented api.fetch option, so three updates arrive in a group called Renewal desk; the handler finds each message already in SQLite and sends one reply; an edit is kept in edit history; a reply builds a chain; search for "cafe" finds "café"; tg_send returns a plan. Speed: on screen at load; proof: real rows and tool results; effort: six presses; honesty: labelled as a replay with the Telegram servers replaced by a stand-in; share value: the edit history.
 Rejected: a live bot demo: needs a token and would post in real chats.
 Rejected: a chat-bubble animation: looks like a messenger, shows nothing stored.
 Rejected: a feature grid of the eight tables: lists without proof.
@@ -40,7 +40,7 @@ Price: free, MIT licence
 Delivery: `npm install @ghostpaw/telegram` into a Node.js 24+ project, or `npx -y @ghostpaw/telegram mcp` as a local MCP server
 
 ## Facts
-- telegram 0.6.0 is on npm with zero runtime dependencies and requires Node.js 24+ for node:sqlite. https://www.npmjs.com/package/@ghostpaw/telegram
+- telegram 0.6.2 is on npm with zero runtime dependencies and requires Node.js 24+ for node:sqlite. https://www.npmjs.com/package/@ghostpaw/telegram
 - Every incoming update is mirrored into a local SQLite database before the handler runs. https://github.com/GhostPawJS/telegram
 - Eight tables, created by initTelegramTables(db): messages, users, chats, members, reactions, files, callbacks and bot state. https://github.com/GhostPawJS/telegram
 - The message index is FTS5 with Unicode diacritic folding. https://github.com/GhostPawJS/telegram
@@ -48,7 +48,7 @@ Delivery: `npm install @ghostpaw/telegram` into a Node.js 24+ project, or `npx -
 - The MCP server keeps messages in ~/.ghostpaw/telegram.db, executes sends only when TELEGRAM_BOT_TOKEN is set and does not poll for updates. https://github.com/GhostPawJS/telegram
 - createBot accepts api: { fetch, apiRoot } for an injected fetch or a custom Bot API endpoint. https://github.com/GhostPawJS/telegram
 - In the recorded run the handler found each message already stored, editHistory kept the pre-edit text, replyChain returned messages 10 and 11, a search for "cafe" found "café", and tg_send returned "Message ready to send". https://github.com/GhostPawJS/telegram#quick-start
-- In the recorded run the search index still held the pre-edit text after the edit, and DEFAULTS.autoDownload was false. https://github.com/GhostPawJS/telegram
+- In the 0.6.2 run a search for \"finance\" found message 10 after the edit and messagesOut counted the handler's reply. createBot downloads incoming files in the background and stores them once per SHA-256 hash; DEFAULTS.autoDownload is deprecated and unused. https://github.com/GhostPawJS/telegram
 - 883 tests with 97.92% line, 90.27% branch and 97.41% function coverage, measured 2026-10-24. https://github.com/GhostPawJS/telegram
 - dist is 33.7 KB gzip and imports in about 9.1 ms on the maintainer box, measured 2026-10-24. https://github.com/GhostPawJS/telegram
 - People log agent actions to a Telegram bot as an audit trail. V021 V030
@@ -138,10 +138,11 @@ Reduced motion: no sweep or flash.
 - Use: "remembers", "audit trail", "allowlist" in the voices' plain sense V035 V021 V026
 - Show tool names, tables and environment variables as code. V026
 - Avoid: "The Telegram Bot Framework", "powered by obsession", "2,000+ apps" P001 P007
-- Avoid: "files downloaded eagerly", "search follows edits"; the run did not show them. V045
+- Avoid: "files downloaded eagerly" as a headline; the stand-in run sent no files, so the page states only what the source does with files. V045
 - Plain second person; say the Bot API was a stand-in. V005
 - Never present voices as customers. V013
 
 ## Changelog
 - 2026-10-24: first concept from the 2026-10-24 research batch (61 voices, 12 peers); mirror first chosen; replay of a real telegram 0.6.0 run against a local Bot API stand-in. Eager file download and search after edits left off the page: in the run DEFAULTS.autoDownload was false and the search index kept the pre-edit text.
 - 2026-10-24: depth pass (10 more voices, now 71); replay re-run against the current release; import time re-measured; comparison section added; page moved to https://telegram.ghostpaw.dev/.
+- 2026-10-24: telegram 0.6.2 released (search follows edits, allowedChatIds filters chats, sent messages mirrored and counted). Replay re-run against 0.6.2; the search step and the notes now show the edited text in the index, the worry list names allowedChatIds, and the files line says background download from bot.ts. Tests 887, 34.2 KB gzip.

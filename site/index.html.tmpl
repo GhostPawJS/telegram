@@ -31,7 +31,7 @@
 <main>
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <p class="kicker"><code>@ghostpaw/telegram</code> 0.6.0</p>
+      <p class="kicker"><code>@ghostpaw/telegram</code> 0.6.2</p>
       <h1 id="hero-title">Your bot remembers the chat, including what was edited.</h1>
       <p class="lede">telegram writes every incoming update into a SQLite file before your handler runs: messages, edits, replies, reactions, members and files. Your bot and your agent read from that record, and the agent's tools return plans until you switch execution on.</p>
       <div class="install">
@@ -52,7 +52,7 @@
   <section id="run" class="sec run-sec" aria-labelledby="run-title">
     <h2 id="run-title">One group, three updates, six calls</h2>
     <p class="intro">Your handler never has to save anything. The row is already there.</p>
-    <p class="intro">This ran with <code>createBot</code> and long polling against telegram 0.6.0 on 2026-10-24. The Telegram servers were replaced by a local stand-in passed through the documented <code>api.fetch</code> option, so three updates arrive in a group called Renewal desk and nothing reaches Telegram. Everything else is the library. Run the steps in order.</p>
+    <p class="intro">This ran with <code>createBot</code> and long polling against telegram 0.6.2 on 2026-10-24. The Telegram servers were replaced by a local stand-in passed through the documented <code>api.fetch</code> option, so three updates arrive in a group called Renewal desk and nothing reaches Telegram. Everything else is the library. Run the steps in order.</p>
     <div class="run">
       <div class="state" role="region" aria-labelledby="state-title" aria-live="polite">
         <p class="state-label" id="state-title">Mirror</p>
@@ -114,7 +114,7 @@ read.replyChain(db, -1001234, 11);</code></pre>
           <p>FTS5 over the mirror, no network.</p>
           <pre class="call"><code>read.searchMessages(db, -1001234, 'cafe');</code></pre>
           <div class="result"><pre><code>// [{ messageId: 11, snippet: 'Which &lt;b&gt;café&lt;/b&gt;?' },
-//  { messageId: 10, snippet: 'Invoice 4471 is paid. The &lt;b&gt;café&lt;/b&gt; receipt is in the shared drive.' }]</code></pre><p class="say">Both messages, accent or not. The snippet for message 10 still shows the text from before the edit; see the note below.</p></div>
+//  { messageId: 10, snippet: 'Invoice 4471 is paid. The &lt;b&gt;café&lt;/b&gt; receipt is in the finance folder.' }]</code></pre><p class="say">Both messages, accent or not. The snippet for message 10 shows the text after the edit.</p></div>
           <button type="button" class="act run-btn">Run step 5</button>
         </li>
         <li class="step" id="step-6">
@@ -124,14 +124,14 @@ read.replyChain(db, -1001234, 11);</code></pre>
   subcommand: 'send_message', chatId: -1001234, text: 'Receipt found, thanks.',
 });</code></pre>
           <div class="result"><pre><code>// { ok: true, outcome: 'success', summary: 'Message ready to send',
-//   data: { action: 'send_message', chatId: -1001234, text: 'Receipt found, thanks.' } }</code></pre><p class="say">A plan, and the outbound count is still one. Sending takes <code>createTelegramToolFacade({ client, execute: true })</code>, which you have to write yourself.</p></div>
+//   data: { action: 'send_message', chatId: -1001234, text: 'Receipt found, thanks.' } }</code></pre><p class="say">A plan, and the outbound count is still one: <code>getStats().messagesOut</code> reads 1. Sending takes <code>createTelegramToolFacade({ client, execute: true })</code>, which you have to write yourself.</p></div>
           <button type="button" class="act run-btn">Run step 6</button>
         </li>
       </ol>
     </div>
     <div class="run-tools"><button type="button" class="button ghost" id="reset">Start over</button><p id="run-status" role="status"></p></div>
-    <p class="note">In this run the search index kept the text from before the edit: a search for “finance” found nothing and “shared” still found message 10. <code>editHistory</code> and <code>getMessage</code> were right. We do not claim that search sees edits.</p>
-    <p class="note">The README says files are downloaded eagerly. In 0.6.0 <code>DEFAULTS.autoDownload</code> is <code>false</code>, so check that setting if you want file bytes stored.</p>
+    <p class="note">In this run a search for “finance” found message 10 after the edit, and “shared” found nothing. Before 0.6.2 the index kept the old text.</p>
+    <p class="note">The stand-in sent no files. With a real token, <code>createBot</code> downloads incoming files in the background; a failed download leaves the checksum empty so you can retry it.</p>
   </section>
 
   <section class="sec explain" aria-labelledby="explain-title">
@@ -144,7 +144,7 @@ read.replyChain(db, -1001234, 11);</code></pre>
       <div><dt>Messages</dt><dd>Text, media, edits, reply edges, albums and threads, with an FTS5 index that folds diacritics.</dd></div>
       <div><dt>Users, chats, members</dt><dd>Names, chat titles and types, member status, permissions and admin titles.</dd></div>
       <div><dt>Reactions, callbacks</dt><dd>Emoji per user per message, and inline button presses with their data.</dd></div>
-      <div><dt>Files</dt><dd>Metadata, and the bytes as a BLOB deduplicated by SHA-256 when downloading is on.</dd></div>
+      <div><dt>Files</dt><dd>Metadata, and the bytes as a BLOB, downloaded in the background and stored once per SHA-256 hash.</dd></div>
       <div><dt><code>tg_read</code></dt><dd>Messages, chats, users, reactions, edit history and reply chains.</dd></div>
       <div><dt><code>tg_send</code></dt><dd>Send, edit, delete, forward and pin, set reactions, broadcast.</dd></div>
       <div><dt><code>tg_manage</code></dt><dd>Ban, unban, restrict, promote and kick, and member status.</dd></div>
@@ -161,7 +161,7 @@ read.replyChain(db, -1001234, 11);</code></pre>
         <li>The tools return plans by default. Execution needs an explicit facade with <code>execute: true</code>.</li>
         <li>The executing facade limits calls per chat and globally with token buckets, waits on Telegram's <code>retry_after</code> and retries twice by default. It masks bot tokens in errors.</li>
         <li>The MCP server executes sends only when <code>TELEGRAM_BOT_TOKEN</code> is set, keeps the mirror in <code>~/.ghostpaw/telegram.db</code> and does not poll for updates itself.</li>
-        <li>The library does not filter senders for you. In 0.6.0 <code>DEFAULTS.allowedChatIds</code> exists but nothing reads it, so the allowlist belongs in your handler.</li>
+        <li><code>createBot</code> takes a chat allowlist, <code>allowedChatIds</code>, and drops updates from other chats. The default empty list allows every chat, and it does not filter individual senders.</li>
         <li>Node.js 24 or newer, because it uses the built-in <code>node:sqlite</code> and global fetch.</li>
       </ul>
     </div>
@@ -182,13 +182,13 @@ read.replyChain(db, -1001234, 11);</code></pre>
     <dl class="ledger">
       <div><dt>Runtime dependencies</dt><dd>0</dd></div>
       <div><dt>Node.js</dt><dd>24 or newer (node:sqlite)</dd></div>
-      <div><dt>Size of dist/index.js, gzip</dt><dd>33.7 KB</dd></div>
-      <div><dt>Import time</dt><dd>about 9.1 ms</dd></div>
-      <div><dt>Tests</dt><dd>883 passing</dd></div>
+      <div><dt>Size of dist/index.js, gzip</dt><dd>34.2 KB</dd></div>
+      <div><dt>Import time</dt><dd>about 8.9 ms</dd></div>
+      <div><dt>Tests</dt><dd>887 passing</dd></div>
       <div><dt>Line coverage</dt><dd>97.9%</dd></div>
       <div><dt>Agent tools</dt><dd>4</dd></div>
     </dl>
-    <p class="note">Measured 2026-10-24 on the maintainer's machine with Node.js 24.14.0 against telegram 0.6.0: size of the published dist/index.js at gzip -9, median of 11 cold imports, tests and coverage from the v0.6.0 tag. The replay above was re-run against the same release on that day and gave the same output.</p>
+    <p class="note">Measured 2026-10-24 on the maintainer's machine with Node.js 24.14.0 against telegram 0.6.2: size of the published dist/index.js at gzip -9, median of 11 cold imports, tests and coverage from the v0.6.2 tag. The replay above was run against the same release on that day.</p>
   </section>
 
   <section class="sec start" aria-labelledby="start-title">
