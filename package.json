@@ -96,7 +96,9 @@
 		"mcp-server",
 		"model-context-protocol",
 		"agent-skills",
-		"cli"
+		"cli",
+		"ai-agents",
+		"zero-dependencies"
 	],
 	"license": "MIT",
 	"repository": {
