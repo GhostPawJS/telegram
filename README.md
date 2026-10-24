@@ -84,13 +84,13 @@ const chain = read.replyChain(db, chatId, messageId);
 const bytes = write.getFileBlob(db, fileId); // Buffer | null
 
 // send text and media
-await write.sendMessage(bot, chatId, 'Hello');
-await write.sendPhoto(bot, chatId, fileId);
-await write.sendDocument(bot, chatId, buffer, { caption: 'Report' });
-await write.broadcast(bot, chatIds, 'Announcement');
+await write.sendMessage(bot.client, chatId, 'Hello');
+await write.sendPhoto(bot.client, chatId, fileId);
+await write.sendDocument(bot.client, chatId, buffer, { caption: 'Report' });
+await write.broadcast(bot.client, chatIds, 'Announcement');
 
 // streaming — progressive in-place edits
-const stream = write.createStream(bot, { chatId });
+const stream = write.createStream(bot.client, { chatId });
 await stream.append('Thinking...');
 await stream.replace('Done.');
 ```
