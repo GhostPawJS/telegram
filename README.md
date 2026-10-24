@@ -1,12 +1,14 @@
+<a href="https://telegram.ghostpaw.dev/"><img src="https://raw.githubusercontent.com/GhostPawJS/telegram/main/.github/social-preview.png" alt="GhostPaw telegram: Your bot remembers the chat, including what was edited." width="100%"></a>
+
 # @ghostpaw/telegram
 
-[![npm](https://img.shields.io/npm/v/@ghostpaw/telegram)](https://www.npmjs.com/package/@ghostpaw/telegram)
-[![node](https://img.shields.io/node/v/@ghostpaw/telegram)](https://nodejs.org)
-[![license](https://img.shields.io/npm/l/@ghostpaw/telegram)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.GhostPawJS%2Ftelegram-06d6a0)](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.GhostPawJS%2Ftelegram/versions/latest)
-[![Site](https://img.shields.io/badge/site-telegram.ghostpaw.dev-62e6f2)](https://telegram.ghostpaw.dev/)
-[![Docs](https://img.shields.io/badge/docs-telegram.ghostpaw.dev%2Fdocs-62e6f2)](https://telegram.ghostpaw.dev/docs/)
+[![npm](https://img.shields.io/npm/v/@ghostpaw/telegram?style=flat-square&labelColor=0a1119&color=62e6f2&label=npm)](https://www.npmjs.com/package/@ghostpaw/telegram) [![CI](https://img.shields.io/github/actions/workflow/status/GhostPawJS/telegram/ci.yml?branch=main&style=flat-square&labelColor=0a1119&label=CI)](https://github.com/GhostPawJS/telegram/actions/workflows/ci.yml) [![site](https://img.shields.io/badge/site-telegram.ghostpaw.dev-62e6f2?style=flat-square&labelColor=0a1119)](https://telegram.ghostpaw.dev/) [![runtime deps](https://img.shields.io/badge/runtime_deps-0-7af0b4?style=flat-square&labelColor=0a1119)](package.json) [![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.GhostPawJS%2Ftelegram-b39dff?style=flat-square&labelColor=0a1119)](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.GhostPawJS%2Ftelegram/versions/latest) [![node](https://img.shields.io/badge/node-%E2%89%A524-93a5b9?style=flat-square&labelColor=0a1119)](https://nodejs.org) [![license](https://img.shields.io/npm/l/@ghostpaw/telegram?style=flat-square&labelColor=0a1119&color=93a5b9)](LICENSE)
+
+**Agent Telegram bots: every update mirrored into SQLite before your handler runs.**
+
+```bash
+npm install @ghostpaw/telegram
+```
 
 Telegram bot channel engine — fetch transport with zero runtime dependencies, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
 
