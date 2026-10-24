@@ -44,7 +44,10 @@ export function applyEdit(
 		);
 
 		const patch: Partial<StoredMessage> = {};
-		if ('text' in edit) patch.text = edit.text ?? null;
+		if ('text' in edit) {
+			patch.text = edit.text ?? null;
+			patch.textPlain = edit.text ?? null;
+		}
 		if ('entities' in edit) patch.entities = edit.entities ?? null;
 		if ('media' in edit) patch.media = edit.media ?? null;
 		if ('editDate' in edit) patch.editDate = edit.editDate ?? null;

@@ -4,6 +4,16 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Changed
+
+- The homepage and MCP Registry website URL point to https://telegram.ghostpaw.dev/.
+
+### Fixed
+
+- Refresh searchable text when stored messages are edited.
+- Filter incoming chat updates by `allowedChatIds`, configurable on `createBot`; an empty list, the default, allows all chats.
+- Mirror messages sent through the bot client and count them in `getStats().messagesOut`.
+
 ## [0.6.0] - 2026-10-24
 
 ### Added

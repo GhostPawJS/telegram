@@ -15,8 +15,8 @@
 	},
 	"size": {
 		"full": {
-			"minBytes": 96192,
-			"gzipBytes": 29120
+			"minBytes": 96960,
+			"gzipBytes": 29376
 		},
 		"tools": {
 			"minBytes": 60672,
