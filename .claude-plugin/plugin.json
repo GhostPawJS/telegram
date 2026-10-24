@@ -1,6 +1,6 @@
 {
   "name": "ghostpaw-telegram",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Telegram message mirror, search, sending, and moderation tools.",
   "author": {
     "name": "Anonyfox",
@@ -42,7 +42,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@ghostpaw/telegram@0.6.1",
+        "@ghostpaw/telegram@0.6.2",
         "mcp"
       ]
     }
