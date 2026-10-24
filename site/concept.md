@@ -120,7 +120,7 @@ Mirror first. The page leads with what the voices build by hand (V059 V035): a r
 | code | Martian Mono, Cascadia Mono, Consolas, monospace | rows, calls and tool results |
 
 ## Form
-Shared panes with chamfer and lit top bar; the mirror pane lists messages, edits kept, outbound calls, last read and last tool result. Steps with call and result. One column on phones; desktop keeps the pane beside the steps. Shared 48px grid.
+Shared panes with chamfer and lit top bar; the mirror pane lists messages, edits kept, outbound calls, last read and last tool result. Steps with call and result. One column on phones; desktop keeps the pane beside the steps. Plain void ground with one faint cyan glow.
 
 ## Imagery
 | Image | Job | Art direction | Source |
@@ -146,3 +146,4 @@ Reduced motion: no sweep or flash.
 - 2026-10-24: first concept from the 2026-10-24 research batch (61 voices, 12 peers); mirror first chosen; replay of a real telegram 0.6.0 run against a local Bot API stand-in. Eager file download and search after edits left off the page: in the run DEFAULTS.autoDownload was false and the search index kept the pre-edit text.
 - 2026-10-24: depth pass (10 more voices, now 71); replay re-run against the current release; import time re-measured; comparison section added; page moved to https://telegram.ghostpaw.dev/.
 - 2026-10-24: telegram 0.6.2 released (search follows edits, allowedChatIds filters chats, sent messages mirrored and counted). Replay re-run against 0.6.2; the search step and the notes now show the edited text in the index, the worry list names allowedChatIds, and the files line says background download from bot.ts. Tests 887, 34.2 KB gzip.
+- 2026-10-24: portal chrome pass. Shared top bar (GhostPaw/<lib>, Live demo or Docs, GitHub, npm), version badge, footer row of all seven libraries; sibling links row dropped from the start section; the ruled grid on the page ground was replaced by one radial glow (lfm 0.1.9 rejects ruled ground textures); share card relabelled GhostPaw/<lib> with the install line.

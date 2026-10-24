@@ -21,17 +21,17 @@
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="{{.urls.home}}">GhostPaw</a>
+  <a class="brand" href="{{.urls.home}}">GhostPaw<span class="crumb">/telegram</span></a>
   <nav aria-label="telegram elsewhere">
+    <a href="{{.urls.docs}}">Docs</a>
     <a href="{{.urls.github}}">GitHub</a>
     <a href="{{.urls.npm}}">npm</a>
-    <a href="{{.urls.readme}}">README</a>
   </nav>
 </header>
 <main>
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <p class="kicker"><code>@ghostpaw/telegram</code> 0.6.2</p>
+      <p class="kicker"><code>@ghostpaw/telegram</code> <span class="ver">0.6.2</span></p>
       <h1 id="hero-title">Your bot remembers the chat, including what was edited.</h1>
       <p class="lede">telegram writes every incoming update into a SQLite file before your handler runs: messages, edits, replies, reactions, members and files. Your bot and your agent read from that record, and the agent's tools return plans until you switch execution on.</p>
       <div class="install">
@@ -209,13 +209,13 @@ const bot = createBot({
 
 await bot.start(); // long-polling</code></pre>
     <p>To give an agent the mirror as an MCP server, add <code>npx -y @ghostpaw/telegram mcp</code> to your client.</p>
-    <p class="links"><a class="more" href="{{.urls.readme}}">Read the README</a><a href="{{.urls.npm}}">telegram on npm</a></p>
-    <p class="links"><a href="{{.urls.home}}">All seven GhostPaw libraries</a><a href="{{.urls.agentMemory}}">codex, for memory</a><a href="{{.urls.agentTasks}}">questlog, for tasks</a><a href="{{.urls.agentContacts}}">affinity, for contacts</a><a href="{{.urls.agentIdentity}}">souls, for identity</a><a href="{{.urls.agentSkills}}">grimoire, for skills</a><a href="{{.urls.agentEmail}}">email, for mail</a></p>
+    <p class="links"><a class="more" href="{{.urls.readme}}">Read the README</a><a href="{{.urls.docs}}">Read the docs</a><a href="{{.urls.npm}}">telegram on npm</a></p>
   </section>
 </main>
 <footer class="foot">
-  <p>telegram is maintained in the open by GhostPaw under the MIT licence.</p>
-  <p class="foot-links"><a href="{{.urls.github}}">Source</a><a href="{{.urls.impressum}}">Impressum</a><a href="{{.urls.privacy}}">Datenschutz</a></p>
+  <nav class="foot-libs" aria-label="GhostPaw libraries"><a href="{{.urls.agentMemory}}">codex</a><a href="{{.urls.agentTasks}}">questlog</a><a href="{{.urls.agentContacts}}">affinity</a><a href="{{.urls.agentIdentity}}">souls</a><a href="{{.urls.agentSkills}}">grimoire</a><a href="{{.urls.agentEmail}}">email</a><a href="{{.url}}" aria-current="page">telegram</a></nav>
+  <p>telegram is one of seven GhostPaw libraries, maintained in the open under the MIT licence.</p>
+  <p class="foot-links"><a href="{{.urls.home}}">GhostPaw home</a><a href="{{.urls.github}}">Source on GitHub</a><a href="{{.urls.npm}}">telegram on npm</a><a href="{{.urls.impressum}}">Impressum</a><a href="{{.urls.privacy}}">Datenschutz</a></p>
 </footer>
 {{script "assets/scripts/main.js"}}
 </body>
