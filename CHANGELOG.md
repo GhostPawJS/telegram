@@ -4,6 +4,17 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Added
+
+- 27 noun-verb commands: bot stats/state/chats; mirror message/messages/search/chat/chats/user/users/reactions/replies/edits; message send/edit/delete/pin/unpin/typing/forward; member ban/unban/restrict/promote/kick/show/list. Noun-verb send and moderation commands return plans even when credentials are present.
+- Schema-driven CLI flags, stdin JSON, per-command help, bash/zsh/fish completions, JSON and quiet output, and exit codes 0/1/2/3/4/70. Existing CLI forms retain their behavior.
+- Standalone binaries for linux-x64, linux-arm64, darwin-arm64, darwin-x64 and windows-x64, with SHA256SUMS and build provenance attestations. Binaries are unsigned; macOS builds carry an ad-hoc signature.
+- install.sh and install.ps1 refuse checksum mismatches. Release installation checks run on ubuntu-24.04, macos-15 and windows-2025 using offline mirror reads and MCP discovery; a public TLS handshake runs only in the install workflow.
+
+### Changed
+
+- SurfaceTool accepts optional `cli` command metadata. CLI and standalone binaries share Telegram options. Local reads and plans need no token; existing execution forms use TELEGRAM_BOT_TOKEN.
+
 ## [0.6.2] - 2026-10-24
 
 ### Deprecated

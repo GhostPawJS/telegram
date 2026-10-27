@@ -1,7 +1,7 @@
 {
 	"name": "@ghostpaw/telegram",
 	"version": "0.6.2",
-	"description": "Telegram bot channel engine — zero runtime dependencies, Telegram transport, SQLite message mirror, FTS5 full-text search, markdown rendering, and a structured LLM tool facade. Node 24+, built-in node:sqlite.",
+	"description": "Telegram bot channel engine \u2014 zero runtime dependencies, Telegram transport, SQLite message mirror, FTS5 full-text search, markdown rendering, and a structured LLM tool facade. Node 24+, built-in node:sqlite.",
 	"type": "module",
 	"exports": {
 		".": {
@@ -63,7 +63,10 @@
 		"check:api": "node scripts/guard/api.mjs",
 		"check:consumer": "node scripts/guard/consumer.mjs",
 		"check:startup": "node scripts/guard/startup.mjs",
-		"mcpb": "node scripts/mcpb/build.mjs"
+		"mcpb": "node scripts/mcpb/build.mjs",
+		"sea": "node scripts/sea/build.mjs",
+		"sea:smoke": "node scripts/sea/smoke.mjs",
+		"sea:bench": "node scripts/sea/bench.mjs"
 	},
 	"engines": {
 		"node": ">=24"
@@ -124,7 +127,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4",
 		"@types/node": "^25.3.0",
-		"esbuild": "^0.27.7",
+		"esbuild": "^0.28.1",
 		"fflate": "0.8.3",
 		"grammy": "^1",
 		"marked": "^15",
@@ -134,5 +137,8 @@
 	"bin": {
 		"ghostpaw-telegram": "./dist/cli.js"
 	},
-	"mcpName": "io.github.GhostPawJS/telegram"
+	"mcpName": "io.github.GhostPawJS/telegram",
+	"overrides": {
+		"esbuild": "$esbuild"
+	}
 }
