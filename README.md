@@ -7,7 +7,9 @@
 **Agent Telegram bots: every update mirrored into SQLite before your handler runs.**
 
 ```bash
-npm install @ghostpaw/telegram
+npm install @ghostpaw/telegram        # library
+npm install -g @ghostpaw/telegram     # global CLI
+npx @ghostpaw/telegram --help         # one-off
 ```
 
 Telegram bot channel engine — fetch transport with zero runtime dependencies, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
@@ -68,6 +70,66 @@ Without a token, these tools return plans; local reads and tool discovery work o
 The `.mcp.json` token placeholder must be supplied by the client environment.
 The server reads the mirror populated by your library transport; it does not poll for updates.
 
+## Noun-verb CLI
+
+The 27 command paths derive from the 4 tool schemas:
+
+```text
+bot stats | state <key> | chats
+mirror message <chatId> <messageId>
+mirror messages <chatId> | search <chatId> <query>
+mirror chat <chatId> | chats | user <userId> | users
+mirror reactions <chatId> <messageId>
+mirror replies <chatId> <messageId> | edits <chatId> <messageId>
+message send <chatId> <text> | edit <chatId> <messageId> <text>
+message delete <chatId> <messageId> | pin <chatId> <messageId> | unpin <chatId> <messageId>
+message typing <chatId> | forward <fromChatId> <messageId> <toChatId>
+member ban <chatId> <userId> | unban <chatId> <userId> | restrict <chatId> <userId>
+member promote <chatId> <userId> | kick <chatId> <userId> | show <chatId> <userId>
+member list <chatId>
+```
+
+Use `help <noun>` or `<noun> <verb> --help` for schema flags. Fields accept
+kebab-case flags, such as `--can-send-messages true` and `--is-admin false`.
+Objects accept JSON or `@file`; arrays accept repeated flags or JSON.
+A single `-` reads stdin JSON; explicit flags override stdin fields.
+`--` ends option parsing.
+
+Global flags: `--db <path>`, `--json`, `--quiet`, `--compact`, `--help`/`-h`,
+`--version`/`-V`/`-v`, `--no-color`. Piped output defaults to JSON;
+`--quiet` suppresses stdout. `completions bash|zsh|fish` prints completion
+setup and `version` prints the package version.
+
+| New command exit code | Meaning |
+|---|---|
+| 0 | Success or no-op |
+| 1 | Tool error |
+| 2 | Usage or schema error |
+| 3 | Clarification needed or not found |
+| 4 | Conflict or version mismatch |
+| 70 | Unexpected internal error |
+
+Existing `tools [--json]`, `describe <tool>`, `call <tool> [JSON|-]`, flat
+`tg_<tool> --parameter value`, `mcp` and `skill` forms keep their behavior.
+The noun-verb send and moderation commands always return plans, including
+when `TELEGRAM_BOT_TOKEN` is set. Execution remains available through
+`createTelegramToolFacade({ client, execute: true })`; the existing tool-level
+CLI and MCP forms execute when `TELEGRAM_BOT_TOKEN` is set.
+Local mirror reads and plans work offline without credentials.
+`GHOSTPAW_TELEGRAM_DB` sets the default database, otherwise
+`~/.ghostpaw/telegram.db` is used; `--db` overrides both.
+
+Offline examples:
+
+```sh
+ghostpaw-telegram mirror chats --db /tmp/telegram-port-example.db --json
+ghostpaw-telegram message send 123 'Offline plan' --db /tmp/telegram-port-example.db --json
+ghostpaw-telegram mirror messages 123 --db /tmp/telegram-port-example.db --json
+```
+
+The empty mirror returns no chats or messages. The send returns an action
+descriptor without sending a Telegram message.
+
 ## CLI
 
 ```bash
@@ -86,10 +148,81 @@ The send example returns a plan unless `TELEGRAM_BOT_TOKEN` is set.
 ## Install
 
 ```bash
-npm install @ghostpaw/telegram
+npm install @ghostpaw/telegram        # library
+npm install -g @ghostpaw/telegram     # global CLI
+npx @ghostpaw/telegram --help         # one-off
 ```
 
 Requires **Node.js 24+** (uses the built-in `node:sqlite` module).
+
+Standalone binaries are available from [GitHub Releases](https://github.com/GhostPawJS/telegram/releases)
+for linux-x64, linux-arm64, darwin-arm64, darwin-x64 and windows-x64.
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
+```
+
+Other release installers:
+
+```sh
+mise use -g github:GhostPawJS/telegram
+ubi --project GhostPawJS/telegram --exe ghostpaw-telegram --in ~/.local/bin
+eget GhostPawJS/telegram
+```
+
+For [aqua](https://aquaproj.github.io/docs/reference/registry-config/), define a
+`github_release` package in `aqua.yaml`:
+
+```yaml
+registries:
+  - name: telegram
+    type: local
+    path: telegram-registry.yaml
+packages:
+  - name: GhostPawJS/telegram@v<VERSION>
+    registry: telegram
+```
+
+`telegram-registry.yaml`:
+
+```yaml
+packages:
+  - type: github_release
+    repo_owner: GhostPawJS
+    repo_name: telegram
+    asset: ghostpaw-telegram-{{trimV .Version}}-{{.OS}}-{{.Arch}}.tar.gz
+    format: tar.gz
+    replacements: { amd64: x64 }
+    overrides:
+      - goos: windows
+        asset: ghostpaw-telegram-{{trimV .Version}}-windows-{{.Arch}}.zip
+        format: zip
+    files:
+      - name: ghostpaw-telegram
+```
+
+Install scripts verify SHA256SUMS. To verify a downloaded archive's
+[build attestation](https://cli.github.com/manual/gh_attestation_verify):
+
+```sh
+gh attestation verify <archive> -R GhostPawJS/telegram
+```
+
+Set `GHOSTPAW_VERIFY=attestation` for attestation verification in `install.sh`.
+Binaries are unsigned; macOS binaries carry an ad-hoc signature. For a browser
+download on macOS, remove quarantine with
+`xattr -d com.apple.quarantine /path/to/ghostpaw-telegram`.
+Linux binaries require glibc 2.28+; use npx on Alpine.
+See the [binary build workflow](.github/workflows/release-binaries.yml).
+
+<!-- sizes -->
+
+Release installation is checked on ubuntu-24.04, macos-15 and windows-2025.
+
 
 ## Quick Start
 

@@ -242,3 +242,63 @@ try {
 | `TelegramFileError` | `TELEGRAM_FILE` | File download or upload failure |
 
 `isTelegramError(e)` narrows any `unknown` to `TelegramError`.
+
+## Noun-verb CLI
+
+The 27 command paths derive from the 4 tool schemas:
+
+```text
+bot stats | state <key> | chats
+mirror message <chatId> <messageId>
+mirror messages <chatId> | search <chatId> <query>
+mirror chat <chatId> | chats | user <userId> | users
+mirror reactions <chatId> <messageId>
+mirror replies <chatId> <messageId> | edits <chatId> <messageId>
+message send <chatId> <text> | edit <chatId> <messageId> <text>
+message delete <chatId> <messageId> | pin <chatId> <messageId> | unpin <chatId> <messageId>
+message typing <chatId> | forward <fromChatId> <messageId> <toChatId>
+member ban <chatId> <userId> | unban <chatId> <userId> | restrict <chatId> <userId>
+member promote <chatId> <userId> | kick <chatId> <userId> | show <chatId> <userId>
+member list <chatId>
+```
+
+Use `help <noun>` or `<noun> <verb> --help` for schema flags. Fields accept
+kebab-case flags, such as `--can-send-messages true` and `--is-admin false`.
+Objects accept JSON or `@file`; arrays accept repeated flags or JSON.
+A single `-` reads stdin JSON; explicit flags override stdin fields.
+`--` ends option parsing.
+
+Global flags: `--db <path>`, `--json`, `--quiet`, `--compact`, `--help`/`-h`,
+`--version`/`-V`/`-v`, `--no-color`. Piped output defaults to JSON;
+`--quiet` suppresses stdout. `completions bash|zsh|fish` prints completion
+setup and `version` prints the package version.
+
+| New command exit code | Meaning |
+|---|---|
+| 0 | Success or no-op |
+| 1 | Tool error |
+| 2 | Usage or schema error |
+| 3 | Clarification needed or not found |
+| 4 | Conflict or version mismatch |
+| 70 | Unexpected internal error |
+
+Existing `tools [--json]`, `describe <tool>`, `call <tool> [JSON|-]`, flat
+`tg_<tool> --parameter value`, `mcp` and `skill` forms keep their behavior.
+The noun-verb send and moderation commands always return plans, including
+when `TELEGRAM_BOT_TOKEN` is set. Execution remains available through
+`createTelegramToolFacade({ client, execute: true })`; the existing tool-level
+CLI and MCP forms execute when `TELEGRAM_BOT_TOKEN` is set.
+Local mirror reads and plans work offline without credentials.
+`GHOSTPAW_TELEGRAM_DB` sets the default database, otherwise
+`~/.ghostpaw/telegram.db` is used; `--db` overrides both.
+
+Offline examples:
+
+```sh
+ghostpaw-telegram mirror chats --db /tmp/telegram-port-example.db --json
+ghostpaw-telegram message send 123 'Offline plan' --db /tmp/telegram-port-example.db --json
+ghostpaw-telegram mirror messages 123 --db /tmp/telegram-port-example.db --json
+```
+
+The empty mirror returns no chats or messages. The send returns an action
+descriptor without sending a Telegram message.
