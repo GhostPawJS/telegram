@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.4] - 2026-10-28
+
 ### Added
 
 - Add `--version --short` and `--version --json` for machine-readable version output.
@@ -163,7 +165,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.3...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.4...HEAD
+[0.7.4]: https://github.com/GhostPawJS/telegram/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/GhostPawJS/telegram/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/GhostPawJS/telegram/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/GhostPawJS/telegram/compare/v0.7.0...v0.7.1
