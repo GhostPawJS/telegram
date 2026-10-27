@@ -68,3 +68,38 @@ test('Telegram noun verb commands read an empty mirror and plan sends offline ev
 		rmSync(dir, { recursive: true, force: true });
 	}
 });
+
+test('global output flags after -- still apply and are not read as positionals', async () => {
+	const dir = mkdtempSync(join(tmpdir(), 'telegram-cli-'));
+	try {
+		let out = '';
+		const code = await runToolCli(
+			['--db', join(dir, 'test.db'), 'message', 'send', '--', '-100123', 'After dashes', '--json'],
+			{
+				...telegramCliOptions,
+				stdin: Readable.from([]),
+				stdout: new Writable({
+					write(chunk, _encoding, cb) {
+						out += String(chunk);
+						cb();
+					},
+				}),
+				stderr: new Writable({
+					write(_chunk, _encoding, cb) {
+						cb();
+					},
+				}),
+			},
+		);
+		assert.equal(code, 0);
+		const result = JSON.parse(out);
+		assert.equal(result.ok, true);
+		assert.deepEqual(result.data, {
+			action: 'send_message',
+			chatId: -100123,
+			text: 'After dashes',
+		});
+	} finally {
+		rmSync(dir, { recursive: true, force: true });
+	}
+});

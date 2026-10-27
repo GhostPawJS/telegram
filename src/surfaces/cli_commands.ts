@@ -71,9 +71,18 @@ export async function runCliCommand<T>(
 	)
 		return undefined;
 	try {
+		let afterDashes = false;
 		for (let i = 0; i < args.length; i++) {
 			const flag = args[i];
-			if (flag === '--') break;
+			if (flag === '--') afterDashes = true;
+			if (afterDashes) {
+				if (flag === '--json') json = true;
+				else if (flag === '--quiet') quiet = true;
+				else if (flag === '--compact') compact = true;
+				else if (flag !== '--no-color') continue;
+				args.splice(i--, 1);
+				continue;
+			}
 			if (flag === '--db' || flag?.startsWith('--db=')) {
 				db = flag === '--db' ? args.splice(i + 1, 1)[0] : flag.slice(5);
 				if (!db || db.startsWith('--')) throw new CliUsageError('--db requires a path');
