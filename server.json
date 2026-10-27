@@ -3,7 +3,7 @@
   "name": "io.github.GhostPawJS/telegram",
   "description": "Telegram message mirror, search, sending, and moderation tools.",
   "title": "GhostPaw Telegram",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "repository": {
     "url": "https://github.com/GhostPawJS/telegram.git",
     "source": "github"
@@ -14,7 +14,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@ghostpaw/telegram",
-      "version": "0.7.0",
+      "version": "0.7.1",
       "transport": {
         "type": "stdio"
       },
