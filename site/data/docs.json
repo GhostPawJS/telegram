@@ -1,0 +1,65 @@
+{
+  "heading": "Read the docs",
+  "pages": [
+    {
+      "key": "docs",
+      "label": "Overview",
+      "note": "what the manual covers and where to start"
+    },
+    {
+      "key": "docsHuman",
+      "label": "Human usage",
+      "note": "using the library directly in code"
+    },
+    {
+      "key": "docsLlm",
+      "label": "LLM usage",
+      "note": "tools, skills and the soul prompt for agents"
+    },
+    {
+      "key": "docsRecipes",
+      "label": "Recipes",
+      "note": "patterns for menus, keyboards and replies"
+    },
+    {
+      "key": "docsArchitecture",
+      "label": "Architecture",
+      "note": "how the code is laid out"
+    },
+    {
+      "key": "docsEntitiesChats",
+      "label": "Chats",
+      "note": "every conversation the bot has seen"
+    },
+    {
+      "key": "docsEntitiesMessages",
+      "label": "Messages",
+      "note": "inbound and outbound messages"
+    },
+    {
+      "key": "docsEntitiesUsers",
+      "label": "Users",
+      "note": "bot and human accounts"
+    },
+    {
+      "key": "docsEntitiesMembers",
+      "label": "Members",
+      "note": "who is in which chat, with status"
+    },
+    {
+      "key": "docsEntitiesCallbacks",
+      "label": "Callbacks",
+      "note": "inline keyboard button presses"
+    },
+    {
+      "key": "docsEntitiesFiles",
+      "label": "Files",
+      "note": "photos, documents and voice notes"
+    },
+    {
+      "key": "docsEntitiesReactions",
+      "label": "Reactions",
+      "note": "emoji reactions and their counts"
+    }
+  ]
+}

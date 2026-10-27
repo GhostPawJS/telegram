@@ -24,7 +24,18 @@
     "agentSkills": "https://grimoire.ghostpaw.dev/",
     "agentEmail": "https://email.ghostpaw.dev/",
     "docs": "https://telegram.ghostpaw.dev/docs/",
-    "cfBeacon": "https://static.cloudflareinsights.com/beacon.min.js"
+    "cfBeacon": "https://static.cloudflareinsights.com/beacon.min.js",
+    "docsHuman": "https://telegram.ghostpaw.dev/docs/human/",
+    "docsLlm": "https://telegram.ghostpaw.dev/docs/llm/",
+    "docsRecipes": "https://telegram.ghostpaw.dev/docs/recipes/",
+    "docsArchitecture": "https://telegram.ghostpaw.dev/docs/architecture/",
+    "docsEntitiesChats": "https://telegram.ghostpaw.dev/docs/entities/chats/",
+    "docsEntitiesMessages": "https://telegram.ghostpaw.dev/docs/entities/messages/",
+    "docsEntitiesUsers": "https://telegram.ghostpaw.dev/docs/entities/users/",
+    "docsEntitiesMembers": "https://telegram.ghostpaw.dev/docs/entities/members/",
+    "docsEntitiesCallbacks": "https://telegram.ghostpaw.dev/docs/entities/callbacks/",
+    "docsEntitiesFiles": "https://telegram.ghostpaw.dev/docs/entities/files/",
+    "docsEntitiesReactions": "https://telegram.ghostpaw.dev/docs/entities/reactions/"
   },
   "jsonld": {
     "@context": "https://schema.org",

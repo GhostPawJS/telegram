@@ -124,6 +124,23 @@ const bot = createBot({
 await bot.start(); // listens on port 8443
 ```
 
+## Docs
+
+Read the manual for usage guides, recipes, architecture and entity references.
+
+- [Overview](https://telegram.ghostpaw.dev/docs/): what the manual covers and where to start
+- [Human usage](https://telegram.ghostpaw.dev/docs/human/): using the library directly in code
+- [LLM usage](https://telegram.ghostpaw.dev/docs/llm/): tools, skills and the soul prompt for agents
+- [Recipes](https://telegram.ghostpaw.dev/docs/recipes/): patterns for menus, keyboards and replies
+- [Architecture](https://telegram.ghostpaw.dev/docs/architecture/): how the code is laid out
+- [Chats](https://telegram.ghostpaw.dev/docs/entities/chats/): every conversation the bot has seen
+- [Messages](https://telegram.ghostpaw.dev/docs/entities/messages/): inbound and outbound messages
+- [Users](https://telegram.ghostpaw.dev/docs/entities/users/): bot and human accounts
+- [Members](https://telegram.ghostpaw.dev/docs/entities/members/): who is in which chat, with status
+- [Callbacks](https://telegram.ghostpaw.dev/docs/entities/callbacks/): inline keyboard button presses
+- [Files](https://telegram.ghostpaw.dev/docs/entities/files/): photos, documents and voice notes
+- [Reactions](https://telegram.ghostpaw.dev/docs/entities/reactions/): emoji reactions and their counts
+
 ## What It Stores
 
 Every update is mirrored into SQLite before your handler runs:
@@ -260,16 +277,6 @@ Six workflow playbooks as markdown strings:
 | `broadcast-to-audience` | Compose, send, handle errors, retry failed chats |
 | `search-and-retrieve-messages` | Full-text search, reply chains, edit history |
 | `stream-progressive-responses` | Debounced streaming with overflow and error recovery |
-
-## Documentation
-
-| Document | Audience |
-|---|---|
-| [docs/HUMAN.md](docs/HUMAN.md) | Human developers using the `read`/`write`/`network` API |
-| [docs/LLM.md](docs/LLM.md) | Agent builders wiring tools, skills, and soul |
-| [docs/RECIPES.md](docs/RECIPES.md) | Advanced UI/UX patterns: streaming, approval flows, pagination |
-| [docs/README.md](docs/README.md) | Architecture overview: storage model, surfaces, invariants |
-| [docs/entities/](docs/entities/) | Per-entity manuals with exact public API listings |
 
 The package has zero runtime dependencies. It uses Node 24 global fetch for
 Bot API requests and an in-repo synchronous Markdown parser. grammy and marked
