@@ -4,6 +4,13 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-27
+
+### Fixed
+
+- CLI commands accept a negative chat ID, as used by groups, supergroups and channels, as a positional argument instead of failing with `Unknown flag`.
+- `bot state` without `--key` reports the missing key instead of `No state stored for key: undefined`.
+
 ## [0.7.0] - 2026-10-27
 
 ### Added
@@ -135,7 +142,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/GhostPawJS/telegram/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/GhostPawJS/telegram/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/GhostPawJS/telegram/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/GhostPawJS/telegram/compare/v0.6.0...v0.6.1
