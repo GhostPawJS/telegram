@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-27
+
 ### Added
 
 - 27 noun-verb commands: bot stats/state/chats; mirror message/messages/search/chat/chats/user/users/reactions/replies/edits; message send/edit/delete/pin/unpin/typing/forward; member ban/unban/restrict/promote/kick/show/list. Noun-verb send and moderation commands return plans even when credentials are present.
@@ -133,7 +135,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.6.2...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/GhostPawJS/telegram/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/GhostPawJS/telegram/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/GhostPawJS/telegram/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/GhostPawJS/telegram/compare/v0.5.0...v0.6.0
