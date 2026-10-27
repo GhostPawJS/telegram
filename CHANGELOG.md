@@ -4,6 +4,11 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Added
+
+- Add `--version --short` and `--version --json` for machine-readable version output.
+- Add `GHOSTPAW_NO_MODIFY_PATH=1` to skip persistent user PATH changes in the Windows installer.
+
 ## [0.7.3] - 2026-10-27
 
 ### Changed

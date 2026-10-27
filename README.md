@@ -150,6 +150,8 @@ The send example returns a plan unless `TELEGRAM_BOT_TOKEN` is set.
 
 Each line downloads the latest release asset, checks it against the release's SHA256SUMS and installs it on the PATH (~/.local/bin on Linux/macOS; the Windows script adds its folder to the user PATH).
 
+These lines never edit ~/.profile or other shell startup files: `export PATH` applies to the current shell only. To keep it, add `export PATH="$HOME/.local/bin:$PATH"` to your shell profile yourself.
+
 linux-x64:
 
 ```sh
@@ -174,16 +176,30 @@ darwin-x64:
 curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target darwin-x64 && export PATH="$HOME/.local/bin:$PATH"
 ```
 
-windows-x64 (PowerShell):
+windows-x64 (PowerShell; persistently adds the install folder to the user PATH):
 
 ```powershell
 irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
 ```
 
+To skip the persistent user PATH edit:
+
+```powershell
+$env:GHOSTPAW_NO_MODIFY_PATH=1; irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
+```
+
+Pinned to a release:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.4 && export PATH="$HOME/.local/bin:$PATH"
+```
+
 ```text
 $ ghostpaw-telegram --version
-telegram 0.7.3 (binary, linux-x64)
+telegram 0.7.4 (binary, linux-x64)
 ```
+
+Scripts that compare versions should use `--version --short` or `--version --json`.
 
 A session with the 0.7.1 linux-x64 binary against a fresh database, with no token set, so outbound commands only return the planned action and nothing is sent (output piped through `jq` to keep it short):
 

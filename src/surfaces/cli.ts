@@ -6,6 +6,7 @@ import { validateInput } from './validate_input.ts';
 export interface ToolCliOptions<TCtx> {
 	bin: string;
 	version: string;
+	formatVersion?: (args: string[]) => string;
 	description: string;
 	tools: readonly SurfaceTool<TCtx>[];
 	openContext(opts: { db?: string }): TCtx | Promise<TCtx>;
@@ -28,7 +29,10 @@ export async function runToolCli<TCtx>(
 			.slice(0, end < 0 ? argv.length : end)
 			.some((arg) => ['--version', '-V', '-v'].includes(arg))
 	) {
-		if (!argv.includes('--quiet')) (options.stdout ?? process.stdout).write(`${options.version}\n`);
+		if (!argv.includes('--quiet'))
+			(options.stdout ?? process.stdout).write(
+				`${options.formatVersion?.(argv) ?? options.version}\n`,
+			);
 		return 0;
 	}
 	const modern = await runCliCommand(argv, options);
@@ -80,7 +84,7 @@ export async function runToolCli<TCtx>(
 		return 0;
 	}
 	if (['--version', '-V', '-v', 'version'].includes(command)) {
-		stdout.write(`${options.version}\n`);
+		stdout.write(`${options.formatVersion?.(argv) ?? options.version}\n`);
 		return 0;
 	}
 	if (command === 'tools') {

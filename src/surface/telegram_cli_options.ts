@@ -9,6 +9,7 @@ export const telegramCliOptions: ToolCliOptions<TelegramDb> = {
 	get version() {
 		return cliVersion();
 	},
+	formatVersion: (args) => cliVersion({ args }),
 	description: 'Telegram message mirror and chat tools',
 	tools: telegramCliSurfaceTools,
 	openContext: async (options) => {
