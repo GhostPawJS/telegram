@@ -41,6 +41,12 @@ describe('tgConnectTool', () => {
 			assert.equal(result.ok, true);
 			assert.equal('outcome' in result && result.outcome, 'no_op');
 		});
+
+		it('names the missing key instead of printing undefined', () => {
+			const result = tgConnectTool.handler(db, { subcommand: 'get_state' } as never);
+			assert.equal('outcome' in result && result.outcome, 'no_op');
+			assert.equal('summary' in result && result.summary, 'No key given; pass --key');
+		});
 	});
 
 	describe('list_chats', () => {

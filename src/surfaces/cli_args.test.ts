@@ -62,3 +62,20 @@ test('generic parser reports typed usage errors and renders schema help', () => 
 		{ ids: [1, 2] },
 	);
 });
+
+test('generic parser reads negative numbers as positionals and flag values', () => {
+	const spec = {
+		command: 'x',
+		positionals: [
+			{ name: 'chatId', type: 'integer' as const },
+			{ name: 'text', type: 'string' as const },
+		],
+		flags: [{ name: 'offset', type: 'integer' as const }],
+	};
+	assert.deepEqual(parseCliArgs(['-1001234567890', 'hi', '--offset', '-5'], spec), {
+		chatId: -1001234567890,
+		text: 'hi',
+		offset: -5,
+	});
+	assert.throws(() => parseCliArgs(['-x'], spec), CliUsageError);
+});

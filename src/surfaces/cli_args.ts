@@ -65,7 +65,7 @@ export function parseCliArgs(argv: string[], spec: CliSpec): Record<string, unkn
 			ended = true;
 			continue;
 		}
-		if (ended || token === '-' || !token.startsWith('-')) {
+		if (ended || token === '-' || !token.startsWith('-') || /^-\d/.test(token)) {
 			positions.push(token);
 			continue;
 		}

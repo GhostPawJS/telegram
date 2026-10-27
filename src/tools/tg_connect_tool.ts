@@ -44,6 +44,7 @@ export const tgConnectTool = defineTelegramTool<TgConnectInput, unknown>({
 			}
 			case 'get_state': {
 				const { key } = input;
+				if (key === undefined) return toolNoOp('No key given; pass --key', null);
 				const value = getState(db, key);
 				if (value === null) {
 					return toolNoOp(`No state stored for key: ${key}`, null);
