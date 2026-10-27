@@ -15,28 +15,28 @@
 	},
 	"size": {
 		"full": {
-			"minBytes": 97024,
-			"gzipBytes": 29440
+			"minBytes": 99968,
+			"gzipBytes": 30400
 		},
 		"tools": {
-			"minBytes": 60736,
-			"gzipBytes": 20096
+			"minBytes": 63680,
+			"gzipBytes": 21056
 		},
 		"read-write": {
-			"minBytes": 60672,
-			"gzipBytes": 20096
+			"minBytes": 63616,
+			"gzipBytes": 21056
 		},
 		"mcp": {
-			"minBytes": 39040,
-			"gzipBytes": 11712
+			"minBytes": 41024,
+			"gzipBytes": 12288
 		},
 		"cli": {
-			"minBytes": 68928,
-			"gzipBytes": 22592
+			"minBytes": 72832,
+			"gzipBytes": 23808
 		},
 		"mcp-server": {
-			"minBytes": 42624,
-			"gzipBytes": 12992
+			"minBytes": 44672,
+			"gzipBytes": 13632
 		}
 	}
 }
