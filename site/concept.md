@@ -96,8 +96,9 @@ Mirror first. The page leads with what the voices build by hand (V059 V035): a r
 3. Explainer: what the mirror keeps and the four tools. V056 V046
 4. Worry: what needs a token, rate limits, what is stored. V026 V033
 5. Numbers: 0 deps, Node 24+, 883 tests, 97.9% lines, 33.7 KB gzip, about 9.1 ms import, 4 tools.
-6. Start: install, quick start, GitHub, README, home and siblings.
-7. Footer: Impressum, Datenschutz.
+6. Binaries: since 0.7.0 the CLI ships as one executable per platform with Node.js inside; install lines (install.sh, install.ps1, mise, ubi, eget, npx), targets and archive sizes from the v0.7.1 release assets, SHA256SUMS and attestation check, unsigned note, and a real terminal session (mirror chats, planned message send, typing and forward, bot stats and state, tools, all without a bot token).
+7. Start: install, quick start, GitHub, README, home and siblings.
+8. Footer: Impressum, Datenschutz.
 
 ## Palette
 | Role | Color | Source |
@@ -127,6 +128,7 @@ Shared panes with chamfer and lit top bar; the mirror pane lists messages, edits
 | --- | --- | --- | --- |
 | hero vault | protagonist | a wireframe paper plane in cyan light, a violet dotted orbit leading into a stacked database cylinder with a glowing paw on its lid; no text V059 V056 | generated |
 | chain | explanation | cyan speech bubbles stacking down into a band of stored lines, with a violet magnifier over them; search over the mirror V045 | generated |
+| terminal session | evidence | real output of the 0.7.1 linux-x64 binary against a fresh database, recorded with vhs in the void/spectral palette; never retouched | recorded |
 | share card | share preview | the hero art with the headline at 1200×630 | generated art, rendered from HTML |
 
 ## Motion
@@ -143,6 +145,7 @@ Reduced motion: no sweep or flash.
 - Never present voices as customers. V013
 
 ## Changelog
+- 2026-10-27: telegram ships standalone binaries since 0.7.0; the section shows 0.7.1. New spine item 6, Binaries: install lines, targets and archive sizes from the v0.7.1 release assets, SHA256SUMS and attestation check, unsigned note, and the terminal session screenshot (new Imagery row). Kicker and JSON-LD version 0.7.1. Other sections unchanged.
 - 2026-10-24: first concept from the 2026-10-24 research batch (61 voices, 12 peers); mirror first chosen; replay of a real telegram 0.6.0 run against a local Bot API stand-in. Eager file download and search after edits left off the page: in the run DEFAULTS.autoDownload was false and the search index kept the pre-edit text.
 - 2026-10-24: depth pass (10 more voices, now 71); replay re-run against the current release; import time re-measured; comparison section added; page moved to https://telegram.ghostpaw.dev/.
 - 2026-10-24: telegram 0.6.2 released (search follows edits, allowedChatIds filters chats, sent messages mirrored and counted). Replay re-run against 0.6.2; the search step and the notes now show the edited text in the index, the worry list names allowedChatIds, and the files line says background download from bot.ts. Tests 887, 34.2 KB gzip.
