@@ -4,11 +4,14 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.3] - 2026-10-27
+
+### Changed
+
 - Make release binaries the default installation path and support explicit installer targets.
 - Show the installation variant in human version output; retain plain machine versions.
 - Include workflow guides, nested parameter rows and validated call examples in CLI skill output.
 - Validate tool inputs before dispatch and include recovery shapes for invalid input.
-
 
 ## [0.7.2] - 2026-10-27
 
@@ -155,7 +158,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.3...HEAD
+[0.7.3]: https://github.com/GhostPawJS/telegram/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/GhostPawJS/telegram/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/GhostPawJS/telegram/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/GhostPawJS/telegram/compare/v0.6.2...v0.7.0
