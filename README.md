@@ -166,6 +166,12 @@ curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh
 irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
 ```
 
+A session with the 0.7.1 linux-x64 binary against a fresh database, with no bot token set, so outbound commands only return the planned action and nothing is sent (output piped through `jq` to keep it short):
+
+![ghostpaw-telegram 0.7.1 without a bot token: version, mirror chats, planned message send, typing and forward, bot stats, bot state and the tool list](https://raw.githubusercontent.com/GhostPawJS/telegram/main/docs/assets/cli.png)
+
+The same session as an [animated GIF](https://raw.githubusercontent.com/GhostPawJS/telegram/main/docs/assets/cli.gif).
+
 Other release installers:
 
 ```sh
@@ -219,7 +225,7 @@ download on macOS, remove quarantine with
 Linux binaries require glibc 2.28+; use npx on Alpine.
 See the [binary build workflow](.github/workflows/release-binaries.yml).
 
-Sizes for 0.7.0 (Node 26.12.1 inside each binary):
+Sizes for 0.7.1 (Node 26.12.1 inside each binary):
 
 | Target | Archive | Binary |
 |---|---|---|
