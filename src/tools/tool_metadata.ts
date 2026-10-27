@@ -1,6 +1,8 @@
 import type { TelegramDb } from '../database.ts';
-
+import { actionFields, inputExample } from '../surfaces/input_example.ts';
+import { validateInput } from '../surfaces/validate_input.ts';
 import type { ToolResult } from './tool_types.ts';
+import { toolFailure } from './tool_types.ts';
 
 export type JsonSchemaType = 'array' | 'boolean' | 'integer' | 'number' | 'object' | 'string';
 
@@ -38,7 +40,44 @@ export type ToolDefinitionRegistry = readonly TelegramToolDefinition<any, any>[]
 export function defineTelegramTool<TInput, TOutput>(
 	tool: TelegramToolDefinition<TInput, TOutput>,
 ): TelegramToolDefinition<TInput, TOutput> {
-	return tool;
+	const handler = tool.handler;
+	return {
+		...tool,
+		handler(db, input) {
+			const record = input as Record<string, unknown>;
+			const action = record?.subcommand;
+			const schema = {
+				...tool.inputSchema,
+				required: [
+					...(tool.inputSchema.required ?? []),
+					...(typeof action === 'string' ? (actionFields[action] ?? []) : []),
+				],
+			};
+			const errors = validateInput(schema, input);
+			if (errors.length) {
+				const recovery = errors.join('; ');
+				const result = toolFailure(
+					'domain',
+					'invalid_input',
+					errors[0] ?? 'Invalid input',
+					recovery,
+					{ next: [{ kind: 'retry_with', message: recovery }] },
+				);
+				result.error.recovery = recovery;
+				return result;
+			}
+			const result = handler(db, input);
+			if (
+				!result.ok &&
+				result.outcome === 'error' &&
+				result.error.code === 'invalid_input' &&
+				!result.error.recovery
+			) {
+				result.error.recovery = `Inspect ${tool.name} input; pass ${JSON.stringify(inputExample(schema, typeof action === 'string' ? action : undefined))}`;
+			}
+			return result;
+		},
+	};
 }
 
 export function stringSchema(description: string): JsonSchema {

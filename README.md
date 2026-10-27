@@ -7,9 +7,7 @@
 **Agent Telegram bots: every update mirrored into SQLite before your handler runs.**
 
 ```bash
-npm install @ghostpaw/telegram        # library
-npm install -g @ghostpaw/telegram     # global CLI
-npx @ghostpaw/telegram --help         # one-off
+ghostpaw-telegram --help             # after installing the release binary
 ```
 
 Telegram bot channel engine — fetch transport with zero runtime dependencies, SQLite message mirror with FTS5 full-text search, eager file BLOB storage, markdown rendering, and a structured LLM tool facade.
@@ -18,14 +16,15 @@ Every incoming update is mirrored into a local SQLite database before your handl
 
 ## MCP server
 
-Every client below starts the same stdio server: `npx -y @ghostpaw/telegram mcp`.
+Every client below starts the same stdio server: `ghostpaw-telegram mcp`.
+For npm-based environments, use `npx -y @ghostpaw/telegram mcp`.
 Messages live in `~/.ghostpaw/telegram.db` unless the `GHOSTPAW_TELEGRAM_DB`
 environment variable (absolute path) or `--db <path>` says otherwise.
 
 **Claude Code**
 
 ```bash
-claude mcp add ghostpaw-telegram -- npx -y @ghostpaw/telegram mcp
+claude mcp add ghostpaw-telegram -- ghostpaw-telegram mcp
 ```
 
 or as a plugin, which also installs the skill:
@@ -39,8 +38,8 @@ or as a plugin, which also installs the skill:
 
 ```toml
 [mcp_servers.ghostpaw-telegram]
-command = "npx"
-args = ["-y", "@ghostpaw/telegram", "mcp"]
+command = "ghostpaw-telegram"
+args = ["mcp"]
 ```
 
 **Cursor** (`.cursor/mcp.json`), **Claude Desktop** (`claude_desktop_config.json`)
@@ -50,8 +49,8 @@ or a project `.mcp.json`:
 {
   "mcpServers": {
     "ghostpaw-telegram": {
-      "command": "npx",
-      "args": ["-y", "@ghostpaw/telegram", "mcp"]
+      "command": "ghostpaw-telegram",
+      "args": ["mcp"]
     }
   }
 }
@@ -98,7 +97,7 @@ A single `-` reads stdin JSON; explicit flags override stdin fields.
 Global flags: `--db <path>`, `--json`, `--quiet`, `--compact`, `--help`/`-h`,
 `--version`/`-V`/`-v`, `--no-color`. Piped output defaults to JSON;
 `--quiet` suppresses stdout. `completions bash|zsh|fish` prints completion
-setup and `version` prints the package version.
+setup and `version` prints the package version and installation variant.
 
 | New command exit code | Meaning |
 |---|---|
@@ -133,9 +132,9 @@ descriptor without sending a Telegram message.
 ## CLI
 
 ```bash
-npx -y @ghostpaw/telegram tools
-npx -y @ghostpaw/telegram call tg_read '{"subcommand":"list_chats"}'
-npx -y @ghostpaw/telegram --db :memory: call tg_send '{"subcommand":"send_message","chatId":123,"text":"Hello"}'
+ghostpaw-telegram tools
+ghostpaw-telegram call tg_read '{"subcommand":"list_chats"}'
+ghostpaw-telegram --db :memory: call tg_send '{"subcommand":"send_message","chatId":123,"text":"Hello"}'
 ```
 
 The send example returns a plan unless `TELEGRAM_BOT_TOKEN` is set.
@@ -143,32 +142,52 @@ The send example returns a plan unless `TELEGRAM_BOT_TOKEN` is set.
 ## Agent Skill
 
 `SKILL.md` and `skills/telegram/` ship in the package. Print the skill with
-`npx -y @ghostpaw/telegram skill` or copy `skills/telegram/` into your skills folder.
+`ghostpaw-telegram skill` or copy `skills/telegram/` into your skills folder.
 
 ## Install
 
-```bash
-npm install @ghostpaw/telegram        # library
-npm install -g @ghostpaw/telegram     # global CLI
-npx @ghostpaw/telegram --help         # one-off
-```
+### Release binary (default)
 
-Requires **Node.js 24+** (uses the built-in `node:sqlite` module).
+Each line downloads the latest release asset, checks it against the release's SHA256SUMS and installs it on the PATH (~/.local/bin on Linux/macOS; the Windows script adds its folder to the user PATH).
 
-Standalone binaries are available from [GitHub Releases](https://github.com/GhostPawJS/telegram/releases)
-for linux-x64, linux-arm64, darwin-arm64, darwin-x64 and windows-x64.
+linux-x64:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 && export PATH="$HOME/.local/bin:$PATH"
 ```
+
+linux-arm64:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-arm64 && export PATH="$HOME/.local/bin:$PATH"
+```
+
+darwin-arm64:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target darwin-arm64 && export PATH="$HOME/.local/bin:$PATH"
+```
+
+darwin-x64:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target darwin-x64 && export PATH="$HOME/.local/bin:$PATH"
+```
+
+windows-x64 (PowerShell):
 
 ```powershell
 irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
 ```
 
-A session with the 0.7.1 linux-x64 binary against a fresh database, with no bot token set, so outbound commands only return the planned action and nothing is sent (output piped through `jq` to keep it short):
+```text
+$ ghostpaw-telegram --version
+telegram 0.7.3 (binary, linux-x64)
+```
 
-![ghostpaw-telegram 0.7.1 without a bot token: version, mirror chats, planned message send, typing and forward, bot stats, bot state and the tool list](https://raw.githubusercontent.com/GhostPawJS/telegram/main/docs/assets/cli.png)
+A session with the 0.7.1 linux-x64 binary against a fresh database, with no token set, so outbound commands only return the planned action and nothing is sent (output piped through `jq` to keep it short):
+
+![ghostpaw-telegram 0.7.1 without a token: version, mirror chats, planned message send, typing and forward, account stats, account state and the tool list](https://raw.githubusercontent.com/GhostPawJS/telegram/main/docs/assets/cli.png)
 
 The same session as an [animated GIF](https://raw.githubusercontent.com/GhostPawJS/telegram/main/docs/assets/cli.gif).
 
@@ -235,10 +254,29 @@ Sizes for 0.7.1 (Node 26.12.1 inside each binary):
 | darwin-x64 | 46.3 MB tar.gz | 149.5 MB |
 | windows-x64 | 38.4 MB zip | 105.6 MB |
 
-The npm package is 816 KB unpacked and needs Node 24+.
-
 Release installation is checked on ubuntu-24.04, macos-15 and windows-2025.
 
+
+### npx / npm (for npm-based environments)
+
+```sh
+npx @ghostpaw/telegram --help
+npm install -g @ghostpaw/telegram
+```
+
+Requires **Node 24+** for the built-in `node:sqlite` module. The npm package is 816 KB unpacked.
+
+### Library (for harnesses embedding it in code)
+
+```sh
+npm install @ghostpaw/telegram
+```
+
+```ts
+import { tools } from '@ghostpaw/telegram';
+```
+
+See [library usage](#quick-start).
 
 ## Quick Start
 

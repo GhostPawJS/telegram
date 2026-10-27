@@ -38,7 +38,8 @@ const run = (args, input = '') => {
 };
 
 const version = run(['--version']).trim();
-if (version !== pkg.version) fail(`--version printed ${version}, expected ${pkg.version}`);
+const expectedVersion = `telegram ${pkg.version} (binary, ${process.platform === 'win32' ? 'windows' : process.platform}-${process.arch})`;
+if (version !== expectedVersion) fail(`--version printed ${version}, expected ${expectedVersion}`);
 run(['--help']);
 // Plans and local mirror reads need no credentials.
 const plan = JSON.parse(

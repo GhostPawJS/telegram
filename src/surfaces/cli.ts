@@ -12,7 +12,7 @@ export interface ToolCliOptions<TCtx> {
 	closeContext?: (ctx: TCtx) => void | Promise<void>;
 	commands?: {
 		mcp?: (opts: { db?: string }) => unknown | Promise<unknown>;
-		skill?: () => string | Promise<string>;
+		skill?: (args?: string[]) => string | Promise<string>;
 	};
 	stdin?: Readable & { isTTY?: boolean };
 	stdout?: Writable;
@@ -97,7 +97,11 @@ export async function runToolCli<TCtx>(
 	}
 	if (command === 'skill') {
 		if (!options.commands?.skill) return fail('skill command unavailable');
-		stdout.write(await options.commands.skill());
+		try {
+			stdout.write(await options.commands.skill(args));
+		} catch (cause) {
+			return fail(cause instanceof Error ? cause.message : String(cause), 1);
+		}
 		return 0;
 	}
 	if (command === 'mcp') {

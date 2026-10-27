@@ -6,7 +6,8 @@ export const telegramSkillSpec = {
 	description:
 		'Read and search Telegram messages, send replies, and moderate chats. Use when managing Telegram conversations or inspecting the local message mirror.',
 	license: 'MIT',
-	compatibility: 'Node.js 24 or newer. MCP stdio or ghostpaw-telegram CLI.',
+	compatibility:
+		'Release binary ghostpaw-telegram (no runtime needed); MCP stdio via ghostpaw-telegram mcp.',
 	bin: 'ghostpaw-telegram',
 	packageName: '@ghostpaw/telegram',
 	server: 'ghostpaw-telegram',

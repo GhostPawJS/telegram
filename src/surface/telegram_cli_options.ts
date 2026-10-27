@@ -1,11 +1,14 @@
 import type { TelegramDb } from '../database.ts';
+import { telegramSkills } from '../skills/skill_registry.ts';
 import { runToolCli, type ToolCliOptions } from '../surfaces/cli.ts';
-import { telegramVersion } from '../version.ts';
+import { cliVersion } from './cli_version.ts';
 import { telegramCliSurfaceTools, telegramSurfaceTools } from './telegram_surface_tools.ts';
 
 export const telegramCliOptions: ToolCliOptions<TelegramDb> = {
 	bin: 'ghostpaw-telegram',
-	version: telegramVersion,
+	get version() {
+		return cliVersion();
+	},
 	description: 'Telegram message mirror and chat tools',
 	tools: telegramCliSurfaceTools,
 	openContext: async (options) => {
@@ -21,7 +24,18 @@ export const telegramCliOptions: ToolCliOptions<TelegramDb> = {
 			const { serveTelegramMcp } = await import('./serve_telegram_mcp.ts');
 			await serveTelegramMcp(options.db === undefined ? {} : { dbPath: options.db });
 		},
-		skill: async () => {
+		skill: async (args = []) => {
+			if (args.includes('--help') || args.includes('-h'))
+				return 'Usage: ghostpaw-telegram skill\n       ghostpaw-telegram skill --list\n       ghostpaw-telegram skill <guide>\n';
+			if (args[0] === '--list')
+				return `${telegramSkills
+					.map((guide) => `${guide.name}  ${guide.description.replace(/\s+/g, ' ')}`)
+					.join('\n')}\n`;
+			if (args.length) {
+				const guide = telegramSkills.find((guide) => guide.name === args[0]);
+				if (!guide) throw new Error(`unknown guide ${args[0]}; run ghostpaw-telegram skill --list`);
+				return guide.content;
+			}
 			const { renderSkillMarkdown } = await import('../surfaces/skill_markdown.ts');
 			const { telegramSkillSpec } = await import('./telegram_skill_spec.ts');
 			return renderSkillMarkdown(telegramSkillSpec);

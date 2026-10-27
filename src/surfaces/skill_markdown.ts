@@ -1,4 +1,5 @@
-import type { SurfaceTool } from './surface_types.ts';
+import { inputExample } from './input_example.ts';
+import type { JsonSchema, SurfaceTool } from './surface_types.ts';
 
 export interface SkillMarkdownSpec<TCtx> {
 	name: string;
@@ -41,13 +42,29 @@ export function renderSkillMarkdown<TCtx>(
 		'',
 		`# ${spec.name}`,
 		'',
+		'## Install',
+		'',
+		'Linux/macOS (checks SHA256SUMS and installs to ~/.local/bin/ghostpaw-telegram):',
+		'',
+		'```sh',
+		'curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh',
+		'```',
+		'',
+		'Windows x64:',
+		'',
+		'```powershell',
+		'irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex',
+		'```',
+		'',
+		`Run tools as \`${spec.bin} ...\`; use \`~/.local/bin/${spec.bin}\` if it is not on PATH.`,
+		'',
 		spec.about,
 		'',
 		'## Calling tools',
 		'',
 		`MCP: connect to ${spec.server}, then call a tool by name with its JSON arguments.`,
 		'',
-		`CLI: \`${spec.bin} call <tool> '<JSON object>'\` or \`${spec.bin} <tool> --parameter value\`${spec.packageName ? ` (without a global install: \`npx -y ${spec.packageName} <tool> ...\`)` : ''}.`,
+		`CLI: \`${spec.bin} call <tool> '<JSON object>'\` or \`${spec.bin} <tool> --parameter value\`.`,
 		'',
 		`Inspect schemas with \`${spec.bin} describe <tool>\`. Use \`--db <path>\` to select a database.`,
 		'',
@@ -67,9 +84,30 @@ export function renderSkillMarkdown<TCtx>(
 			'| Parameter | Type | Required | Values / description |',
 			'| --- | --- | --- | --- |',
 		);
-		for (const [name, property] of Object.entries(tool.inputSchema.properties ?? {}))
+		const rows = (schema: JsonSchema, prefix = '') => {
+			for (const [name, property] of Object.entries(schema.properties ?? {})) {
+				if (
+					prefix &&
+					Object.keys(schema.properties ?? {}).length > 8 &&
+					!schema.required?.includes(name)
+				)
+					continue;
+				lines.push(
+					`| ${prefix}${name} | ${property.type ?? property.oneOf?.map((branch) => branch.type).join(' / ') ?? 'any'} | ${schema.required?.includes(name) ? 'yes' : 'no'} | ${(property.enum ? `${property.enum.join(', ')}. ` : '') + (property.description ?? '').replaceAll('|', '\\|').replaceAll('\n', ' ')} |`,
+				);
+				if (property.properties) rows(property, `${prefix}${name}.`);
+				for (const branch of property.oneOf ?? [])
+					if (branch.properties) rows(branch, `${prefix}${name}.`);
+			}
+		};
+		rows(tool.inputSchema);
+		lines.push('');
+		const actions =
+			tool.inputSchema.properties?.action?.enum ?? tool.inputSchema.properties?.subcommand?.enum;
+		for (const action of actions?.slice(0, 3) ?? [undefined])
 			lines.push(
-				`| ${name} | ${property.type ?? property.oneOf?.map((branch) => branch.type).join(' / ') ?? 'any'} | ${tool.inputSchema.required?.includes(name) ? 'yes' : 'no'} | ${(property.enum ? `${property.enum.join(', ')}. ` : '') + (property.description ?? '').replaceAll('|', '\\|').replaceAll('\n', ' ')} |`,
+				`\`${spec.bin} call ${tool.name} '${JSON.stringify(inputExample(tool.inputSchema, typeof action === 'string' ? action : undefined))}'\``,
+				'',
 			);
 		lines.push('');
 	}
@@ -78,7 +116,7 @@ export function renderSkillMarkdown<TCtx>(
 		'',
 		...spec.workflows.map(
 			(workflow) =>
-				`- [${workflow.name}](${referencesBase}/${workflow.name}.md): ${workflow.description}`,
+				`- \`${spec.bin} skill ${workflow.name}\` — [${workflow.name}](${referencesBase}/${workflow.name}.md): ${workflow.description}`,
 		),
 		'',
 		'## Principles',
@@ -86,5 +124,12 @@ export function renderSkillMarkdown<TCtx>(
 		...spec.principles.map((principle) => `- ${principle}`),
 		'',
 	);
+	if (spec.packageName)
+		lines.push(
+			'## Without the binary',
+			'',
+			`Use \`npx -y ${spec.packageName} ...\` in npm-based environments (Node 24+). Harnesses embedding it in code can import \`${spec.packageName}\` as a library.`,
+			'',
+		);
 	return lines.join('\n');
 }

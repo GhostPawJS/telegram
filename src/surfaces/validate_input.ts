@@ -1,6 +1,7 @@
+import { inputExample } from './input_example.ts';
 import type { JsonSchema } from './surface_types.ts';
 
-export function validateInput(schema: JsonSchema, input: unknown, path = '$'): string[] {
+function validateValue(schema: JsonSchema, input: unknown, path = '$'): string[] {
 	const errors: string[] = [];
 	const matchesType = (type: string) => {
 		switch (type) {
@@ -28,7 +29,7 @@ export function validateInput(schema: JsonSchema, input: unknown, path = '$'): s
 		errors.push(`${path}: expected one of ${JSON.stringify(schema.enum)}`);
 	if (
 		schema.oneOf &&
-		!schema.oneOf.some((branch) => validateInput(branch, input, path).length === 0)
+		!schema.oneOf.some((branch) => validateValue(branch, input, path).length === 0)
 	)
 		errors.push(`${path}: must match at least one schema branch`);
 	if (typeof input === 'object' && input !== null && !Array.isArray(input)) {
@@ -37,11 +38,22 @@ export function validateInput(schema: JsonSchema, input: unknown, path = '$'): s
 			if (!Object.hasOwn(record, name)) errors.push(`${path}.${name}: required`);
 		for (const [name, property] of Object.entries(schema.properties ?? {}))
 			if (Object.hasOwn(record, name))
-				errors.push(...validateInput(property, record[name], `${path}.${name}`));
+				errors.push(...validateValue(property, record[name], `${path}.${name}`));
 	}
 	if (Array.isArray(input) && schema.items)
 		input.forEach((value, index) => {
-			errors.push(...validateInput(schema.items as JsonSchema, value, `${path}[${index}]`));
+			errors.push(...validateValue(schema.items as JsonSchema, value, `${path}[${index}]`));
 		});
 	return errors;
+}
+
+export function validateInput(schema: JsonSchema, input: unknown, path = '$'): string[] {
+	const action =
+		typeof input === 'object' && input !== null
+			? (input as Record<string, unknown>).subcommand
+			: undefined;
+	return validateValue(schema, input, path).map(
+		(error) =>
+			`${error}; pass ${JSON.stringify(inputExample(schema, typeof action === 'string' ? action : undefined))}`,
+	);
 }

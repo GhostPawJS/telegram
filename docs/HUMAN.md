@@ -271,7 +271,7 @@ A single `-` reads stdin JSON; explicit flags override stdin fields.
 Global flags: `--db <path>`, `--json`, `--quiet`, `--compact`, `--help`/`-h`,
 `--version`/`-V`/`-v`, `--no-color`. Piped output defaults to JSON;
 `--quiet` suppresses stdout. `completions bash|zsh|fish` prints completion
-setup and `version` prints the package version.
+setup and `version` prints the package version and installation variant.
 
 | New command exit code | Meaning |
 |---|---|

@@ -17,3 +17,19 @@ test('validates nested types, enum, integer, required, items and inclusive oneOf
 	assert.ok(validateInput({ type: 'integer' }, 1.5).length);
 	assert.deepEqual(validateInput({ type: ['string', 'null'] }, null), []);
 });
+
+test('partial nested objects report missing paths and a minimal recovery shape', () => {
+	const schema = {
+		type: 'object',
+		required: ['quest'],
+		properties: {
+			quest: { type: 'object', required: ['title'], properties: { title: { type: 'string' } } },
+		},
+	};
+	for (const input of [{}, { quest: {} }, { quest: null }]) {
+		const errors = validateInput(schema, input);
+		assert.ok(errors.length);
+		assert.match(errors.join('\n'), /\$\.quest/);
+		assert.match(errors.join('\n'), /pass {"quest":{"title":"example"}}/);
+	}
+});

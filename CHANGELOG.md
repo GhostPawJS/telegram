@@ -4,6 +4,12 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+- Make release binaries the default installation path and support explicit installer targets.
+- Show the installation variant in human version output; retain plain machine versions.
+- Include workflow guides, nested parameter rows and validated call examples in CLI skill output.
+- Validate tool inputs before dispatch and include recovery shapes for invalid input.
+
+
 ## [0.7.2] - 2026-10-27
 
 ### Fixed

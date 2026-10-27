@@ -2,10 +2,26 @@
 name: telegram
 description: "Read and search Telegram messages, send replies, and moderate chats. Use when managing Telegram conversations or inspecting the local message mirror."
 license: "MIT"
-compatibility: "Node.js 24 or newer. MCP stdio or ghostpaw-telegram CLI."
+compatibility: "Release binary ghostpaw-telegram (no runtime needed); MCP stdio via ghostpaw-telegram mcp."
 ---
 
 # telegram
+
+## Install
+
+Linux/macOS (checks SHA256SUMS and installs to ~/.local/bin/ghostpaw-telegram):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh
+```
+
+Windows x64:
+
+```powershell
+irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
+```
+
+Run tools as `ghostpaw-telegram ...`; use `~/.local/bin/ghostpaw-telegram` if it is not on PATH.
 
 Read and search the local Telegram message mirror before replying. Use send and moderation tools only for intended chat actions. TELEGRAM_BOT_TOKEN enables execution through the Telegram Bot API; without it these tools return plans. Never disclose tokens. The mirror is populated by the consuming application transport.
 
@@ -13,7 +29,7 @@ Read and search the local Telegram message mirror before replying. Use send and 
 
 MCP: connect to ghostpaw-telegram, then call a tool by name with its JSON arguments.
 
-CLI: `ghostpaw-telegram call <tool> '<JSON object>'` or `ghostpaw-telegram <tool> --parameter value` (without a global install: `npx -y @ghostpaw/telegram <tool> ...`).
+CLI: `ghostpaw-telegram call <tool> '<JSON object>'` or `ghostpaw-telegram <tool> --parameter value`.
 
 Inspect schemas with `ghostpaw-telegram describe <tool>`. Use `--db <path>` to select a database.
 
@@ -39,6 +55,13 @@ Read-only.
 | after | integer | no | After this timestamp (ms) |
 | threadId | integer | no | Thread ID filter |
 
+`ghostpaw-telegram call tg_read '{"subcommand":"get_message","chatId":123,"messageId":123}'`
+
+`ghostpaw-telegram call tg_read '{"subcommand":"list_messages","chatId":123}'`
+
+`ghostpaw-telegram call tg_read '{"subcommand":"search_messages","chatId":123,"query":"example"}'`
+
+
 ## tg_send
 
 Outbound actions: send, edit, delete, pin/unpin messages, send typing indicator, and forward messages.
@@ -59,6 +82,13 @@ Writes: writes_state.
 | replyToMessageId | integer | no | Reply-to message ID |
 | toChatId | integer | no | Destination chat ID |
 | fromChatId | integer | no | Source chat ID |
+
+`ghostpaw-telegram call tg_send '{"subcommand":"send_message","chatId":123,"text":"example"}'`
+
+`ghostpaw-telegram call tg_send '{"subcommand":"edit_message","chatId":123,"messageId":123,"text":"example"}'`
+
+`ghostpaw-telegram call tg_send '{"subcommand":"delete_message","chatId":123,"messageId":123}'`
+
 
 ## tg_manage
 
@@ -82,6 +112,13 @@ Writes: writes_state.
 | status | string | no | creator, administrator, member, restricted, left, kicked. Filter by member status. |
 | limit | integer | no | Max members to return. |
 
+`ghostpaw-telegram call tg_manage '{"subcommand":"ban_user","chatId":123,"userId":123}'`
+
+`ghostpaw-telegram call tg_manage '{"subcommand":"unban_user","chatId":123,"userId":123}'`
+
+`ghostpaw-telegram call tg_manage '{"subcommand":"restrict_user","chatId":123,"userId":123,"canSendMessages":true}'`
+
+
 ## tg_connect
 
 Query bot connection status, configuration, and chat list.
@@ -98,17 +135,28 @@ Read-only.
 | key | string | no | The state key to look up. |
 | limit | integer | no | Max chats to return. |
 
+`ghostpaw-telegram call tg_connect '{"subcommand":"get_stats"}'`
+
+`ghostpaw-telegram call tg_connect '{"subcommand":"get_state"}'`
+
+`ghostpaw-telegram call tg_connect '{"subcommand":"list_chats"}'`
+
+
 ## Workflow guides
 
-- [manage-telegram-conversations](references/manage-telegram-conversations.md): Retrieve, search, and navigate conversation history across chats and threads.
-- [handle-group-administration](references/handle-group-administration.md): Inspect and update chat membership, admin rights, and chat metadata.
-- [stream-progressive-responses](references/stream-progressive-responses.md): Send long responses progressively by editing a message in place as content is generated.
-- [moderate-chat-effectively](references/moderate-chat-effectively.md): Detect and respond to rule violations, spam, and unwanted content in group chats.
-- [search-and-retrieve-messages](references/search-and-retrieve-messages.md): Find specific messages using full-text search, filters, and reply-chain traversal.
-- [broadcast-to-audience](references/broadcast-to-audience.md): Send a message to many chats or users with rate limiting and error tracking.
+- `ghostpaw-telegram skill manage-telegram-conversations` — [manage-telegram-conversations](references/manage-telegram-conversations.md): Retrieve, search, and navigate conversation history across chats and threads.
+- `ghostpaw-telegram skill handle-group-administration` — [handle-group-administration](references/handle-group-administration.md): Inspect and update chat membership, admin rights, and chat metadata.
+- `ghostpaw-telegram skill stream-progressive-responses` — [stream-progressive-responses](references/stream-progressive-responses.md): Send long responses progressively by editing a message in place as content is generated.
+- `ghostpaw-telegram skill moderate-chat-effectively` — [moderate-chat-effectively](references/moderate-chat-effectively.md): Detect and respond to rule violations, spam, and unwanted content in group chats.
+- `ghostpaw-telegram skill search-and-retrieve-messages` — [search-and-retrieve-messages](references/search-and-retrieve-messages.md): Find specific messages using full-text search, filters, and reply-chain traversal.
+- `ghostpaw-telegram skill broadcast-to-audience` — [broadcast-to-audience](references/broadcast-to-audience.md): Send a message to many chats or users with rate limiting and error tracking.
 
 ## Principles
 
 - Search the mirror before replying.
 - Confirm the target chat and intended moderation action.
 - Keep Telegram tokens private.
+
+## Without the binary
+
+Use `npx -y @ghostpaw/telegram ...` in npm-based environments (Node 24+). Harnesses embedding it in code can import `@ghostpaw/telegram` as a library.

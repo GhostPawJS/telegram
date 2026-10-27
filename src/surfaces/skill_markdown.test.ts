@@ -59,3 +59,43 @@ test('reference base changes only workflow link targets', () => {
 		),
 	);
 });
+
+test('nested object and oneOf parameter fields are inlined with local required flags', () => {
+	const tool = spec.tools[0];
+	assert.ok(tool);
+	const markdown = renderSkillMarkdown({
+		...spec,
+		tools: [
+			{
+				...tool,
+				inputSchema: {
+					type: 'object',
+					required: ['record'],
+					properties: {
+						record: {
+							type: 'object',
+							required: ['title'],
+							properties: {
+								title: { type: 'string', description: 'Record title' },
+								enabled: { type: 'boolean' },
+							},
+						},
+						choice: {
+							oneOf: [
+								{ type: 'object', required: ['id'], properties: { id: { type: 'integer' } } },
+								{ type: 'object', properties: { label: { type: 'string' } } },
+							],
+						},
+					},
+				},
+			},
+		],
+	});
+	for (const row of [
+		'| record.title | string | yes | Record title |',
+		'| record.enabled | boolean | no |',
+		'| choice.id | integer | yes |',
+		'| choice.label | string | no |',
+	])
+		assert.ok(markdown.includes(row), row);
+});
