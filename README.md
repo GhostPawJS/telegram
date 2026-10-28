@@ -191,7 +191,7 @@ $env:GHOSTPAW_NO_MODIFY_PATH=1; irm https://raw.githubusercontent.com/GhostPawJS
 Pinned to a release:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.4 && export PATH="$HOME/.local/bin:$PATH"
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.5 && export PATH="$HOME/.local/bin:$PATH"
 ```
 
 Also adding ~/.local/bin to ~/.profile (edits ~/.profile once; skipped if it already mentions ~/.local/bin; zsh login shells read ~/.zprofile instead, so use that file name there):
@@ -202,7 +202,7 @@ curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh
 
 ```text
 $ ghostpaw-telegram --version
-telegram 0.7.4 (binary, linux-x64)
+telegram 0.7.5 (binary, linux-x64)
 ```
 
 Scripts that compare versions should use `--version --short` or `--version --json`.
@@ -498,6 +498,28 @@ fetch implementation or a custom Bot API endpoint. The default endpoint is
 `adaptBot` continues to accept grammy Bot instances. Calls without uploads use
 `api.raw`; file uploads use the built-in client, so grammy API transformers do
 not apply to uploads. Its optional second argument accepts `{ fetch, apiRoot }`.
+
+## Remote media URLs
+
+Media sends accept `{ url: 'https://example.com/image.jpg' }`. Downloads use
+Node HTTP/HTTPS directly, independently of the Bot API `fetch` option. Only
+HTTP and HTTPS are supported. Every DNS result and redirect target is checked;
+private, local, link-local, multicast and reserved targets are blocked. Connections
+use a validated address to prevent DNS rebinding.
+
+Downloads default to 50 MiB, a 30 second overall timeout (including DNS and
+redirects), and at most five redirects. Oversized bodies and non-2xx final
+responses fail with `TELEGRAM_FILE` errors.
+
+Set `api: { allowPrivateMediaUrls: true }` in `createBot`, or set
+`GHOSTPAW_TELEGRAM_ALLOW_PRIVATE_URLS=1`, to permit private targets. Either
+opt-in permits access to local services and metadata endpoints; use it only
+with trusted media URLs. Client options `mediaMaxBytes` and `mediaTimeoutMs`
+override the size and timeout limits, for example:
+
+```ts
+const bot = createBot({ token, db, api: { mediaMaxBytes: 10 * 1024 * 1024, mediaTimeoutMs: 15_000 } });
+```
 
 ## Development
 

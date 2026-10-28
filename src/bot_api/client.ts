@@ -1,9 +1,13 @@
+import { TelegramFileError } from '../errors.ts';
 import type { MockBot } from '../lib/mock_grammy.ts';
 import { containsInputFile, InputFile } from './input_file.ts';
 
 export interface ClientOptions {
 	fetch?: typeof fetch;
 	apiRoot?: string;
+	allowPrivateMediaUrls?: boolean;
+	mediaMaxBytes?: number;
+	mediaTimeoutMs?: number;
 }
 export class TelegramApiError extends Error {
 	readonly error_code: number;
@@ -36,7 +40,19 @@ export function createApiClient(token: string, options: ClientOptions = {}): Moc
 				async function serialize(value: unknown): Promise<unknown> {
 					if (value instanceof InputFile) {
 						const key = `file${index++}`;
-						form.append(key, await value.toBlob(fetcher), value.filename ?? 'file');
+						form.append(
+							key,
+							await value.toBlob(fetcher, {
+								allowPrivate:
+									options.allowPrivateMediaUrls === true ||
+									process.env.GHOSTPAW_TELEGRAM_ALLOW_PRIVATE_URLS === '1',
+								...(options.mediaMaxBytes !== undefined ? { maxBytes: options.mediaMaxBytes } : {}),
+								...(options.mediaTimeoutMs !== undefined
+									? { timeoutMs: options.mediaTimeoutMs }
+									: {}),
+							}),
+							value.filename ?? 'file',
+						);
 						return `attach://${key}`;
 					}
 					if (Array.isArray(value)) return Promise.all(value.map(serialize));
@@ -81,6 +97,7 @@ export function createApiClient(token: string, options: ClientOptions = {}): Moc
 			return result.result;
 		} catch (error) {
 			if (error instanceof TelegramApiError) throw error;
+			if (error instanceof TelegramFileError) throw new TelegramFileError(mask(error.message));
 			throw new Error(mask(error instanceof Error ? error.message : String(error)));
 		}
 	}

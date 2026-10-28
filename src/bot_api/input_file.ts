@@ -1,3 +1,4 @@
+import { type RemoteFetchOptions, remoteFetch } from './remote_fetch.ts';
 /** A reusable upload source. Strings refer to local files; URL objects are downloaded. */
 export class InputFile {
 	readonly fileData: Uint8Array | string | { url: string };
@@ -6,15 +7,13 @@ export class InputFile {
 		this.fileData = file;
 		this.filename = filename;
 	}
-	async toBlob(fetcher: typeof fetch): Promise<Blob> {
+	async toBlob(_fetcher: typeof fetch, options: RemoteFetchOptions = {}): Promise<Blob> {
 		if (typeof this.fileData === 'string') {
 			const { readFile } = await import('node:fs/promises');
 			return new Blob([new Uint8Array(await readFile(this.fileData))]);
 		}
 		if ('url' in this.fileData) {
-			const response = await fetcher(this.fileData.url);
-			if (!response.ok) throw new Error(`Upload download failed: HTTP ${response.status}`);
-			return response.blob();
+			return remoteFetch(this.fileData.url, options);
 		}
 		return new Blob([new Uint8Array(this.fileData)]);
 	}

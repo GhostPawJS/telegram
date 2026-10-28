@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
+import { EventEmitter } from 'node:events';
 import { readFile } from 'node:fs/promises';
+import http from 'node:http';
+import { PassThrough } from 'node:stream';
 import { it } from 'node:test';
 import { Bot } from 'grammy';
 import { adaptBot } from '../lib/adapt_bot.ts';
@@ -61,14 +64,29 @@ it('posts every used Bot API method as JSON, preserving values and API roots', a
 	assert.ok(api);
 	await api({ chat_id: 1, text: 'hello', options: { enabled: false } });
 });
-it('serializes nested uploads and URL sources into multipart attachments', async () => {
+it('serializes nested uploads and URL sources into multipart attachments', async (t) => {
 	let downloads = 0;
+	t.mock.method(
+		http,
+		'request',
+		(
+			_url: URL,
+			_options: http.RequestOptions,
+			callback: (response: http.IncomingMessage) => void,
+		) => {
+			const request = Object.assign(new EventEmitter(), {
+				end() {
+					downloads++;
+					const response = Object.assign(new PassThrough(), { statusCode: 200, headers: {} });
+					callback(response as unknown as http.IncomingMessage);
+					response.end('remote');
+				},
+			});
+			return request;
+		},
+	);
 	const client = createApiClient('token', {
-		fetch: async (url, init) => {
-			if (String(url) === 'https://files.test/file') {
-				downloads++;
-				return new Response('remote');
-			}
+		fetch: async (_url, init) => {
 			assert.ok(init?.body instanceof FormData);
 			const form = init.body;
 			assert.equal(form.get('chat_id'), '1');
@@ -92,7 +110,7 @@ it('serializes nested uploads and URL sources into multipart attachments', async
 			missing: undefined,
 			media: [
 				{ media: new InputFile(Buffer.from('local'), 'local.txt'), type: 'photo' },
-				{ media: new InputFile({ url: 'https://files.test/file' }), type: 'document' },
+				{ media: new InputFile({ url: 'http://8.8.8.8/file' }), type: 'document' },
 			],
 		}),
 		true,
@@ -101,15 +119,26 @@ it('serializes nested uploads and URL sources into multipart attachments', async
 	assert.equal(containsInputFile(null), false);
 	assert.equal(containsInputFile(['id']), false);
 });
-it('reads local paths and maps failed URL downloads', async () => {
+it('reads local paths and maps failed URL downloads', async (t) => {
+	t.mock.method(
+		http,
+		'request',
+		(
+			_url: URL,
+			_options: http.RequestOptions,
+			callback: (response: http.IncomingMessage) => void,
+		) =>
+			Object.assign(new EventEmitter(), {
+				end() {
+					const response = Object.assign(new PassThrough(), { statusCode: 404, headers: {} });
+					callback(response as unknown as http.IncomingMessage);
+					response.end();
+				},
+			}),
+	);
 	const file = new InputFile('package.json');
 	assert.equal(await (await file.toBlob(fetch)).text(), await readFile('package.json', 'utf8'));
-	await assert.rejects(
-		new InputFile({ url: 'https://files.test/missing' }).toBlob(
-			async () => new Response('', { status: 404 }),
-		),
-		/HTTP 404/,
-	);
+	await assert.rejects(new InputFile({ url: 'http://8.8.8.8/missing' }).toBlob(fetch), /HTTP 404/);
 });
 it('maps Telegram errors including retry_after and masks tokens in all error messages', async () => {
 	const client = createApiClient('secret', {

@@ -12,6 +12,16 @@ const result = await broadcast(bot, chatIds, text, {
 console.log(result.sent, result.failed);
 ```
 
+### Media URLs
+Media send helpers accept `{ url: string }` for HTTP/HTTPS downloads.
+All DNS answers and redirect targets are checked, and connections use validated addresses.
+Private and local targets are blocked by default. Limits are 50 MiB, 30 seconds overall,
+and five redirects. Configure `mediaMaxBytes` and `mediaTimeoutMs` in client options
+(or `createBot`'s `api` options). Explicit `allowPrivateMediaUrls: true` or
+`GHOSTPAW_TELEGRAM_ALLOW_PRIVATE_URLS=1` permits private targets, including local
+services and metadata endpoints. Use this opt-in only with trusted URLs.
+Media downloads use Node HTTP/HTTPS directly, independently of the Bot API fetch option.
+
 ### Getting the audience
 - `tg_read` → `list_chats` — returns all known active chats
 - Filter by `type` (`'group'`, `'supergroup'`, `'channel'`) as needed

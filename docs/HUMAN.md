@@ -119,6 +119,14 @@ All `write` functions take a `MockBot` (or grammy `Bot` via `adaptBot`) as the f
 ### Media
 
 Each media send accepts `MediaInput`: a `string` (file_id), `Buffer`, or `{ url: string }`.
+URL downloads allow HTTP/HTTPS only, validate all DNS answers and redirects,
+and pin the connection to a validated address. Private and local addresses are
+blocked by default. Downloads have a 50 MiB cap, a 30 second overall timeout,
+and a five redirect limit. Configure `mediaMaxBytes`, `mediaTimeoutMs`, or
+`allowPrivateMediaUrls` through `createBot({ ..., api: { ... } })` or client options.
+`GHOSTPAW_TELEGRAM_ALLOW_PRIVATE_URLS=1` also permits private targets; either
+opt-in allows access to local services and metadata endpoints. Media downloads
+do not use the Bot API `fetch` option.
 
 | Function | What it does |
 |---|---|

@@ -31,17 +31,18 @@
 <main>
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <p class="kicker"><code>@ghostpaw/telegram</code> <span class="ver">0.7.1</span></p>
+      <p class="kicker"><code>@ghostpaw/telegram</code> <span class="ver">0.7.5</span></p>
       <h1 id="hero-title">Your bot remembers the chat, including what was edited.</h1>
       <p class="lede">telegram writes every incoming update into a SQLite file before your handler runs: messages, edits, replies, reactions, members and files. Your bot and your agent read from that record, and the agent's tools return plans until you switch execution on.</p>
       <div class="install">
-        <p class="cmd-label" id="lib-label">As a library</p>
-        <div class="cmd"><input id="cmd-lib" readonly value="npm install @ghostpaw/telegram" aria-labelledby="lib-label" spellcheck="false"><button type="button" class="copy" data-copy="cmd-lib">Copy</button></div>
-        <p class="cmd-label" id="mcp-label">As a local MCP server</p>
-        <div class="cmd"><input id="cmd-mcp" readonly value="npx -y @ghostpaw/telegram mcp" aria-labelledby="mcp-label" spellcheck="false"><button type="button" class="copy" data-copy="cmd-mcp">Copy</button></div>
+        <p class="cmd-label" id="lib-label">Binary for linux-x64 (checked against SHA256SUMS)</p>
+        <div class="cmd"><input id="cmd-lib" readonly value="curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 &amp;&amp; export PATH=&quot;$HOME/.local/bin:$PATH&quot;" aria-labelledby="lib-label" spellcheck="false"><button type="button" class="copy" data-copy="cmd-lib">Copy</button></div>
+        <p class="cmd-label" id="mcp-label">Then run it as a local MCP server</p>
+        <div class="cmd"><input id="cmd-mcp" readonly value="ghostpaw-telegram mcp" aria-labelledby="mcp-label" spellcheck="false"><button type="button" class="copy" data-copy="cmd-mcp">Copy</button></div>
+        <p class="cmd-label"><a href="#binaries">macOS, Windows, pinned versions, npx and the npm library</a></p>
       </div>
       <p class="actions"><a class="button" href="#run">Replay the run</a> <a href="{{.urls.github}}">Read the source on GitHub</a></p>
-      <p class="terms">Free and MIT licensed for Node.js 24 or newer, with zero runtime dependencies. The mirror is a SQLite file on your disk; the bot token stays in your environment.</p>
+      <p class="terms">Free and MIT licensed; the binary carries its own Node.js and the npm package needs Node.js 24 or newer, with zero runtime dependencies. The mirror is a SQLite file on your disk; the bot token stays in your environment.</p>
     </div>
     <figure class="hero-art frame">
       <div class="scope"><picture><source media="(min-width: 52rem)" srcset="assets/images/hero-720.webp" width="720" height="540"><img src="assets/images/hero-480.webp" width="480" height="360" alt="A wireframe paper plane drawn in cyan light, a violet dotted orbit looping from it into a stacked database cylinder with a glowing paw on its lid." fetchpriority="high"></picture><span class="scan" aria-hidden="true"></span></div>
@@ -205,8 +206,8 @@ read.replyChain(db, -1001234, 11);</code></pre>
         <div class="cmd"><textarea id="bin-darwin-x64" readonly rows="2" aria-labelledby="bin-darwin-x64-label" spellcheck="false">curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target darwin-x64 &amp;&amp; export PATH=&quot;$HOME/.local/bin:$PATH&quot;</textarea><button type="button" class="copy" data-copy="bin-darwin-x64">Copy</button></div></div>
         <div><p class="cmd-label" id="bin-windows-x64-label">windows-x64 (PowerShell)</p>
         <div class="cmd"><textarea id="bin-windows-x64" readonly rows="2" aria-labelledby="bin-windows-x64-label" spellcheck="false">irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex</textarea><button type="button" class="copy" data-copy="bin-windows-x64">Copy</button></div></div>
-        <div><p class="cmd-label" id="bin-pinned-label">linux-x64 pinned to 0.7.4</p>
-        <div class="cmd"><textarea id="bin-pinned" readonly rows="2" aria-labelledby="bin-pinned-label" spellcheck="false">curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.4 &amp;&amp; export PATH=&quot;$HOME/.local/bin:$PATH&quot;</textarea><button type="button" class="copy" data-copy="bin-pinned">Copy</button></div></div>
+        <div><p class="cmd-label" id="bin-pinned-label">linux-x64 pinned to 0.7.5</p>
+        <div class="cmd"><textarea id="bin-pinned" readonly rows="2" aria-labelledby="bin-pinned-label" spellcheck="false">curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.5 &amp;&amp; export PATH=&quot;$HOME/.local/bin:$PATH&quot;</textarea><button type="button" class="copy" data-copy="bin-pinned">Copy</button></div></div>
         <div><p class="cmd-label" id="bin-profile-label">linux-x64, also adding ~/.local/bin to ~/.profile (edits that file once)</p>
         <div class="cmd"><textarea id="bin-profile" readonly rows="2" aria-labelledby="bin-profile-label" spellcheck="false">curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 &amp;&amp; { grep -qs &#x27;.local/bin&#x27; ~/.profile || echo &#x27;export PATH=&quot;$HOME/.local/bin:$PATH&quot;&#x27; &gt;&gt; ~/.profile; } &amp;&amp; export PATH=&quot;$HOME/.local/bin:$PATH&quot;</textarea><button type="button" class="copy" data-copy="bin-profile">Copy</button></div></div>
     </div>
@@ -268,7 +269,7 @@ const bot = createBot({
 });
 
 await bot.start(); // long-polling</code></pre>
-    <p>To give an agent the mirror as an MCP server, add <code>npx -y @ghostpaw/telegram mcp</code> to your client.</p>
+    <p>To give an agent the mirror as an MCP server, add <code>ghostpaw-telegram mcp</code> to your client (or <code>npx -y @ghostpaw/telegram mcp</code> under Node.js 24).</p>
     <p class="links"><a class="more" href="{{.urls.readme}}">Read the README</a><a href="{{.urls.docs}}">Read the docs</a><a href="{{.urls.npm}}">telegram on npm</a></p>
     <nav class="docs-map" aria-labelledby="docs-map-title">
       <h3 id="docs-map-title">{{.data.docs.heading}}</h3>

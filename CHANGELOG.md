@@ -4,6 +4,12 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Security
+
+- Validate remote media URL schemes, DNS answers and every redirect, block private targets by default, and pin connections to validated addresses to prevent DNS rebinding.
+- Block NAT64 and 6to4 addresses that embed a private IPv4 address.
+- Limit remote media downloads to 50 MiB, five redirects and a 30 second overall timeout by default. Add client size and timeout settings and explicit private URL opt-ins.
+
 ### Changed
 
 - README and site add a labelled install line that also adds ~/.local/bin to ~/.profile, and a pinned line on the site.

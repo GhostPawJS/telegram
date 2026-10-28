@@ -734,6 +734,10 @@
 		"kind": "type",
 		"type": "ClientOptions",
 		"members": {
+			"allowPrivateMediaUrls": {
+				"type": "boolean | undefined",
+				"optional": true
+			},
 			"apiRoot": {
 				"type": "string | undefined",
 				"optional": true
@@ -741,9 +745,17 @@
 			"fetch": {
 				"type": "{ (input: RequestInfo | URL, init?: RequestInit): Promise<Response>; (input: string | URL | Request, init?: RequestInit): Promise<Response>; } | undefined",
 				"optional": true
+			},
+			"mediaMaxBytes": {
+				"type": "number | undefined",
+				"optional": true
+			},
+			"mediaTimeoutMs": {
+				"type": "number | undefined",
+				"optional": true
 			}
 		},
-		"definition": "interface ClientOptions { fetch?: typeof fetch; apiRoot?: string; }"
+		"definition": "interface ClientOptions { fetch?: typeof fetch; apiRoot?: string; allowPrivateMediaUrls?: boolean; mediaMaxBytes?: number; mediaTimeoutMs?: number; }"
 	},
 	".:public.BotInfo": {
 		"kind": "type",
@@ -1066,7 +1078,7 @@
 		"kind": "type",
 		"type": "ChatAction",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -1447,7 +1459,7 @@
 		"kind": "type",
 		"type": "ChatType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -1697,7 +1709,7 @@
 		"kind": "type",
 		"type": "ConnectionStatus",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -2005,7 +2017,7 @@
 		"kind": "type",
 		"type": "EmojiType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -2313,7 +2325,7 @@
 		"kind": "type",
 		"type": "TelegramErrorCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -2918,7 +2930,7 @@
 		"kind": "type",
 		"type": "FileType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -3284,7 +3296,7 @@
 		"kind": "type",
 		"type": "string",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -3714,7 +3726,7 @@
 		"kind": "type",
 		"type": "JsonSchemaType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -4145,7 +4157,7 @@
 		"kind": "type",
 		"type": "string",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -4603,7 +4615,7 @@
 		"kind": "type",
 		"type": "MediaType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -4821,7 +4833,7 @@
 		"kind": "type",
 		"type": "ParseMode$1",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -5196,7 +5208,7 @@
 		"kind": "type",
 		"type": "MediaType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -5453,7 +5465,7 @@
 		"kind": "type",
 		"type": "MemberStatus",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -5942,7 +5954,7 @@
 		"kind": "type",
 		"type": "MessageType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -6260,7 +6272,7 @@
 		"kind": "type",
 		"type": "ConnectionStatus",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -6691,7 +6703,7 @@
 		"kind": "type",
 		"type": "ParseMode$1",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -7921,7 +7933,7 @@
 		"kind": "type",
 		"type": "ParseMode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -8139,7 +8151,7 @@
 		"kind": "type",
 		"type": "ParseMode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -8626,11 +8638,11 @@
 		"kind": "type",
 		"type": "TelegramSkillRegistry",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => ArrayIterator<TelegramSkill>",
 				"optional": false
 			},
-			"__@unscopables@816": {
+			"__@unscopables@819": {
 				"type": "{ readonly [x: number]: boolean | undefined; readonly length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; slice?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; at?: boolean | undefined; findLast?: boolean | undefined; findLastIndex?: boolean | undefined; toReversed?: boolean | undefined; toSorted?: boolean | undefined; toSpliced?: boolean | undefined; with?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; }",
 				"optional": false
 			},
@@ -9220,7 +9232,7 @@
 		"kind": "type",
 		"type": "TelegramErrorCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -9544,11 +9556,11 @@
 		"kind": "type",
 		"type": "TelegramSkillRegistry",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => ArrayIterator<TelegramSkill>",
 				"optional": false
 			},
-			"__@unscopables@816": {
+			"__@unscopables@819": {
 				"type": "{ readonly [x: number]: boolean | undefined; readonly length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; slice?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; at?: boolean | undefined; findLast?: boolean | undefined; findLastIndex?: boolean | undefined; toReversed?: boolean | undefined; toSorted?: boolean | undefined; toSpliced?: boolean | undefined; with?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; }",
 				"optional": false
 			},
@@ -9995,7 +10007,7 @@
 		"kind": "type",
 		"type": "ToolClarificationCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -10210,11 +10222,11 @@
 		"kind": "type",
 		"type": "ToolDefinitionRegistry",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => ArrayIterator<TelegramToolDefinition<any, any>>",
 				"optional": false
 			},
-			"__@unscopables@816": {
+			"__@unscopables@819": {
 				"type": "{ readonly [x: number]: boolean | undefined; readonly length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; slice?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; at?: boolean | undefined; findLast?: boolean | undefined; findLastIndex?: boolean | undefined; toReversed?: boolean | undefined; toSorted?: boolean | undefined; toSpliced?: boolean | undefined; with?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; }",
 				"optional": false
 			},
@@ -10348,7 +10360,7 @@
 		"kind": "type",
 		"type": "ToolErrorCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -10563,7 +10575,7 @@
 		"kind": "type",
 		"type": "ToolErrorKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -10913,7 +10925,7 @@
 		"kind": "type",
 		"type": "ToolNextStepHintKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -11141,7 +11153,7 @@
 		"kind": "type",
 		"type": "ToolOutcomeKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -11526,7 +11538,7 @@
 		"kind": "type",
 		"type": "JsonSchemaType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -11894,7 +11906,7 @@
 		"kind": "type",
 		"type": "ToolClarificationCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -12112,11 +12124,11 @@
 		"kind": "type",
 		"type": "ToolDefinitionRegistry",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => ArrayIterator<TelegramToolDefinition<any, any>>",
 				"optional": false
 			},
-			"__@unscopables@816": {
+			"__@unscopables@819": {
 				"type": "{ readonly [x: number]: boolean | undefined; readonly length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; slice?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; at?: boolean | undefined; findLast?: boolean | undefined; findLastIndex?: boolean | undefined; toReversed?: boolean | undefined; toSorted?: boolean | undefined; toSpliced?: boolean | undefined; with?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; }",
 				"optional": false
 			},
@@ -12250,7 +12262,7 @@
 		"kind": "type",
 		"type": "ToolErrorCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -12468,7 +12480,7 @@
 		"kind": "type",
 		"type": "ToolErrorKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -12788,7 +12800,7 @@
 		"kind": "type",
 		"type": "ToolNextStepHintKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -13010,7 +13022,7 @@
 		"kind": "type",
 		"type": "ToolOutcomeKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -13263,7 +13275,7 @@
 		"kind": "type",
 		"type": "ToolSideEffects",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -13546,7 +13558,7 @@
 		"kind": "type",
 		"type": "ToolWarningCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -13776,7 +13788,7 @@
 		"kind": "type",
 		"type": "ToolSideEffects",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -14069,7 +14081,7 @@
 		"kind": "type",
 		"type": "ToolWarningCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -14708,7 +14720,7 @@
 		"kind": "type",
 		"type": "ChatAction",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -15088,7 +15100,7 @@
 		"kind": "type",
 		"type": "ChatType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -15340,7 +15352,7 @@
 		"kind": "type",
 		"type": "ConnectionStatus",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -15598,7 +15610,7 @@
 		"kind": "type",
 		"type": "EmojiType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -15988,7 +16000,7 @@
 		"kind": "type",
 		"type": "FileType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -16473,7 +16485,7 @@
 		"kind": "type",
 		"type": "JsonSchemaType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -16705,7 +16717,7 @@
 		"kind": "type",
 		"type": "MediaType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -16965,7 +16977,7 @@
 		"kind": "type",
 		"type": "MemberStatus",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -17453,7 +17465,7 @@
 		"kind": "type",
 		"type": "MessageType",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -17671,7 +17683,7 @@
 		"kind": "type",
 		"type": "ParseMode$1",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -18453,11 +18465,11 @@
 		"kind": "type",
 		"type": "TelegramSkillRegistry",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => ArrayIterator<TelegramSkill>",
 				"optional": false
 			},
-			"__@unscopables@816": {
+			"__@unscopables@819": {
 				"type": "{ readonly [x: number]: boolean | undefined; readonly length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; slice?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; at?: boolean | undefined; findLast?: boolean | undefined; findLastIndex?: boolean | undefined; toReversed?: boolean | undefined; toSorted?: boolean | undefined; toSpliced?: boolean | undefined; with?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; }",
 				"optional": false
 			},
@@ -18763,7 +18775,7 @@
 		"kind": "type",
 		"type": "ToolClarificationCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -18981,11 +18993,11 @@
 		"kind": "type",
 		"type": "ToolDefinitionRegistry",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => ArrayIterator<TelegramToolDefinition<any, any>>",
 				"optional": false
 			},
-			"__@unscopables@816": {
+			"__@unscopables@819": {
 				"type": "{ readonly [x: number]: boolean | undefined; readonly length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; slice?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; at?: boolean | undefined; findLast?: boolean | undefined; findLastIndex?: boolean | undefined; toReversed?: boolean | undefined; toSorted?: boolean | undefined; toSpliced?: boolean | undefined; with?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; }",
 				"optional": false
 			},
@@ -19119,7 +19131,7 @@
 		"kind": "type",
 		"type": "ToolErrorCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -19337,7 +19349,7 @@
 		"kind": "type",
 		"type": "ToolErrorKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -19649,7 +19661,7 @@
 		"kind": "type",
 		"type": "ToolNextStepHintKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -19867,7 +19879,7 @@
 		"kind": "type",
 		"type": "ToolOutcomeKind",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -20120,7 +20132,7 @@
 		"kind": "type",
 		"type": "ToolSideEffects",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -20395,7 +20407,7 @@
 		"kind": "type",
 		"type": "ToolWarningCode",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -21330,7 +21342,7 @@
 		"kind": "type",
 		"type": "ChatAction",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
@@ -21701,7 +21713,7 @@
 		"kind": "type",
 		"type": "ParseMode$1",
 		"members": {
-			"__@iterator@796": {
+			"__@iterator@799": {
 				"type": "() => StringIterator<string>",
 				"optional": false
 			},
