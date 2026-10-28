@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ghostpaw-telegram",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "description": "Telegram message mirror, search, sending, and moderation tools.",
   "author": {
     "name": "Anonyfox",
