@@ -1,1 +1,1 @@
-export const telegramVersion = '0.7.4';
+export const telegramVersion = '0.7.5';
