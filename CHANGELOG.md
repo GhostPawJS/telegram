@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.8] - 2026-10-28
+
 ### Security
 
 - CLI values are literal by default, including a leading `@`. Before this release any CLI flag value starting with `@` was read from a file. No telegram flag reads a file now; pass long input as a JSON object on stdin with `-`.
@@ -201,7 +203,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.7...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.8...HEAD
+[0.7.8]: https://github.com/GhostPawJS/telegram/compare/v0.7.7...v0.7.8
 [0.7.7]: https://github.com/GhostPawJS/telegram/compare/v0.7.6...v0.7.7
 [0.7.6]: https://github.com/GhostPawJS/telegram/compare/v0.7.5...v0.7.6
 [0.7.5]: https://github.com/GhostPawJS/telegram/compare/v0.7.4...v0.7.5
