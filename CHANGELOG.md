@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.6] - 2026-10-28
+
 ### Added
 
 - Add `skill --short` with a compact CLI cheat sheet.
@@ -189,7 +191,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.5...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.6...HEAD
+[0.7.6]: https://github.com/GhostPawJS/telegram/compare/v0.7.5...v0.7.6
 [0.7.5]: https://github.com/GhostPawJS/telegram/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/GhostPawJS/telegram/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/GhostPawJS/telegram/compare/v0.7.2...v0.7.3
