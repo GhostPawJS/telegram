@@ -1,11 +1,9 @@
 export const telegramSkillShort = `# Telegram CLI cheat sheet
 
-Install (Linux/macOS, checks SHA256SUMS, installs to ~/.local/bin):
+Install the release binary (checks SHA256SUMS; Linux/macOS installs to ~/.local/bin):
   curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh
-Install (Windows):
-  irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
-Or with Node 24+:
-  npm install -g @ghostpaw/telegram
+  Windows: irm https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.ps1 | iex
+  Node 24+: npm install -g @ghostpaw/telegram
 Version:
   ghostpaw-telegram --version
 
