@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.5] - 2026-10-28
+
 ### Security
 
 - Validate remote media URL schemes, DNS answers and every redirect, block private targets by default, and pin connections to validated addresses to prevent DNS rebinding.
@@ -175,7 +177,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.4...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.5...HEAD
+[0.7.5]: https://github.com/GhostPawJS/telegram/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/GhostPawJS/telegram/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/GhostPawJS/telegram/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/GhostPawJS/telegram/compare/v0.7.1...v0.7.2
