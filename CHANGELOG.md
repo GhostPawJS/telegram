@@ -4,6 +4,10 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Security
+
+- CLI values are literal by default, including a leading `@`. Before this release any CLI flag value starting with `@` was read from a file. No telegram flag reads a file now; pass long input as a JSON object on stdin with `-`.
+
 ## [0.7.7] - 2026-10-28
 
 ### Changed

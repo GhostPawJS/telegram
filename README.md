@@ -90,7 +90,8 @@ member list <chatId>
 
 Use `help <noun>` or `<noun> <verb> --help` for schema flags. Fields accept
 kebab-case flags, such as `--can-send-messages true` and `--is-admin false`.
-Objects accept JSON or `@file`; arrays accept repeated flags or JSON.
+Objects accept JSON; arrays accept repeated flags or JSON. Values are literal,
+including a leading `@`; no flag reads a file.
 A single `-` reads stdin JSON; explicit flags override stdin fields.
 `--` ends option parsing.
 
@@ -200,7 +201,7 @@ $env:GHOSTPAW_NO_MODIFY_PATH=1; irm https://raw.githubusercontent.com/GhostPawJS
 Pinned to a release:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.7 && export PATH="$HOME/.local/bin:$PATH"
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.8 && export PATH="$HOME/.local/bin:$PATH"
 ```
 
 Also adding ~/.local/bin to ~/.profile (edits ~/.profile once; skipped if it already mentions ~/.local/bin; zsh login shells read ~/.zprofile instead, so use that file name there):
@@ -211,7 +212,7 @@ curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh
 
 ```text
 $ ghostpaw-telegram --version
-telegram 0.7.7 (binary, linux-x64)
+telegram 0.7.8 (binary, linux-x64)
 ```
 
 Scripts that compare versions should use `--version --short` or `--version --json`.
