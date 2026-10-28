@@ -6,7 +6,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@ghostpaw/telegram@0.7.6",
+        "@ghostpaw/telegram@0.7.7",
         "mcp"
       ]
     }
