@@ -200,7 +200,7 @@ $env:GHOSTPAW_NO_MODIFY_PATH=1; irm https://raw.githubusercontent.com/GhostPawJS
 Pinned to a release:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.6 && export PATH="$HOME/.local/bin:$PATH"
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.7 && export PATH="$HOME/.local/bin:$PATH"
 ```
 
 Also adding ~/.local/bin to ~/.profile (edits ~/.profile once; skipped if it already mentions ~/.local/bin; zsh login shells read ~/.zprofile instead, so use that file name there):
@@ -211,7 +211,7 @@ curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh
 
 ```text
 $ ghostpaw-telegram --version
-telegram 0.7.6 (binary, linux-x64)
+telegram 0.7.7 (binary, linux-x64)
 ```
 
 Scripts that compare versions should use `--version --short` or `--version --json`.
