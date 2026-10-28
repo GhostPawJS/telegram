@@ -27,7 +27,11 @@ export const telegramCliOptions: ToolCliOptions<TelegramDb> = {
 		},
 		skill: async (args = []) => {
 			if (args.includes('--help') || args.includes('-h'))
-				return 'Usage: ghostpaw-telegram skill\n       ghostpaw-telegram skill --list\n       ghostpaw-telegram skill <guide>\n';
+				return 'Usage: ghostpaw-telegram skill\n       ghostpaw-telegram skill --list\n       ghostpaw-telegram skill --short (compact cheat sheet)\n       ghostpaw-telegram skill <guide>\n';
+			if (args[0] === '--short') {
+				const { telegramSkillShort } = await import('./telegram_skill_short.ts');
+				return telegramSkillShort;
+			}
 			if (args[0] === '--list')
 				return `${telegramSkills
 					.map((guide) => `${guide.name}  ${guide.description.replace(/\s+/g, ' ')}`)
@@ -39,7 +43,7 @@ export const telegramCliOptions: ToolCliOptions<TelegramDb> = {
 			}
 			const { renderSkillMarkdown } = await import('../surfaces/skill_markdown.ts');
 			const { telegramSkillSpec } = await import('./telegram_skill_spec.ts');
-			return renderSkillMarkdown(telegramSkillSpec);
+			return renderSkillMarkdown(telegramSkillSpec, { referencesBase: '' });
 		},
 	},
 };

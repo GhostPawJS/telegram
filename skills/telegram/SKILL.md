@@ -25,6 +25,8 @@ Run tools as `ghostpaw-telegram ...`; use `~/.local/bin/ghostpaw-telegram` if it
 
 Read and search the local Telegram message mirror before replying. Use send and moderation tools only for intended chat actions. TELEGRAM_BOT_TOKEN enables execution through the Telegram Bot API; without it these tools return plans. Never disclose tokens. The mirror is populated by the consuming application transport.
 
+Print the compact cheat sheet with `ghostpaw-telegram skill --short`; list guides with `ghostpaw-telegram skill --list`.
+
 ## Calling tools
 
 MCP: connect to ghostpaw-telegram, then call a tool by name with its JSON arguments.

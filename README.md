@@ -139,6 +139,15 @@ ghostpaw-telegram --db :memory: call tg_send '{"subcommand":"send_message","chat
 
 The send example returns a plan unless `TELEGRAM_BOT_TOKEN` is set.
 
+Use `ghostpaw-telegram skill --short` for the compact CLI cheat sheet,
+`ghostpaw-telegram skill --list` to list guides, and
+`ghostpaw-telegram skill <guide>` to read one.
+
+On POSIX, CLI and MCP mirror databases are created with mode `0600`, including
+new SQLite WAL/SHM files. Directories created for the database use mode `0700`.
+Existing database and directory permissions are preserved. The mirror may contain
+private chat content and file blobs.
+
 ## Agent Skill
 
 `SKILL.md` and `skills/telegram/` ship in the package. Print the skill with
@@ -191,7 +200,7 @@ $env:GHOSTPAW_NO_MODIFY_PATH=1; irm https://raw.githubusercontent.com/GhostPawJS
 Pinned to a release:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.5 && export PATH="$HOME/.local/bin:$PATH"
+curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh | sh -s -- --target linux-x64 --version 0.7.6 && export PATH="$HOME/.local/bin:$PATH"
 ```
 
 Also adding ~/.local/bin to ~/.profile (edits ~/.profile once; skipped if it already mentions ~/.local/bin; zsh login shells read ~/.zprofile instead, so use that file name there):
@@ -202,7 +211,7 @@ curl -fsSL https://raw.githubusercontent.com/GhostPawJS/telegram/main/install.sh
 
 ```text
 $ ghostpaw-telegram --version
-telegram 0.7.5 (binary, linux-x64)
+telegram 0.7.6 (binary, linux-x64)
 ```
 
 Scripts that compare versions should use `--version --short` or `--version --json`.

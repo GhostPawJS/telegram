@@ -1,5 +1,6 @@
 import { inputExample } from './input_example.ts';
-import type { JsonSchema, SurfaceTool } from './surface_types.ts';
+import { parameterRows } from './parameter_rows.ts';
+import type { SurfaceTool } from './surface_types.ts';
 
 export interface SkillMarkdownSpec<TCtx> {
 	name: string;
@@ -60,6 +61,8 @@ export function renderSkillMarkdown<TCtx>(
 		'',
 		spec.about,
 		'',
+		`Print the compact cheat sheet with \`${spec.bin} skill --short\`; list guides with \`${spec.bin} skill --list\`.`,
+		'',
 		'## Calling tools',
 		'',
 		`MCP: connect to ${spec.server}, then call a tool by name with its JSON arguments.`,
@@ -84,23 +87,7 @@ export function renderSkillMarkdown<TCtx>(
 			'| Parameter | Type | Required | Values / description |',
 			'| --- | --- | --- | --- |',
 		);
-		const rows = (schema: JsonSchema, prefix = '') => {
-			for (const [name, property] of Object.entries(schema.properties ?? {})) {
-				if (
-					prefix &&
-					Object.keys(schema.properties ?? {}).length > 8 &&
-					!schema.required?.includes(name)
-				)
-					continue;
-				lines.push(
-					`| ${prefix}${name} | ${property.type ?? property.oneOf?.map((branch) => branch.type).join(' / ') ?? 'any'} | ${schema.required?.includes(name) ? 'yes' : 'no'} | ${(property.enum ? `${property.enum.join(', ')}. ` : '') + (property.description ?? '').replaceAll('|', '\\|').replaceAll('\n', ' ')} |`,
-				);
-				if (property.properties) rows(property, `${prefix}${name}.`);
-				for (const branch of property.oneOf ?? [])
-					if (branch.properties) rows(branch, `${prefix}${name}.`);
-			}
-		};
-		rows(tool.inputSchema);
+		lines.push(...parameterRows(tool.inputSchema));
 		lines.push('');
 		const actions =
 			tool.inputSchema.properties?.action?.enum ?? tool.inputSchema.properties?.subcommand?.enum;
@@ -116,7 +103,7 @@ export function renderSkillMarkdown<TCtx>(
 		'',
 		...spec.workflows.map(
 			(workflow) =>
-				`- \`${spec.bin} skill ${workflow.name}\` — [${workflow.name}](${referencesBase}/${workflow.name}.md): ${workflow.description}`,
+				`- \`${spec.bin} skill ${workflow.name}\` — ${referencesBase ? `[${workflow.name}](${referencesBase}/${workflow.name}.md): ` : ''}${workflow.description}`,
 		),
 		'',
 		'## Principles',

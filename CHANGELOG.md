@@ -4,6 +4,18 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Added
+
+- Add `skill --short` with a compact CLI cheat sheet.
+
+### Fixed
+
+- List runnable guide commands in full CLI skill output and describe nested object and array parameters with complete table rows.
+
+### Security
+
+- Create CLI and MCP mirror databases and their SQLite sidecars with private POSIX permissions, and create containing directories with mode 0700. Preserve existing database and directory modes.
+
 ## [0.7.5] - 2026-10-28
 
 ### Security

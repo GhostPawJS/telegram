@@ -39,6 +39,26 @@ test('skill CLI lists, renders embedded guides byte-identically and reports usag
 		assert.ok((await invoke(['--list'])).out.includes(`${guide.name}  `));
 	}
 	assert.match((await invoke(['--help'])).out, /skill <guide>/);
+	assert.match((await invoke(['--help'])).out, /--short/);
+	const full = (await invoke([])).out;
+	assert.ok(!full.includes('references/'));
+	assert.ok(!/\|\s*\|$/m.test(full));
+	for (const guide of telegramSkills)
+		assert.ok(full.includes(`ghostpaw-telegram skill ${guide.name}`));
+	const short = await invoke(['--short']);
+	assert.equal(short.code, 0);
+	assert.ok(short.out.trim().split('\n').length < 45);
+	assert.ok(short.out.trim().split('\n').length >= 30);
+	for (const command of [
+		'--version',
+		'tools',
+		'describe',
+		'call',
+		'mcp',
+		'skill --list',
+		'skill --short',
+	])
+		assert.ok(short.out.includes(command));
 	assert.deepEqual(await invoke(['missing']), {
 		code: 1,
 		out: '',
