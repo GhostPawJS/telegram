@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Readable, Writable } from 'node:stream';
@@ -99,6 +99,51 @@ test('global output flags after -- still apply and are not read as positionals',
 			chatId: -100123,
 			text: 'After dashes',
 		});
+	} finally {
+		rmSync(dir, { recursive: true, force: true });
+	}
+});
+
+test('CLI creates nested database directories and reports blocked parents as bad input', async () => {
+	const dir = mkdtempSync(join(tmpdir(), 'telegram-cli-db-'));
+	try {
+		const blocked = join(dir, 'file');
+		writeFileSync(blocked, 'blocked');
+		for (const args of [
+			['mirror', 'chats'],
+			['call', 'tg_read', '{"subcommand":"list_chats"}'],
+		]) {
+			let err = '';
+			const code = await runToolCli([...args, '--db', join(blocked, 'nested', 'mirror.db')], {
+				...telegramCliOptions,
+				tools: args[0] === 'call' ? telegramSurfaceTools : telegramCliOptions.tools,
+				stdin: Readable.from([]),
+				stderr: new Writable({
+					write(chunk, _encoding, cb) {
+						err += String(chunk);
+						cb();
+					},
+				}),
+			});
+			assert.equal(code, 2);
+			assert.equal(
+				err,
+				`Cannot create database directory ${join(blocked, 'nested')}: a path component is not a directory\n`,
+			);
+		}
+		const path = join(dir, 'one', 'two', 'mirror.db');
+		const code = await runToolCli(['mirror', 'chats', '--db', path], {
+			...telegramCliOptions,
+			stdin: Readable.from([]),
+			stdout: new Writable({
+				write(_chunk, _encoding, cb) {
+					cb();
+				},
+			}),
+		});
+		assert.equal(code, 0);
+		assert.ok(statSync(path).isFile());
+		assert.ok(statSync(join(dir, 'one', 'two')).isDirectory());
 	} finally {
 		rmSync(dir, { recursive: true, force: true });
 	}
