@@ -9,6 +9,8 @@ The structure follows the exact patterns established by `@ghostpaw/grimoire`,
 `@ghostpaw/questlog`. The only material difference is two runtime dependencies
 (`grammy`, `marked`) and five public surfaces instead of two or three.
 
+The demo is built with `npm run demo:build` (output `demo/`) and published at https://telegram.ghostpaw.dev/docs/. The landing page https://telegram.ghostpaw.dev/ is maintained separately.
+
 ## Package Root
 
 ```
@@ -21,7 +23,6 @@ The structure follows the exact patterns established by `@ghostpaw/grimoire`,
   tsconfig.demo.json          # demo-only overrides (JSX, browser target)
   .github/workflows/
     ci.yml                    # lint + typecheck + test
-    pages.yml                 # deploy demo to GitHub Pages
     publish.yml               # publish to npm on tag
   docs/                       # operator and implementer manual
   scripts/                    # build_demo.mjs, serve_demo.mjs
