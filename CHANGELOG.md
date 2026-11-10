@@ -4,6 +4,8 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+## [0.7.9] - 2026-11-10
+
 ### Added
 
 - `-q` short alias for `--quiet`.
@@ -216,7 +218,8 @@ Tagged but never published; the release check failed on a size budget. Its chang
 
 - Initial Telegram transport, SQLite storage, rendering, streaming, and tool facade.
 
-[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.8...HEAD
+[Unreleased]: https://github.com/GhostPawJS/telegram/compare/v0.7.9...HEAD
+[0.7.9]: https://github.com/GhostPawJS/telegram/compare/v0.7.8...v0.7.9
 [0.7.8]: https://github.com/GhostPawJS/telegram/compare/v0.7.7...v0.7.8
 [0.7.7]: https://github.com/GhostPawJS/telegram/compare/v0.7.6...v0.7.7
 [0.7.6]: https://github.com/GhostPawJS/telegram/compare/v0.7.5...v0.7.6
