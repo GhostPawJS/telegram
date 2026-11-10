@@ -14,6 +14,7 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ### Changed
 
+- Document writable database roots for sandboxed agent harnesses in the README and generated agent skill.
 - Remove the landing page and docs site sources and the automated site deployment workflow.
 
 ## [0.7.8] - 2026-10-28
