@@ -46,7 +46,8 @@ globalPerSecond, maxRetries, now, and sleep at construction.
 
 ## Contribute
 
-Use Node 24. `npm run check` is the single gate: types, lint, tests, build,
+Use Node 24. Run `npm run lint`, `npm run typecheck`, `npm test`, and
+`npm run build`. `npm run check` is the single gate: types, lint, tests, build,
 zero runtime dependencies, generated surfaces, size budgets, API snapshot,
 packed consumer, startup budgets, and ratchet. Also run `npm run test:dist`.
 Use node:test and node:assert, with *.test.ts next to source for unit tests.

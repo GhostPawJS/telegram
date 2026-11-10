@@ -4,6 +4,10 @@ All notable changes are documented here using Keep a Changelog 1.1.0.
 
 ## [Unreleased]
 
+### Added
+
+- `-q` short alias for `--quiet`.
+
 ### Fixed
 
 - Report database directory creation failures clearly and exit with code 2 in the CLI.

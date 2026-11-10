@@ -261,3 +261,29 @@ test('noun verb error results preserve JSON and conflict exit codes', async () =
 	assert.equal((await invoke(['tool', 'test', '--some-value=1', '-'], '{bad')).code, 2);
 	assert.equal((await invoke(['tool', 'test', '--some-value=2', '-'], '{"someValue":1}')).code, 0);
 });
+
+test('-q matches --quiet globally, per command, after --, and with the default database', async () => {
+	for (const args of [
+		['--version'],
+		['version'],
+		['--help'],
+		['tools'],
+		['skill'],
+		['call', 'test_tool', '{"someValue":2}'],
+		['test_tool', '--some-value=2'],
+		['tool', 'test', '--some-value=2'],
+		['tool', 'test', '--', '--some-value=2'],
+		['tool', 'test', '--some-value=bad', '--json'],
+		['completions', 'bash'],
+	]) {
+		for (const global of [true, false]) {
+			const withFlag = (flag: string) => (global ? [flag, ...args] : [...args, flag]);
+			const short = await invoke(withFlag('-q'));
+			assert.deepEqual(short, await invoke(withFlag('--quiet')));
+			assert.equal(short.out, '');
+			if (short.code === 0) assert.equal(short.err, '');
+			for (const context of short.contexts) assert.deepEqual(context, {});
+		}
+	}
+	assert.match((await invoke(['--help'])).out, /-q, --quiet/);
+});

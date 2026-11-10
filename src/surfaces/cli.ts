@@ -25,13 +25,15 @@ export async function runToolCli<TCtx>(
 	argv: string[],
 	options: ToolCliOptions<TCtx>,
 ): Promise<number> {
+	argv = argv.map((arg) => (arg !== '-q' ? arg : '--quiet'));
+	const quiet = argv.includes('--quiet');
 	const end = argv.indexOf('--');
 	if (
 		argv
 			.slice(0, end < 0 ? argv.length : end)
 			.some((arg) => ['--version', '-V', '-v'].includes(arg))
 	) {
-		if (!argv.includes('--quiet'))
+		if (!quiet)
 			(options.stdout ?? process.stdout).write(
 				`${options.formatVersion?.(argv) ?? options.version}\n`,
 			);
@@ -39,7 +41,6 @@ export async function runToolCli<TCtx>(
 	}
 	const modern = await runCliCommand(argv, options);
 	if (modern !== undefined) return modern;
-	const quiet = argv.includes('--quiet');
 	const explicitJson = argv.includes('--json') && !argv.includes('tools');
 	if (quiet)
 		options = {
